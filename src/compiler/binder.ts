@@ -1903,7 +1903,7 @@ namespace ts {
 
             // Even though in the AST the jsdoc @typedef node belongs to the current node,
             // its symbol might be in the same scope with the current node's symbol. Consider:
-            // 
+            //
             //     /** @typedef {string | number} MyType */
             //     function foo();
             //
@@ -3299,6 +3299,7 @@ namespace ts {
 
             case SyntaxKind.AnyKeyword:
             case SyntaxKind.NumberKeyword:
+            case SyntaxKind.IntKeyword:
             case SyntaxKind.NeverKeyword:
             case SyntaxKind.ObjectKeyword:
             case SyntaxKind.StringKeyword:
@@ -3497,6 +3498,7 @@ namespace ts {
                 return TransformFlags.MethodOrAccessorExcludes;
             case SyntaxKind.AnyKeyword:
             case SyntaxKind.NumberKeyword:
+            case SyntaxKind.IntKeyword:
             case SyntaxKind.NeverKeyword:
             case SyntaxKind.StringKeyword:
             case SyntaxKind.ObjectKeyword:

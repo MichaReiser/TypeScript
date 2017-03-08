@@ -779,7 +779,7 @@ namespace ts.server {
 
             this.logger.endGroup();
 
-            function printProjects(logger: Logger, projects: Project[], counter: number) {
+            function printProjects(logger: Logger, projects: Project[], counter: int) {
                 for (const project of projects) {
                     project.updateGraph();
                     logger.info(`Project '${project.getProjectName()}' (${ProjectKind[project.projectKind]}) ${counter}`);

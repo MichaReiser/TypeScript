@@ -401,18 +401,18 @@ namespace ts {
 
     /* @deprecated - consider using EditorSettings instead */
     export interface EditorOptions {
-        BaseIndentSize?: number;
-        IndentSize: number;
-        TabSize: number;
+        BaseIndentSize?: int;
+        IndentSize: int;
+        TabSize: int;
         NewLineCharacter: string;
         ConvertTabsToSpaces: boolean;
         IndentStyle: IndentStyle;
     }
 
     export interface EditorSettings {
-        baseIndentSize?: number;
-        indentSize?: number;
-        tabSize?: number;
+        baseIndentSize?: int;
+        indentSize?: int;
+        tabSize?: int;
         newLineCharacter?: string;
         convertTabsToSpaces?: boolean;
         indentStyle?: IndentStyle;

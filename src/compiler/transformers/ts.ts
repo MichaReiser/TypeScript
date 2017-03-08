@@ -317,6 +317,7 @@ namespace ts {
                 case SyntaxKind.BooleanKeyword:
                 case SyntaxKind.StringKeyword:
                 case SyntaxKind.NumberKeyword:
+                case SyntaxKind.IntKeyword:
                 case SyntaxKind.NeverKeyword:
                 case SyntaxKind.VoidKeyword:
                 case SyntaxKind.SymbolKeyword:
@@ -874,7 +875,7 @@ namespace ts {
          */
         function transformConstructorBody(node: ClassExpression | ClassDeclaration, constructor: ConstructorDeclaration, hasExtendsClause: boolean) {
             let statements: Statement[] = [];
-            let indexOfFirstStatement = 0;
+            let indexOfFirstStatement = 0.0;
 
             resumeLexicalEnvironment();
 
@@ -1727,6 +1728,9 @@ namespace ts {
 
                 case SyntaxKind.NumberKeyword:
                     return createIdentifier("Number");
+
+                case SyntaxKind.IntKeyword:
+                    return createIdentifier("Int");
 
                 case SyntaxKind.SymbolKeyword:
                     return languageVersion < ScriptTarget.ES2015

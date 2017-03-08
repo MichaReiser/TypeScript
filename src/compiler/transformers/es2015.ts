@@ -910,7 +910,7 @@ namespace ts {
             const statements: Statement[] = [];
             resumeLexicalEnvironment();
 
-            let statementOffset = -1;
+            let statementOffset = -1.0;
             if (hasSynthesizedSuper) {
                 // If a super call has already been synthesized,
                 // we're going to assume that we should just transform everything after that.

@@ -1852,7 +1852,7 @@ namespace ts {
             parsingContext |= 1 << kind;
             const result = createNodeArray<T>();
 
-            let commaStart = -1; // Meaning the previous token was not a comma
+            let commaStart: number = -1; // Meaning the previous token was not a comma
             while (true) {
                 if (isListElement(kind, /*inErrorRecovery*/ false)) {
                     result.push(parseListElement(kind, parseElement));
@@ -2517,6 +2517,7 @@ namespace ts {
             switch (token()) {
                 case SyntaxKind.AnyKeyword:
                 case SyntaxKind.StringKeyword:
+                case SyntaxKind.IntKeyword:
                 case SyntaxKind.NumberKeyword:
                 case SyntaxKind.BooleanKeyword:
                 case SyntaxKind.SymbolKeyword:
@@ -2563,6 +2564,7 @@ namespace ts {
                 case SyntaxKind.AnyKeyword:
                 case SyntaxKind.StringKeyword:
                 case SyntaxKind.NumberKeyword:
+                case SyntaxKind.IntKeyword:
                 case SyntaxKind.BooleanKeyword:
                 case SyntaxKind.SymbolKeyword:
                 case SyntaxKind.VoidKeyword:
@@ -6057,6 +6059,7 @@ namespace ts {
                     case SyntaxKind.AnyKeyword:
                     case SyntaxKind.StringKeyword:
                     case SyntaxKind.NumberKeyword:
+                    case SyntaxKind.IntKeyword:
                     case SyntaxKind.BooleanKeyword:
                     case SyntaxKind.SymbolKeyword:
                     case SyntaxKind.VoidKeyword:
@@ -7355,7 +7358,7 @@ namespace ts {
         interface IncrementalElement extends TextRange {
             parent?: Node;
             intersectsChange: boolean;
-            length?: number;
+            length?: int;
             _children: Node[];
         }
 
@@ -7364,7 +7367,7 @@ namespace ts {
         }
 
         interface IncrementalNodeArray extends NodeArray<IncrementalNode>, IncrementalElement {
-            length: number;
+            length: int;
         }
 
         // Allows finding nodes in the source file at a certain position in an efficient manner.

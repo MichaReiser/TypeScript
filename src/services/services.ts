@@ -980,7 +980,7 @@ namespace ts {
         let program: Program;
         let lastProjectVersion: string;
 
-        let lastTypesRootVersion = 0;
+        let lastTypesRootVersion = 0.0;
 
         const useCaseSensitivefileNames = host.useCaseSensitiveFileNames && host.useCaseSensitiveFileNames();
         const cancellationToken = new CancellationTokenObject(host.getCancellationToken && host.getCancellationToken());

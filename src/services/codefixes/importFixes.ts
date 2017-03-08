@@ -381,7 +381,7 @@ namespace ts.codefix {
                 function getCodeActionForNewImport(moduleSpecifier?: string): ImportCodeAction {
                     if (!cachedNewImportInsertPosition) {
                         // insert after any existing imports
-                        let lastModuleSpecifierEnd = -1;
+                        let lastModuleSpecifierEnd = -1.0;
                         for (const moduleSpecifier of sourceFile.imports) {
                             const end = moduleSpecifier.getEnd();
                             if (!lastModuleSpecifierEnd || end > lastModuleSpecifierEnd) {

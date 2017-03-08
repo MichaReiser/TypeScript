@@ -407,6 +407,7 @@ namespace ts {
                 case SyntaxKind.AnyKeyword:
                 case SyntaxKind.StringKeyword:
                 case SyntaxKind.NumberKeyword:
+                case SyntaxKind.IntKeyword:
                 case SyntaxKind.BooleanKeyword:
                 case SyntaxKind.ObjectKeyword:
                 case SyntaxKind.SymbolKeyword:
@@ -1868,7 +1869,7 @@ namespace ts {
         return emitSkipped;
 
         function getDeclarationOutput(synchronousDeclarationOutput: string, moduleElementDeclarationEmitInfo: ModuleElementDeclarationEmitInfo[]) {
-            let appliedSyncOutputPos = 0;
+            let appliedSyncOutputPos = 0.0;
             let declarationOutput = "";
             // apply asynchronous additions to the synchronous output
             forEach(moduleElementDeclarationEmitInfo, aliasEmitInfo => {

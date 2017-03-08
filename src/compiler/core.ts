@@ -767,7 +767,7 @@ namespace ts {
      * @param array A sorted array whose first element must be no larger than number
      * @param number The value to be searched for in the array.
      */
-    export function binarySearch<T>(array: T[], value: T, comparer?: (v1: T, v2: T) => number, offset?: number): number {
+    export function binarySearch<T>(array: T[], value: T, comparer?: (v1: T, v2: T) => number, offset?: int): int {
         if (!array || array.length === 0) {
             return -1;
         }
@@ -2150,7 +2150,7 @@ namespace ts {
     function Signature() {
     }
 
-    function Node(this: Node, kind: SyntaxKind, pos: number, end: number) {
+    function Node(this: Node, kind: SyntaxKind, pos: int, end: int) {
         this.id = 0;
         this.kind = kind;
         this.pos = pos;

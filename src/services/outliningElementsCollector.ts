@@ -32,8 +32,8 @@ namespace ts.OutliningElementsCollector {
             const comments = ts.getLeadingCommentRangesOfNode(n, sourceFile);
 
             if (comments) {
-                let firstSingleLineCommentStart = -1;
-                let lastSingleLineCommentEnd = -1;
+                let firstSingleLineCommentStart: number = -1;
+                let lastSingleLineCommentEnd: number = -1;
                 let isFirstSingleLineComment = true;
                 let singleLineCommentCount = 0;
 
