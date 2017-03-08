@@ -274,7 +274,7 @@ interface Function {
     toString(): string;
 
     prototype: any;
-    readonly length: number;
+    readonly length: int;
 
     // Non-standard extensions
     arguments: any;
@@ -295,7 +295,7 @@ declare const Function: FunctionConstructor;
 
 interface IArguments {
     [index: number]: any;
-    length: number;
+    length: int;
     callee: Function;
 }
 
@@ -406,7 +406,7 @@ interface String {
     trim(): string;
 
     /** Returns the length of a String object. */
-    readonly length: number;
+    readonly length: int;
 
     // IE extensions
     /**
@@ -561,7 +561,7 @@ interface Math {
       * Returns the smallest number greater than or equal to its numeric argument.
       * @param x A numeric expression.
       */
-    ceil(x: number): number;
+    ceil(x: number): int;
     /**
       * Returns the cosine of a number.
       * @param x A numeric expression that contains an angle measured in radians.
@@ -576,7 +576,7 @@ interface Math {
       * Returns the greatest number less than or equal to its numeric argument.
       * @param x A numeric expression.
       */
-    floor(x: number): number;
+    floor(x: number): int;
     /**
       * Returns the natural logarithm (base e) of a number.
       * @param x A numeric expression.
@@ -987,7 +987,7 @@ interface ReadonlyArray<T> {
     /**
       * Gets the length of the array. This is a number one higher than the highest element defined in an array.
       */
-    readonly length: number;
+    readonly length: int;
     /**
       * Returns a string representation of an array.
       */
@@ -1112,7 +1112,7 @@ interface Array<T> {
     /**
       * Gets or sets the length of the array. This is a number one higher than the highest element defined in an array.
       */
-    length: number;
+    length: int;
     /**
       * Returns a string representation of an array.
       */
@@ -1351,7 +1351,7 @@ interface Promise<T> {
 }
 
 interface ArrayLike<T> {
-    readonly length: number;
+    readonly length: int;
     readonly [n: number]: T;
 }
 
@@ -1382,6 +1382,11 @@ type Pick<T, K extends keyof T> = {
 type Record<K extends string, T> = {
     [P in K]: T;
 };
+
+/**
+ * Marker for contextual 'this' type
+ */
+interface ThisType<T> { }
 
 /**
  * Marker for contextual 'this' type
