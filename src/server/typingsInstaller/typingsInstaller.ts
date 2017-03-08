@@ -312,7 +312,8 @@ namespace ts.server.typingsInstaller {
                 kind: EventBeginInstallTypes,
                 eventId: requestId,
                 typingsInstallerVersion: ts.version, // qualified explicitly to prevent occasional shadowing
-                projectName: req.projectName
+                projectName: req.projectName,
+                packagesToInstall: []
             });
 
             const scopedTypings = filteredTypings.map(typingsName);

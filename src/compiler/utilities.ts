@@ -650,6 +650,7 @@ namespace ts {
         switch (node.kind) {
             case SyntaxKind.AnyKeyword:
             case SyntaxKind.NumberKeyword:
+            case SyntaxKind.IntKeyword:
             case SyntaxKind.StringKeyword:
             case SyntaxKind.BooleanKeyword:
             case SyntaxKind.SymbolKeyword:
@@ -2041,7 +2042,7 @@ namespace ts {
     }
 
     export function getPropertyNameForPropertyNameNode(name: DeclarationName | ParameterDeclaration): string {
-        if (name.kind === SyntaxKind.Identifier || name.kind === SyntaxKind.StringLiteral || name.kind === SyntaxKind.NumericLiteral || name.kind === SyntaxKind.Parameter) {
+        if (name.kind === SyntaxKind.Identifier || name.kind === SyntaxKind.StringLiteral || name.kind === SyntaxKind.NumericLiteral ||  name.kind === SyntaxKind.Parameter) {
             return (<Identifier | LiteralExpression>name).text;
         }
         if (name.kind === SyntaxKind.ComputedPropertyName) {
@@ -3702,6 +3703,7 @@ namespace ts {
         return (kind >= SyntaxKind.FirstTypeNode && kind <= SyntaxKind.LastTypeNode)
             || kind === SyntaxKind.AnyKeyword
             || kind === SyntaxKind.NumberKeyword
+      || kind === SyntaxKind.IntKeyword
             || kind === SyntaxKind.ObjectKeyword
             || kind === SyntaxKind.BooleanKeyword
             || kind === SyntaxKind.StringKeyword

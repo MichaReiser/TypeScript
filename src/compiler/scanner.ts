@@ -89,6 +89,7 @@ namespace ts {
         "implements": SyntaxKind.ImplementsKeyword,
         "import": SyntaxKind.ImportKeyword,
         "in": SyntaxKind.InKeyword,
+        "int": SyntaxKind.IntKeyword,
         "instanceof": SyntaxKind.InstanceOfKeyword,
         "interface": SyntaxKind.InterfaceKeyword,
         "is": SyntaxKind.IsKeyword,
@@ -242,8 +243,8 @@ namespace ts {
 
         // Perform binary search in one of the Unicode range maps
         let lo = 0;
-        let hi: number = map.length;
-        let mid: number;
+        let hi = map.length;
+        let mid: int;
 
         while (lo + 1 < hi) {
             mid = lo + (hi - lo) / 2;
@@ -868,10 +869,19 @@ namespace ts {
                     error(Diagnostics.Digit_expected);
                 }
             }
-            return "" + +(text.substring(start, end));
+
+            const literal = text.substring(start, end);
+            let num = "" + (+literal);
+
+            // append .0 if it was a floating point number before converting to number
+            if (literal.indexOf(".") !== -1 && num.indexOf(".") === -1) {
+                num += ".0";
+            }
+
+            return num;
         }
 
-        function scanOctalDigits(): number {
+        function scanOctalDigits(): int {
             const start = pos;
             while (isOctalDigit(text.charCodeAt(pos))) {
                 pos++;
@@ -883,7 +893,7 @@ namespace ts {
          * Scans the given number of hexadecimal digits in the text,
          * returning -1 if the given number is unavailable.
          */
-        function scanExactNumberOfHexDigits(count: number): number {
+        function scanExactNumberOfHexDigits(count: int): number {
             return scanHexDigits(/*minCount*/ count, /*scanAsManyAsPossible*/ false);
         }
 
@@ -891,13 +901,13 @@ namespace ts {
          * Scans as many hexadecimal digits as are available in the text,
          * returning -1 if the given number of digits was unavailable.
          */
-        function scanMinimumNumberOfHexDigits(count: number): number {
+        function scanMinimumNumberOfHexDigits(count: int): number {
             return scanHexDigits(/*minCount*/ count, /*scanAsManyAsPossible*/ true);
         }
 
-        function scanHexDigits(minCount: number, scanAsManyAsPossible: boolean): number {
+        function scanHexDigits(minCount: int, scanAsManyAsPossible: boolean): number {
             let digits = 0;
-            let value = 0;
+            let value = 0.0;
             while (digits < minCount || scanAsManyAsPossible) {
                 const ch = text.charCodeAt(pos);
                 if (ch >= CharacterCodes._0 && ch <= CharacterCodes._9) {
@@ -1085,7 +1095,7 @@ namespace ts {
             }
         }
 
-        function scanHexadecimalEscape(numDigits: number): string {
+        function scanHexadecimalEscape(numDigits: int): string {
             const escapedValue = scanExactNumberOfHexDigits(numDigits);
 
             if (escapedValue >= 0) {
@@ -1200,10 +1210,10 @@ namespace ts {
             return token = SyntaxKind.Identifier;
         }
 
-        function scanBinaryOrOctalDigits(base: number): number {
+        function scanBinaryOrOctalDigits(base: int): number {
             Debug.assert(base === 2 || base === 8, "Expected either base 2 or base 8");
 
-            let value = 0;
+            let value: number = 0;
             // For counting number of digits; Valid binaryIntegerLiteral must have at least one binary digit following B or b.
             // Similarly valid octalIntegerLiteral must have at least one octal digit following o or O.
             let numberOfDigits = 0;

@@ -69,7 +69,7 @@ namespace ts {
         function convertClassifications(classifications: Classifications, text: string): ClassificationResult {
             const entries: ClassificationInfo[] = [];
             const dense = classifications.spans;
-            let lastEnd = 0;
+            let lastEnd = 0.0;
 
             for (let i = 0; i < dense.length; i += 3) {
                 const start = dense[i];
@@ -227,6 +227,7 @@ namespace ts {
                     else if (token === SyntaxKind.AnyKeyword ||
                         token === SyntaxKind.StringKeyword ||
                         token === SyntaxKind.NumberKeyword ||
+                        token === SyntaxKind.IntKeyword ||
                         token === SyntaxKind.BooleanKeyword ||
                         token === SyntaxKind.SymbolKeyword) {
                         if (angleBracketStack > 0 && !syntacticClassifierAbsent) {

@@ -102,9 +102,9 @@ namespace ts.server.protocol {
      */
     export interface Message {
         /**
-         * Sequence number of the message
-         */
-        seq: number;
+          * Sequence number of the message
+          */
+        seq: int;
 
         /**
          * One of "request", "response", or "event"
@@ -1743,10 +1743,10 @@ namespace ts.server.protocol {
         file: string;
 
         /**
-         * Delay in milliseconds to wait before starting to compute
-         * errors for the files in the file list
-         */
-        delay: number;
+          * Delay in milliseconds to wait before starting to compute
+          * errors for the files in the file list
+          */
+        delay: int;
     }
 
     /**
@@ -1770,10 +1770,10 @@ namespace ts.server.protocol {
         files: string[];
 
         /**
-         * Delay in milliseconds to wait before starting to compute
-         * errors for the files in the file list
-         */
-        delay: number;
+          * Delay in milliseconds to wait before starting to compute
+          * errors for the files in the file list
+          */
+        delay: int;
     }
 
     /**

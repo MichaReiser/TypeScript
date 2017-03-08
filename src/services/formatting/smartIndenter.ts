@@ -417,7 +417,7 @@ namespace ts.formatting {
         */
         export function findFirstNonWhitespaceCharacterAndColumn(startPos: number, endPos: number, sourceFile: SourceFileLike, options: EditorSettings) {
             let character = 0;
-            let column = 0;
+            let column = 0.0;
             for (let pos = startPos; pos < endPos; pos++) {
                 const ch = sourceFile.text.charCodeAt(pos);
                 if (!isWhiteSpaceSingleLine(ch)) {
