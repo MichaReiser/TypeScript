@@ -16603,8 +16603,6 @@ namespace ts {
             let expectedResultType = numberType;
 
             switch (operator) {
-                case SyntaxKind.PercentToken:
-                case SyntaxKind.PercentEqualsToken:
                 case SyntaxKind.BarToken:
                 case SyntaxKind.BarEqualsToken:
                 case SyntaxKind.CaretToken:
@@ -16613,6 +16611,8 @@ namespace ts {
                 case SyntaxKind.AmpersandEqualsToken:
                     expectedResultType = intType;
 
+                case SyntaxKind.PercentToken:
+                case SyntaxKind.PercentEqualsToken:
                 case SyntaxKind.AsteriskToken:
                 case SyntaxKind.AsteriskAsteriskToken:
                 case SyntaxKind.AsteriskEqualsToken:
