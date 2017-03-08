@@ -6,8 +6,8 @@ namespace ts.server {
     const lineCollectionCapacity = 4;
 
     export interface LineCollection {
-        charCount(): number;
-        lineCount(): number;
+        charCount(): int;
+        lineCount(): int;
         isLeaf(): boolean;
         walk(rangeStart: number, rangeLength: number, walkFns: ILineIndexWalker): void;
     }
@@ -267,10 +267,10 @@ namespace ts.server {
     export class ScriptVersionCache {
         changes: TextChange[] = [];
         versions: LineIndexSnapshot[] = new Array<LineIndexSnapshot>(ScriptVersionCache.maxVersions);
-        minVersion = 0;  // no versions earlier than min version will maintain change history
+        minVersion = 0.0;  // no versions earlier than min version will maintain change history
 
         private host: ServerHost;
-        private currentVersion = 0;
+        private currentVersion = 0.0;
 
         static changeNumberThreshold = 8;
         static changeLengthThreshold = 256;
@@ -821,7 +821,7 @@ namespace ts.server {
             };
         }
 
-        splitAfter(childIndex: number) {
+        splitAfter(childIndex: int) {
             let splitNode: LineNode;
             const clen = this.children.length;
             childIndex++;

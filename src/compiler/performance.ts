@@ -15,7 +15,7 @@ namespace ts.performance {
             : (_markName: string) => { };
 
     let enabled = false;
-    let profilerStart = 0;
+    let profilerStart: number = 0;
     let counts: Map<number>;
     let marks: Map<number>;
     let measures: Map<number>;

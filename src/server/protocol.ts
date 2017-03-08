@@ -104,7 +104,7 @@ namespace ts.server.protocol {
         /**
           * Sequence number of the message
           */
-        seq: number;
+        seq: int;
 
         /**
           * One of "request", "response", or "event"
@@ -1726,7 +1726,7 @@ namespace ts.server.protocol {
           * Delay in milliseconds to wait before starting to compute
           * errors for the files in the file list
           */
-        delay: number;
+        delay: int;
     }
 
     /**
@@ -1753,7 +1753,7 @@ namespace ts.server.protocol {
           * Delay in milliseconds to wait before starting to compute
           * errors for the files in the file list
           */
-        delay: number;
+        delay: int;
     }
 
     /**

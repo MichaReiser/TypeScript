@@ -435,7 +435,7 @@ namespace ts.server {
             this.send(ev);
         }
 
-        public output(info: any, cmdName: string, reqSeq = 0, errorMsg?: string) {
+        public output(info: any, cmdName: string, reqSeq: number = 0, errorMsg?: string) {
             const res: protocol.Response = {
                 seq: 0,
                 type: "response",
@@ -1228,7 +1228,7 @@ namespace ts.server {
             }
         }
 
-        private getDiagnostics(next: NextStep, delay: number, fileNames: string[]): void {
+        private getDiagnostics(next: NextStep, delay: int, fileNames: string[]): void {
             const checkList = fileNames.reduce((accum: PendingErrorCheck[], uncheckedFileName: string) => {
                 const fileName = toNormalizedPath(uncheckedFileName);
                 const project = this.projectService.getDefaultProjectForFile(fileName, /*refreshInferredProjects*/ true);
@@ -1480,7 +1480,7 @@ namespace ts.server {
                 : spans;
         }
 
-        private getDiagnosticsForProject(next: NextStep, delay: number, fileName: string): void {
+        private getDiagnosticsForProject(next: NextStep, delay: int, fileName: string): void {
             const { fileNames, languageServiceDisabled } = this.getProjectInfoWorker(fileName, /*projectFileName*/ undefined, /*needFileNameList*/ true);
             if (languageServiceDisabled) {
                 return;
