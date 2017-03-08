@@ -1171,7 +1171,7 @@ namespace ts {
             return visitEachChild(node, visitor, context);
         }
 
-        function transformAndEmitStatements(statements: Statement[], start = 0) {
+        function transformAndEmitStatements(statements: Statement[], start = 0.0) {
             const numStatements = statements.length;
             for (let i = start; i < numStatements; i++) {
                 transformAndEmitStatement(statements[i]);

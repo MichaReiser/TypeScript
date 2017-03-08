@@ -1123,6 +1123,7 @@ namespace ts {
             case SyntaxKind.BooleanKeyword:
             case SyntaxKind.NeverKeyword:
             case SyntaxKind.NumberKeyword:
+            case SyntaxKind.IntKeyword:
             case SyntaxKind.ObjectKeyword:
             case SyntaxKind.StringKeyword:
             case SyntaxKind.SymbolKeyword:

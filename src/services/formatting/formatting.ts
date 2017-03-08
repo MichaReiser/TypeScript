@@ -443,7 +443,7 @@ namespace ts.formatting {
             effectiveParentStartLine: number): Indentation {
 
             let indentation = inheritedIndentation;
-            let delta = SmartIndenter.shouldIndentChildNode(node) ? options.indentSize : 0;
+            let delta: number = SmartIndenter.shouldIndentChildNode(node) ? options.indentSize : 0;
 
             if (effectiveParentStartLine === startLine) {
                 // if node is located on the same line with the parent
@@ -937,7 +937,7 @@ namespace ts.formatting {
         }
 
         function characterToColumn(startLinePosition: number, characterInLine: number): number {
-            let column = 0;
+            let column = 0.0;
             for (let i = 0; i < characterInLine; i++) {
                 if (sourceFile.text.charCodeAt(startLinePosition + i) === CharacterCodes.tab) {
                     column += options.tabSize - column % options.tabSize;

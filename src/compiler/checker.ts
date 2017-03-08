@@ -195,6 +195,7 @@ namespace ts {
         const intersectionTypes = createMap<IntersectionType>();
         const stringLiteralTypes = createMap<LiteralType>();
         const numericLiteralTypes = createMap<LiteralType>();
+        const intLiteralTypes = createMap<LiteralType>();
         const indexedAccessTypes = createMap<IndexedAccessType>();
         const evolvingArrayTypes: EvolvingArrayType[] = [];
 
@@ -212,6 +213,7 @@ namespace ts {
         const nullWideningType = strictNullChecks ? nullType : createIntrinsicType(TypeFlags.Null | TypeFlags.ContainsWideningType, "null");
         const stringType = createIntrinsicType(TypeFlags.String, "string");
         const numberType = createIntrinsicType(TypeFlags.Number, "number");
+        const intType = createIntrinsicType(TypeFlags.Int, "int");
         const trueType = createIntrinsicType(TypeFlags.BooleanLiteral, "true");
         const falseType = createIntrinsicType(TypeFlags.BooleanLiteral, "false");
         const booleanType = createBooleanType([trueType, falseType]);
@@ -293,7 +295,7 @@ namespace ts {
         let visitedFlowCount = 0;
 
         const emptyStringType = getLiteralTypeForText(TypeFlags.StringLiteral, "");
-        const zeroType = getLiteralTypeForText(TypeFlags.NumberLiteral, "0");
+        const zeroType = getLiteralTypeForText(TypeFlags.IntLiteral, "0");
 
         const resolutionTargets: TypeSystemEntity[] = [];
         const resolutionResults: boolean[] = [];
@@ -4383,7 +4385,7 @@ namespace ts {
             return true;
         }
 
-        // A type is considered independent if it the any, string, number, boolean, symbol, or void keyword, a string
+        // A type is considered independent if it the any, string, number, int, boolean, symbol, or void keyword, a string
         // literal type, an array with an element type that is considered independent, or a type reference that is
         // considered independent.
         function isIndependentType(node: TypeNode): boolean {
@@ -4391,6 +4393,7 @@ namespace ts {
                 case SyntaxKind.AnyKeyword:
                 case SyntaxKind.StringKeyword:
                 case SyntaxKind.NumberKeyword:
+                case SyntaxKind.IntKeyword:
                 case SyntaxKind.BooleanKeyword:
                 case SyntaxKind.SymbolKeyword:
                 case SyntaxKind.ObjectKeyword:
@@ -5946,6 +5949,8 @@ namespace ts {
                         return stringType;
                     case "Number":
                         return numberType;
+                    case "int":
+                        return intType;
                     case "Boolean":
                         return booleanType;
                     case "Void":
@@ -6275,7 +6280,7 @@ namespace ts {
             }
             else if (!(flags & TypeFlags.Never)) {
                 if (flags & TypeFlags.String) typeSet.containsString = true;
-                if (flags & TypeFlags.Number) typeSet.containsNumber = true;
+                if (flags & (TypeFlags.Number | TypeFlags.Int)) typeSet.containsNumber = true;
                 if (flags & TypeFlags.StringOrNumberLiteral) typeSet.containsStringOrNumberLiteral = true;
                 const len = typeSet.length;
                 const index = len && type.id > typeSet[len - 1].id ? ~len : binarySearchTypes(typeSet, type);
@@ -6351,6 +6356,7 @@ namespace ts {
                 const remove =
                     t.flags & TypeFlags.StringLiteral && types.containsString ||
                     t.flags & TypeFlags.NumberLiteral && types.containsNumber ||
+                    t.flags & TypeFlags.IntLiteral && types.containsNumber ||
                     t.flags & TypeFlags.StringOrNumberLiteral && t.flags & TypeFlags.FreshLiteral && containsType(types, (<LiteralType>t).regularType);
                 if (remove) {
                     orderedRemoveItemAt(types, i);
@@ -6546,7 +6552,7 @@ namespace ts {
 
         function getPropertyTypeForIndexType(objectType: Type, indexType: Type, accessNode: ElementAccessExpression | IndexedAccessTypeNode, cacheSymbol: boolean) {
             const accessExpression = accessNode && accessNode.kind === SyntaxKind.ElementAccessExpression ? <ElementAccessExpression>accessNode : undefined;
-            const propName = indexType.flags & (TypeFlags.StringLiteral | TypeFlags.NumberLiteral | TypeFlags.EnumLiteral) ?
+            const propName = indexType.flags & (TypeFlags.StringLiteral | TypeFlags.NumberLiteral | TypeFlags.IntLiteral | TypeFlags.EnumLiteral) ?
                 (<LiteralType>indexType).text :
                 accessExpression && checkThatExpressionIsProperSymbolReference(accessExpression.argumentExpression, indexType, /*reportError*/ false) ?
                     getPropertyNameForKnownSymbolName((<Identifier>(<PropertyAccessExpression>accessExpression.argumentExpression).name).text) :
@@ -6594,7 +6600,7 @@ namespace ts {
             }
             if (accessNode) {
                 const indexNode = accessNode.kind === SyntaxKind.ElementAccessExpression ? (<ElementAccessExpression>accessNode).argumentExpression : (<IndexedAccessTypeNode>accessNode).indexType;
-                if (indexType.flags & (TypeFlags.StringLiteral | TypeFlags.NumberLiteral)) {
+                if (indexType.flags & (TypeFlags.StringLiteral | TypeFlags.NumberLiteral | TypeFlags.IntLiteral)) {
                     error(indexNode, Diagnostics.Property_0_does_not_exist_on_type_1, (<LiteralType>indexType).text, typeToString(objectType));
                 }
                 else if (indexType.flags & (TypeFlags.String | TypeFlags.Number)) {
@@ -6795,6 +6801,10 @@ namespace ts {
         }
 
         function createLiteralType(flags: TypeFlags, text: string) {
+            if (flags & TypeFlags.NumberLiteral && text.indexOf(".") === -1) {
+                flags = flags & (~TypeFlags.NumberLiteral) | TypeFlags.IntLiteral;
+            }
+
             const type = <LiteralType>createType(flags);
             type.text = text;
             return type;
@@ -6817,7 +6827,7 @@ namespace ts {
         }
 
         function getLiteralTypeForText(flags: TypeFlags, text: string) {
-            const map = flags & TypeFlags.StringLiteral ? stringLiteralTypes : numericLiteralTypes;
+            const map = flags & TypeFlags.StringLike ? stringLiteralTypes : flags & TypeFlags.IntLiteral ? intLiteralTypes : numericLiteralTypes;
             let type = map.get(text);
             if (!type) {
                 map.set(text, type = createLiteralType(flags, text));
@@ -6882,6 +6892,8 @@ namespace ts {
                     return stringType;
                 case SyntaxKind.NumberKeyword:
                     return numberType;
+                case SyntaxKind.IntKeyword:
+                    return intType;
                 case SyntaxKind.BooleanKeyword:
                     return booleanType;
                 case SyntaxKind.SymbolKeyword:
@@ -7673,15 +7685,17 @@ namespace ts {
             if (target.flags & TypeFlags.Any || source.flags & TypeFlags.Never) return true;
             if (source.flags & TypeFlags.StringLike && target.flags & TypeFlags.String) return true;
             if (source.flags & TypeFlags.NumberLike && target.flags & TypeFlags.Number) return true;
+            if ((source.flags & TypeFlags.IntLike) && target.flags & TypeFlags.Int) return true;
             if (source.flags & TypeFlags.BooleanLike && target.flags & TypeFlags.Boolean) return true;
             if (source.flags & TypeFlags.EnumLiteral && target.flags & TypeFlags.Enum && (<EnumLiteralType>source).baseType === target) return true;
             if (source.flags & TypeFlags.Enum && target.flags & TypeFlags.Enum && isEnumTypeRelatedTo(<EnumType>source, <EnumType>target, errorReporter)) return true;
             if (source.flags & TypeFlags.Undefined && (!strictNullChecks || target.flags & (TypeFlags.Undefined | TypeFlags.Void))) return true;
             if (source.flags & TypeFlags.Null && (!strictNullChecks || target.flags & TypeFlags.Null)) return true;
             if (source.flags & TypeFlags.Object && target.flags & TypeFlags.NonPrimitive) return true;
+        
             if (relation === assignableRelation || relation === comparableRelation) {
                 if (source.flags & TypeFlags.Any) return true;
-                if ((source.flags & TypeFlags.Number | source.flags & TypeFlags.NumberLiteral) && target.flags & TypeFlags.EnumLike) return true;
+                if ((source.flags & TypeFlags.Number | source.flags & TypeFlags.NumberLiteral | source.flags & TypeFlags.IntLiteral | source.flags & TypeFlags.Int) && target.flags & TypeFlags.EnumLike) return true
                 if (source.flags & TypeFlags.EnumLiteral &&
                     target.flags & TypeFlags.EnumLiteral &&
                     (<EnumLiteralType>source).text === (<EnumLiteralType>target).text &&
@@ -8930,6 +8944,7 @@ namespace ts {
         function getBaseTypeOfLiteralType(type: Type): Type {
             return type.flags & TypeFlags.StringLiteral ? stringType :
                 type.flags & TypeFlags.NumberLiteral ? numberType :
+                type.flags & TypeFlags.IntLiteral ? intType : 
                 type.flags & TypeFlags.BooleanLiteral ? booleanType :
                 type.flags & TypeFlags.EnumLiteral ? (<EnumLiteralType>type).baseType :
                 type.flags & TypeFlags.Union && !(type.flags & TypeFlags.Enum) ? getUnionType(sameMap((<UnionType>type).types, getBaseTypeOfLiteralType)) :
@@ -8939,6 +8954,7 @@ namespace ts {
         function getWidenedLiteralType(type: Type): Type {
             return type.flags & TypeFlags.StringLiteral && type.flags & TypeFlags.FreshLiteral ? stringType :
                 type.flags & TypeFlags.NumberLiteral && type.flags & TypeFlags.FreshLiteral ? numberType :
+                type.flags & TypeFlags.IntLiteral && type.flags & TypeFlags.FreshLiteral ? intType :
                 type.flags & TypeFlags.BooleanLiteral ? booleanType :
                 type.flags & TypeFlags.EnumLiteral ? (<EnumLiteralType>type).baseType :
                 type.flags & TypeFlags.Union && !(type.flags & TypeFlags.Enum) ? getUnionType(sameMap((<UnionType>type).types, getWidenedLiteralType)) :
@@ -8968,6 +8984,7 @@ namespace ts {
             return type.flags & TypeFlags.Union ? getFalsyFlagsOfTypes((<UnionType>type).types) :
                 type.flags & TypeFlags.StringLiteral ? (<LiteralType>type).text === "" ? TypeFlags.StringLiteral : 0 :
                 type.flags & TypeFlags.NumberLiteral ? (<LiteralType>type).text === "0" ? TypeFlags.NumberLiteral : 0 :
+                type.flags & TypeFlags.IntLiteral ? (<LiteralType>type).text === "0" ? TypeFlags.IntLiteral : 0 :
                 type.flags & TypeFlags.BooleanLiteral ? type === falseType ? TypeFlags.BooleanLiteral : 0 :
                 type.flags & TypeFlags.PossiblyFalsy;
         }
@@ -9351,7 +9368,7 @@ namespace ts {
                             (matchingTypes || (matchingTypes = [])).push(t);
                             inferFromTypes(t, t);
                         }
-                        else if (t.flags & (TypeFlags.NumberLiteral | TypeFlags.StringLiteral)) {
+                        else if (t.flags & (TypeFlags.NumberLiteral | TypeFlags.StringLiteral | TypeFlags.IntLiteral)) {
                             const b = getBaseTypeOfLiteralType(t);
                             if (typeIdenticalToSomeType(b, (<UnionOrIntersectionType>target).types)) {
                                 (matchingTypes || (matchingTypes = [])).push(t, b);
@@ -9859,10 +9876,10 @@ namespace ts {
                     (<LiteralType>type).text === "" ? TypeFacts.EmptyStringStrictFacts : TypeFacts.NonEmptyStringStrictFacts :
                     (<LiteralType>type).text === "" ? TypeFacts.EmptyStringFacts : TypeFacts.NonEmptyStringFacts;
             }
-            if (flags & (TypeFlags.Number | TypeFlags.Enum)) {
+            if (flags & (TypeFlags.Number | TypeFlags.Enum | TypeFlags.Int)) {
                 return strictNullChecks ? TypeFacts.NumberStrictFacts : TypeFacts.NumberFacts;
             }
-            if (flags & (TypeFlags.NumberLiteral | TypeFlags.EnumLiteral)) {
+            if (flags & (TypeFlags.NumberLiteral | TypeFlags.EnumLiteral | TypeFlags.IntLiteral)) {
                 const isZero = (<LiteralType>type).text === "0";
                 return strictNullChecks ?
                     isZero ? TypeFacts.ZeroStrictFacts : TypeFacts.NonZeroStrictFacts :
@@ -10150,10 +10167,12 @@ namespace ts {
         // literals in typeWithLiterals, respectively.
         function replacePrimitivesWithLiterals(typeWithPrimitives: Type, typeWithLiterals: Type) {
             if (isTypeSubsetOf(stringType, typeWithPrimitives) && maybeTypeOfKind(typeWithLiterals, TypeFlags.StringLiteral) ||
-                isTypeSubsetOf(numberType, typeWithPrimitives) && maybeTypeOfKind(typeWithLiterals, TypeFlags.NumberLiteral)) {
+                isTypeSubsetOf(numberType, typeWithPrimitives) && maybeTypeOfKind(typeWithLiterals, TypeFlags.NumberLiteral) ||
+                isTypeSubsetOf(intType, typeWithPrimitives) && maybeTypeOfKind(typeWithLiterals, TypeFlags.IntLiteral)) {
                 return mapType(typeWithPrimitives, t =>
                     t.flags & TypeFlags.String ? extractTypesOfKind(typeWithLiterals, TypeFlags.String | TypeFlags.StringLiteral) :
                     t.flags & TypeFlags.Number ? extractTypesOfKind(typeWithLiterals, TypeFlags.Number | TypeFlags.NumberLiteral) :
+                    t.flags & TypeFlags.Int ? extractTypesOfKind(typeWithLiterals, TypeFlags.Int | TypeFlags.IntLiteral) :
                     t);
             }
             return typeWithPrimitives;
@@ -13567,7 +13586,7 @@ namespace ts {
             }
         }
 
-        function getSpreadArgumentIndex(args: Expression[]): number {
+        function getSpreadArgumentIndex(args: Expression[]): int {
             for (let i = 0; i < args.length; i++) {
                 const arg = args[i];
                 if (arg && arg.kind === SyntaxKind.SpreadElement) {
@@ -13578,7 +13597,7 @@ namespace ts {
         }
 
         function hasCorrectArity(node: CallLikeExpression, args: Expression[], signature: Signature, signatureHelpTrailingComma = false) {
-            let argCount: number;            // Apparent number of arguments we will have in this call
+            let argCount: int;            // Apparent number of arguments we will have in this call
             let typeArguments: NodeArray<TypeNode>;  // Type arguments (undefined if none)
             let callIsIncomplete: boolean;           // In incomplete call we want to be lenient when we have too few arguments
             let isDecorator: boolean;
@@ -15416,6 +15435,20 @@ namespace ts {
             }
         }
 
+        function isIntLikeType(type: Type) {
+            return isTypeOfKind(type, TypeFlags.Int) || isTypeOfKind(type, TypeFlags.IntLiteral);
+        }
+
+        function unifyNumberTypes(first: Type, second: Type, fallback: Type) {
+            if (isIntLikeType(first)) {
+                if (isTypeOfKind(second, TypeFlags.Int) || isTypeOfKind(second, TypeFlags.EnumLike) || isTypeOfKind(second, TypeFlags.IntLiteral)) {
+                    return intType;
+                }
+            }
+
+            return fallback;
+        }
+
         function checkArithmeticOperandType(operand: Node, type: Type, diagnostic: DiagnosticMessage): boolean {
             if (!isTypeAnyOrAllConstituentTypesHaveKind(type, TypeFlags.NumberLike)) {
                 error(operand, diagnostic);
@@ -15528,8 +15561,13 @@ namespace ts {
             if (operandType === silentNeverType) {
                 return silentNeverType;
             }
-            if (node.operator === SyntaxKind.MinusToken && node.operand.kind === SyntaxKind.NumericLiteral) {
-                return getFreshTypeOfLiteralType(getLiteralTypeForText(TypeFlags.NumberLiteral, "" + -(<LiteralExpression>node.operand).text));
+            if (node.operator === SyntaxKind.MinusToken && (node.operand.kind === SyntaxKind.NumericLiteral)) {
+                const num = (<LiteralExpression>node.operand).text;
+                let negativeNum = "" + -(num);
+                if (num.indexOf(".") !== -1 && negativeNum.indexOf(".") === -1) {
+                    negativeNum += ".0";
+                }
+                return getFreshTypeOfLiteralType(getLiteralTypeForText(TypeFlags.NumberLiteral, negativeNum));
             }
             switch (node.operator) {
                 case SyntaxKind.PlusToken:
@@ -15539,7 +15577,7 @@ namespace ts {
                     if (maybeTypeOfKind(operandType, TypeFlags.ESSymbol)) {
                         error(node.operand, Diagnostics.The_0_operator_cannot_be_applied_to_type_symbol, tokenToString(node.operator));
                     }
-                    return numberType;
+                    return intType;
                 case SyntaxKind.ExclamationToken:
                     const facts = getTypeFacts(operandType) & (TypeFacts.Truthy | TypeFacts.Falsy);
                     return facts === TypeFacts.Truthy ? falseType :
@@ -15553,7 +15591,8 @@ namespace ts {
                         // run check only if former checks succeeded to avoid reporting cascading errors
                         checkReferenceExpression(node.operand, Diagnostics.The_operand_of_an_increment_or_decrement_operator_must_be_a_variable_or_a_property_access);
                     }
-                    return numberType;
+
+                    return unifyNumberTypes(operandType, intType, numberType);
             }
             return unknownType;
         }
@@ -15569,7 +15608,7 @@ namespace ts {
                 // run check only if former checks succeeded to avoid reporting cascading errors
                 checkReferenceExpression(node.operand, Diagnostics.The_operand_of_an_increment_or_decrement_operator_must_be_a_variable_or_a_property_access);
             }
-            return numberType;
+            return unifyNumberTypes(operandType, intType, numberType);
         }
 
         // Return true if type might be of the given kind. A union or intersection type might be of a given
@@ -15914,15 +15953,25 @@ namespace ts {
             }
             let leftType = checkExpression(left, checkMode);
             let rightType = checkExpression(right, checkMode);
+            let expectedResultType = numberType;
+
             switch (operator) {
+                case SyntaxKind.PercentToken:
+                case SyntaxKind.PercentEqualsToken:
+                case SyntaxKind.BarToken:
+                case SyntaxKind.BarEqualsToken:
+                case SyntaxKind.CaretToken:
+                case SyntaxKind.CaretEqualsToken:
+                case SyntaxKind.AmpersandToken:
+                case SyntaxKind.AmpersandEqualsToken:
+                    expectedResultType = intType;
+
                 case SyntaxKind.AsteriskToken:
                 case SyntaxKind.AsteriskAsteriskToken:
                 case SyntaxKind.AsteriskEqualsToken:
                 case SyntaxKind.AsteriskAsteriskEqualsToken:
                 case SyntaxKind.SlashToken:
                 case SyntaxKind.SlashEqualsToken:
-                case SyntaxKind.PercentToken:
-                case SyntaxKind.PercentEqualsToken:
                 case SyntaxKind.MinusToken:
                 case SyntaxKind.MinusEqualsToken:
                 case SyntaxKind.LessThanLessThanToken:
@@ -15931,12 +15980,6 @@ namespace ts {
                 case SyntaxKind.GreaterThanGreaterThanEqualsToken:
                 case SyntaxKind.GreaterThanGreaterThanGreaterThanToken:
                 case SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken:
-                case SyntaxKind.BarToken:
-                case SyntaxKind.BarEqualsToken:
-                case SyntaxKind.CaretToken:
-                case SyntaxKind.CaretEqualsToken:
-                case SyntaxKind.AmpersandToken:
-                case SyntaxKind.AmpersandEqualsToken:
                     if (leftType === silentNeverType || rightType === silentNeverType) {
                         return silentNeverType;
                     }
@@ -15957,11 +16000,11 @@ namespace ts {
                         const leftOk = checkArithmeticOperandType(left, leftType, Diagnostics.The_left_hand_side_of_an_arithmetic_operation_must_be_of_type_any_number_or_an_enum_type);
                         const rightOk = checkArithmeticOperandType(right, rightType, Diagnostics.The_right_hand_side_of_an_arithmetic_operation_must_be_of_type_any_number_or_an_enum_type);
                         if (leftOk && rightOk) {
-                            checkAssignmentOperator(numberType);
+                            checkAssignmentOperator(unifyNumberTypes(leftType, rightType, expectedResultType));
                         }
                     }
 
-                    return numberType;
+                    return unifyNumberTypes(leftType, rightType, expectedResultType);
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.PlusEqualsToken:
                     if (leftType === silentNeverType || rightType === silentNeverType) {
@@ -15977,7 +16020,7 @@ namespace ts {
                     if (isTypeOfKind(leftType, TypeFlags.NumberLike) && isTypeOfKind(rightType, TypeFlags.NumberLike)) {
                         // Operands of an enum type are treated as having the primitive type Number.
                         // If both operands are of the Number primitive type, the result is of the Number primitive type.
-                        resultType = numberType;
+                        resultType = unifyNumberTypes(leftType, rightType, numberType);
                     }
                     else {
                         if (isTypeOfKind(leftType, TypeFlags.StringLike) || isTypeOfKind(rightType, TypeFlags.StringLike)) {
@@ -16262,7 +16305,7 @@ namespace ts {
                     // If the type parameter is constrained to the base primitive type we're checking for,
                     // consider this a literal context. For example, given a type parameter 'T extends string',
                     // this causes us to infer string literal types for T.
-                    if (constraint.flags & (TypeFlags.String | TypeFlags.Number | TypeFlags.Boolean | TypeFlags.Enum)) {
+                    if (constraint.flags & (TypeFlags.String | TypeFlags.Number | TypeFlags.Int | TypeFlags.Boolean | TypeFlags.Enum)) {
                         return true;
                     }
                     contextualType = constraint;
@@ -19839,7 +19882,7 @@ namespace ts {
             if (!(nodeLinks.flags & NodeCheckFlags.EnumValuesComputed)) {
                 const enumSymbol = getSymbolOfNode(node);
                 const enumType = getDeclaredTypeOfSymbol(enumSymbol);
-                let autoValue = 0; // set to undefined when enum member is non-constant
+                let autoValue = 0.0; // set to undefined when enum member is non-constant
                 const ambient = isInAmbientContext(node);
                 const enumIsConst = isConst(node);
 

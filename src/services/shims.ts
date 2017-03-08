@@ -474,7 +474,7 @@ namespace ts {
         // Store when we last tried to cancel.  Checking cancellation can be expensive (as we have
         // to marshall over to the host layer).  So we only bother actually checking once enough
         // time has passed.
-        private lastCancellationCheckTime = 0;
+        private lastCancellationCheckTime = 0.0;
 
         constructor(private hostCancellationToken: HostCancellationToken) {
         }

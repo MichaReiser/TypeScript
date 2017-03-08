@@ -16,9 +16,9 @@ namespace ts {
         const extendedDiagnostics = printerOptions.extendedDiagnostics;
         const newLine = getNewLineCharacter(printerOptions);
         let writer: EmitTextWriter;
-        let containerPos = -1;
-        let containerEnd = -1;
-        let declarationListContainerEnd = -1;
+        let containerPos: number = -1;
+        let containerEnd: number = -1;
+        let declarationListContainerEnd: number = -1;
         let currentSourceFile: SourceFile;
         let currentText: string;
         let currentLineMap: number[];

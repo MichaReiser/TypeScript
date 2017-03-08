@@ -194,6 +194,7 @@ namespace ts {
         ReadonlyKeyword,
         RequireKeyword,
         NumberKeyword,
+        IntKeyword,
         ObjectKeyword,
         SetKeyword,
         StringKeyword,
@@ -852,6 +853,7 @@ namespace ts {
     export interface KeywordTypeNode extends TypeNode {
         kind: SyntaxKind.AnyKeyword
             | SyntaxKind.NumberKeyword
+            | SyntaxKind.IntKeyword
             | SyntaxKind.ObjectKeyword
             | SyntaxKind.BooleanKeyword
             | SyntaxKind.StringKeyword
@@ -2932,20 +2934,23 @@ namespace ts {
         NonPrimitive            = 1 << 24,  // intrinsic object type
         /* @internal */
         JsxAttributes           = 1 << 25,  // Jsx attributes type
+        IntLiteral              = 1 << 26,
+        Int                     = 1 << 27,
 
         /* @internal */
         Nullable = Undefined | Null,
-        Literal = StringLiteral | NumberLiteral | BooleanLiteral | EnumLiteral,
-        StringOrNumberLiteral = StringLiteral | NumberLiteral,
+        Literal = StringLiteral | NumberLiteral | IntLiteral | BooleanLiteral | EnumLiteral,
+        StringOrNumberLiteral = StringLiteral | NumberLiteral | IntLiteral,
         /* @internal */
-        DefinitelyFalsy = StringLiteral | NumberLiteral | BooleanLiteral | Void | Undefined | Null,
-        PossiblyFalsy = DefinitelyFalsy | String | Number | Boolean,
+        DefinitelyFalsy = StringLiteral | NumberLiteral | IntLiteral | BooleanLiteral | Void | Undefined | Null,
+        PossiblyFalsy = DefinitelyFalsy | String | Number | Int | Boolean,
         /* @internal */
-        Intrinsic = Any | String | Number | Boolean | BooleanLiteral | ESSymbol | Void | Undefined | Null | Never | NonPrimitive,
+        Intrinsic = Any | String | Number | Int | Boolean | BooleanLiteral | ESSymbol | Void | Undefined | Null | Never | NonPrimitive,
         /* @internal */
-        Primitive = String | Number | Boolean | Enum | ESSymbol | Void | Undefined | Null | Literal,
+        Primitive = String | Number | Int | Boolean | Enum | ESSymbol | Void | Undefined | Null | Literal,
         StringLike = String | StringLiteral | Index,
-        NumberLike = Number | NumberLiteral | Enum | EnumLiteral,
+        NumberLike = Number | NumberLiteral | IntLiteral | Int | Enum | EnumLiteral,
+        IntLike = Enum | EnumLiteral | IntLiteral | Int,
         BooleanLike = Boolean | BooleanLiteral,
         EnumLike = Enum | EnumLiteral,
         UnionOrIntersection = Union | Intersection,
@@ -3277,7 +3282,7 @@ namespace ts {
     export interface DiagnosticMessage {
         key: string;
         category: DiagnosticCategory;
-        code: number;
+        code: int;
         message: string;
     }
 

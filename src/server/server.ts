@@ -107,7 +107,7 @@ namespace ts.server {
     } = require("readline");
 
     const fs: {
-        openSync(path: string, options: string): number;
+        openSync(path: string, options: string): int;
         close(fd: number): void;
         writeSync(fd: number, buffer: Buffer, offset: number, length: number, position?: number): number;
         writeSync(fd: number, data: any, position?: number, enconding?: string): number;
@@ -239,7 +239,7 @@ namespace ts.server {
             }
         }
 
-        private sendEvent(seq: number, event: string, body: any): void {
+        private sendEvent(seq: int, event: string, body: any): void {
             this.socket.write(formatMessage({ seq, type: "event", event, body }, this.logger, Buffer.byteLength, this.newLine), "utf8");
         }
 
