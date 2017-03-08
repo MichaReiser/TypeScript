@@ -90,7 +90,7 @@ namespace ts {
             const relativeFileName = host ? convertToRelativePath(file.fileName, host.getCurrentDirectory(), fileName => host.getCanonicalFileName(fileName)) : file.fileName;
 
             const hasMoreThanFiveLines = (lastLine - firstLine) >= 4;
-            let gutterWidth = (lastLine + 1 + "").length;
+            let gutterWidth: number = (lastLine + 1 + "").length;
             if (hasMoreThanFiveLines) {
                 gutterWidth = Math.max(ellipsis.length, gutterWidth);
             }

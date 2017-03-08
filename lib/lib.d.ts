@@ -160,14 +160,14 @@ interface ObjectConstructor {
       * Creates an object that has the specified prototype or that has null prototype.
       * @param o Object to use as a prototype. May be null.
       */
-    create<T extends object>(o: T | null): T | object;
+    create(o: object | null): any;
 
     /**
       * Creates an object that has the specified prototype, and that optionally contains specified properties.
       * @param o Object to use as a prototype. May be null
       * @param properties JavaScript object that contains one or more property descriptors.
       */
-    create(o: object | null, properties: PropertyDescriptorMap): any;
+    create(o: object | null, properties: PropertyDescriptorMap & ThisType<any>): any;
 
     /**
       * Adds a property to an object, or modifies attributes of an existing property.
@@ -175,14 +175,14 @@ interface ObjectConstructor {
       * @param p The property name.
       * @param attributes Descriptor for the property. It can be for a data property or an accessor property.
       */
-    defineProperty(o: any, p: string, attributes: PropertyDescriptor): any;
+    defineProperty(o: any, p: string, attributes: PropertyDescriptor & ThisType<any>): any;
 
     /**
       * Adds one or more properties to an object, and/or modifies attributes of existing properties.
       * @param o Object on which to add or modify the properties. This can be a native JavaScript object or a DOM object.
       * @param properties JavaScript object that contains one or more descriptor objects. Each descriptor object describes a data property or an accessor property.
       */
-    defineProperties(o: any, properties: PropertyDescriptorMap): any;
+    defineProperties(o: any, properties: PropertyDescriptorMap & ThisType<any>): any;
 
     /**
       * Prevents the modification of attributes of existing properties, and prevents the addition of new properties.
@@ -274,7 +274,7 @@ interface Function {
     toString(): string;
 
     prototype: any;
-    readonly length: number;
+    readonly length: int;
 
     // Non-standard extensions
     arguments: any;
@@ -295,7 +295,7 @@ declare const Function: FunctionConstructor;
 
 interface IArguments {
     [index: number]: any;
-    length: number;
+    length: int;
     callee: Function;
 }
 
@@ -439,7 +439,7 @@ interface String {
     trim(): string;
 
     /** Returns the length of a String object. */
-    readonly length: number;
+    readonly length: int;
 
     // IE extensions
     /**
@@ -594,7 +594,7 @@ interface Math {
       * Returns the smallest number greater than or equal to its numeric argument.
       * @param x A numeric expression.
       */
-    ceil(x: number): number;
+    ceil(x: number): int;
     /**
       * Returns the cosine of a number.
       * @param x A numeric expression that contains an angle measured in radians.
@@ -609,7 +609,7 @@ interface Math {
       * Returns the greatest number less than or equal to its numeric argument.
       * @param x A numeric expression.
       */
-    floor(x: number): number;
+    floor(x: number): int;
     /**
       * Returns the natural logarithm (base e) of a number.
       * @param x A numeric expression.
@@ -1020,7 +1020,7 @@ interface ReadonlyArray<T> {
     /**
       * Gets the length of the array. This is a number one higher than the highest element defined in an array.
       */
-    readonly length: number;
+    readonly length: int;
     /**
       * Returns a string representation of an array.
       */
@@ -1133,7 +1133,7 @@ interface Array<T> {
     /**
       * Gets or sets the length of the array. This is a number one higher than the highest element defined in an array.
       */
-    length: number;
+    length: int;
     /**
       * Returns a string representation of an array.
       */
@@ -1354,7 +1354,7 @@ interface Promise<T> {
 }
 
 interface ArrayLike<T> {
-    readonly length: number;
+    readonly length: int;
     readonly [n: number]: T;
 }
 
@@ -1385,6 +1385,11 @@ type Pick<T, K extends keyof T> = {
 type Record<K extends string, T> = {
     [P in K]: T;
 }
+
+/**
+ * Marker for contextual 'this' type
+ */
+interface ThisType<T> { }
 
 /**
   * Represents a raw buffer of binary data, which is used to store data for the
