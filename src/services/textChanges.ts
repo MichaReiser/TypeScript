@@ -574,7 +574,7 @@ namespace ts.textChanges {
     }
 
     class Writer implements EmitTextWriter, PrintHandlers {
-        private lastNonTriviaPosition = 0;
+        private lastNonTriviaPosition = 0.0;
         private readonly writer: EmitTextWriter;
 
         public readonly onEmitNode: PrintHandlers["onEmitNode"];
