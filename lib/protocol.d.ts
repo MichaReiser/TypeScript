@@ -469,6 +469,10 @@ declare namespace ts.server.protocol {
           * True if the occurrence is a write location, false otherwise.
           */
         isWriteAccess: boolean;
+        /**
+         * True if the occurrence is in a string, undefined otherwise;
+         */
+        isInString?: true;
     }
     interface OccurrencesResponse extends Response {
         body?: OccurrencesResponseItem[];
@@ -1665,6 +1669,14 @@ declare namespace ts.server.protocol {
     interface TelemetryEventBody {
         telemetryEventName: string;
         payload: any;
+    }
+    type TypesInstallerInitializationFailedEventName = "typesInstallerInitializationFailed";
+    interface TypesInstallerInitializationFailedEvent extends Event {
+        event: TypesInstallerInitializationFailedEventName;
+        body: TypesInstallerInitializationFailedEventBody;
+    }
+    interface TypesInstallerInitializationFailedEventBody {
+        message: string;
     }
     type TypingsInstalledTelemetryEventName = "typingsInstalled";
     interface TypingsInstalledTelemetryEventBody extends TelemetryEventBody {
