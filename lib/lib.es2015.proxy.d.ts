@@ -18,7 +18,7 @@ and limitations under the License.
 /// <reference no-default-lib="true"/>
 
 
-interface ProxyHandler<T extends object> {
+interface ProxyHandler<T> {
     getPrototypeOf? (target: T): object | null;
     setPrototypeOf? (target: T, v: any): boolean;
     isExtensible? (target: T): boolean;
@@ -36,7 +36,7 @@ interface ProxyHandler<T extends object> {
 }
 
 interface ProxyConstructor {
-    revocable<T extends object>(target: T, handler: ProxyHandler<T>): { proxy: T; revoke: () => void; };
-    new <T extends object>(target: T, handler: ProxyHandler<T>): T;
+    revocable<T>(target: T, handler: ProxyHandler<T>): { proxy: T; revoke: () => void; };
+    new <T>(target: T, handler: ProxyHandler<T>): T;
 }
 declare var Proxy: ProxyConstructor;
