@@ -213,7 +213,7 @@ namespace ts {
      * returns a truthy value, then returns that value.
      * If no such value is found, the callback is applied to each element of array and undefined is returned.
      */
-    export function forEach<T, U>(array: T[] | undefined, callback: (element: T, index: number) => U | undefined): U | undefined {
+    export function forEach<T, U>(array: T[] | undefined, callback: (element: T, index: int) => U | undefined): U | undefined {
         if (array) {
             for (let i = 0; i < array.length; i++) {
                 const result = callback(array[i], i);
@@ -225,7 +225,7 @@ namespace ts {
         return undefined;
     }
 
-    export function zipWith<T, U>(arrayA: T[], arrayB: U[], callback: (a: T, b: U, index: number) => void): void {
+    export function zipWith<T, U>(arrayA: T[], arrayB: U[], callback: (a: T, b: U, index: int) => void): void {
         Debug.assert(arrayA.length === arrayB.length);
         for (let i = 0; i < arrayA.length; i++) {
             callback(arrayA[i], arrayB[i], i);
@@ -237,7 +237,7 @@ namespace ts {
      * returns a falsey value, then returns false.
      * If no such value is found, the callback is applied to each element of array and `true` is returned.
      */
-    export function every<T>(array: T[], callback: (element: T, index: number) => boolean): boolean {
+    export function every<T>(array: T[], callback: (element: T, index: int) => boolean): boolean {
         if (array) {
             for (let i = 0; i < array.length; i++) {
                 if (!callback(array[i], i)) {
@@ -250,7 +250,7 @@ namespace ts {
     }
 
     /** Works like Array.prototype.find, returning `undefined` if no element satisfying the predicate is found. */
-    export function find<T>(array: T[], predicate: (element: T, index: number) => boolean): T | undefined {
+    export function find<T>(array: T[], predicate: (element: T, index: int) => boolean): T | undefined {
         for (let i = 0; i < array.length; i++) {
             const value = array[i];
             if (predicate(value, i)) {
@@ -261,7 +261,7 @@ namespace ts {
     }
 
     /** Works like Array.prototype.findIndex, returning `-1` if no element satisfying the predicate is found. */
-    export function findIndex<T>(array: T[], predicate: (element: T, index: number) => boolean): number {
+    export function findIndex<T>(array: T[], predicate: (element: T, index: int) => boolean): int {
         for (let i = 0; i < array.length; i++) {
             if (predicate(array[i], i)) {
                 return i;
@@ -274,7 +274,7 @@ namespace ts {
      * Returns the first truthy result of `callback`, or else fails.
      * This is like `forEach`, but never returns undefined.
      */
-    export function findMap<T, U>(array: T[], callback: (element: T, index: number) => U | undefined): U {
+    export function findMap<T, U>(array: T[], callback: (element: T, index: int) => U | undefined): U {
         for (let i = 0; i < array.length; i++) {
             const result = callback(array[i], i);
             if (result) {
@@ -295,7 +295,7 @@ namespace ts {
         return false;
     }
 
-    export function indexOf<T>(array: T[], value: T): number {
+    export function indexOf<T>(array: T[], value: T): int {
         if (array) {
             for (let i = 0; i < array.length; i++) {
                 if (array[i] === value) {
@@ -306,7 +306,7 @@ namespace ts {
         return -1;
     }
 
-    export function indexOfAnyCharCode(text: string, charCodes: number[], start?: number): number {
+    export function indexOfAnyCharCode(text: string, charCodes: int[], start?: int): int {
         for (let i = start || 0; i < text.length; i++) {
             if (contains(charCodes, text.charCodeAt(i))) {
                 return i;
@@ -315,7 +315,7 @@ namespace ts {
         return -1;
     }
 
-    export function countWhere<T>(array: T[], predicate: (x: T, i: number) => boolean): number {
+    export function countWhere<T>(array: T[], predicate: (x: T, i: int) => boolean): int {
         let count = 0;
         if (array) {
             for (let i = 0; i < array.length; i++) {
@@ -381,7 +381,7 @@ namespace ts {
         array.length = outIndex;
     }
 
-    export function map<T, U>(array: T[], f: (x: T, i: number) => U): U[] {
+    export function map<T, U>(array: T[], f: (x: T, i: int) => U): U[] {
         let result: U[];
         if (array) {
             result = [];
@@ -393,7 +393,7 @@ namespace ts {
     }
 
     // Maps from T to T and avoids allocation if all elements map to themselves
-    export function sameMap<T>(array: T[], f: (x: T, i: number) => T): T[] {
+    export function sameMap<T>(array: T[], f: (x: T, i: int) => T): T[] {
         let result: T[];
         if (array) {
             for (let i = 0; i < array.length; i++) {
@@ -443,7 +443,7 @@ namespace ts {
      * @param array The array to map.
      * @param mapfn The callback used to map the result into one or more values.
      */
-    export function flatMap<T, U>(array: T[], mapfn: (x: T, i: number) => U | U[]): U[] {
+    export function flatMap<T, U>(array: T[], mapfn: (x: T, i: int) => U | U[]): U[] {
         let result: U[];
         if (array) {
             result = [];
@@ -466,7 +466,7 @@ namespace ts {
      * Computes the first matching span of elements and returns a tuple of the first span
      * and the remaining elements.
      */
-    export function span<T>(array: T[], f: (x: T, i: number) => boolean): [T[], T[]] {
+    export function span<T>(array: T[], f: (x: T, i: int) => boolean): [T[], T[]] {
         if (array) {
             for (let i = 0; i < array.length; i++) {
                 if (!f(array[i], i)) {
@@ -486,7 +486,7 @@ namespace ts {
      * @param keyfn A callback used to select the key for an element.
      * @param mapfn A callback used to map a contiguous chunk of values to a single value.
      */
-    export function spanMap<T, K, U>(array: T[], keyfn: (x: T, i: number) => K, mapfn: (chunk: T[], key: K, start: number, end: number) => U): U[] {
+    export function spanMap<T, K, U>(array: T[], keyfn: (x: T, i: int) => K, mapfn: (chunk: T[], key: K, start: int, end: int) => U): U[] {
         let result: U[];
         if (array) {
             result = [];
@@ -707,7 +707,7 @@ namespace ts {
             .map(i => array[i]); // get sorted array
     }
 
-    export function rangeEquals<T>(array1: T[], array2: T[], pos: number, end: number) {
+    export function rangeEquals<T>(array1: T[], array2: T[], pos: int, end: int) {
         while (pos < end) {
             if (array1[pos] !== array2[pos]) {
                 return false;
@@ -754,7 +754,7 @@ namespace ts {
             : array;
     }
 
-    export function replaceElement<T>(array: T[], index: number, value: T): T[] {
+    export function replaceElement<T>(array: T[], index: int, value: T): T[] {
         const result = array.slice(0);
         result[index] = value;
         return result;
@@ -796,9 +796,9 @@ namespace ts {
         return ~low;
     }
 
-    export function reduceLeft<T, U>(array: T[], f: (memo: U, value: T, i: number) => U, initial: U, start?: number, count?: number): U;
-    export function reduceLeft<T>(array: T[], f: (memo: T, value: T, i: number) => T): T;
-    export function reduceLeft<T>(array: T[], f: (memo: T, value: T, i: number) => T, initial?: T, start?: number, count?: number): T {
+    export function reduceLeft<T, U>(array: T[], f: (memo: U, value: T, i: int) => U, initial: U, start?: int, count?: int): U;
+    export function reduceLeft<T>(array: T[], f: (memo: T, value: T, i: int) => T): T;
+    export function reduceLeft<T>(array: T[], f: (memo: T, value: T, i: int) => T, initial?: T, start?: int, count?: int): T {
         if (array && array.length > 0) {
             const size = array.length;
             if (size > 0) {
@@ -822,9 +822,9 @@ namespace ts {
         return initial;
     }
 
-    export function reduceRight<T, U>(array: T[], f: (memo: U, value: T, i: number) => U, initial: U, start?: number, count?: number): U;
-    export function reduceRight<T>(array: T[], f: (memo: T, value: T, i: number) => T): T;
-    export function reduceRight<T>(array: T[], f: (memo: T, value: T, i: number) => T, initial?: T, start?: number, count?: number): T {
+    export function reduceRight<T, U>(array: T[], f: (memo: U, value: T, i: int) => U, initial: U, start?: int, count?: int): U;
+    export function reduceRight<T>(array: T[], f: (memo: T, value: T, i: int) => T): T;
+    export function reduceRight<T>(array: T[], f: (memo: T, value: T, i: int) => T, initial?: T, start?: int, count?: int): T {
         if (array) {
             const size = array.length;
             if (size > 0) {
@@ -1149,7 +1149,7 @@ namespace ts {
         }
     }
 
-    export function formatStringFromArgs(text: string, args: { [index: number]: string; }, baseIndex?: number): string {
+    export function formatStringFromArgs(text: string, args: { [index: number]: string; }, baseIndex?: int): string {
         baseIndex = baseIndex || 0;
 
         return text.replace(/{(\d+)}/g, (_match, index?) => args[+index + baseIndex]);
@@ -1161,8 +1161,8 @@ namespace ts {
         return localizedDiagnosticMessages && localizedDiagnosticMessages[message.key] || message.message;
     }
 
-    export function createFileDiagnostic(file: SourceFile, start: number, length: number, message: DiagnosticMessage, ...args: (string | number)[]): Diagnostic;
-    export function createFileDiagnostic(file: SourceFile, start: number, length: number, message: DiagnosticMessage): Diagnostic {
+    export function createFileDiagnostic(file: SourceFile, start: int, length: int, message: DiagnosticMessage, ...args: (string | number)[]): Diagnostic;
+    export function createFileDiagnostic(file: SourceFile, start: int, length: int, message: DiagnosticMessage): Diagnostic {
         const end = start + length;
 
         Debug.assert(start >= 0, "start must be non-negative, is " + start);
@@ -1359,7 +1359,7 @@ namespace ts {
     /**
      * Returns length of path root (i.e. length of "/", "x:/", "//server/share/, file:///user/files")
     */
-    export function getRootLength(path: string): number {
+    export function getRootLength(path: string): int {
         if (path.charCodeAt(0) === CharacterCodes.slash) {
             if (path.charCodeAt(1) !== CharacterCodes.slash) return 1;
             const p1 = path.indexOf("/", 2);
@@ -1394,7 +1394,7 @@ namespace ts {
      */
     export const directorySeparator = "/";
     const directorySeparatorCharCode = CharacterCodes.slash;
-    function getNormalizedParts(normalizedSlashedPath: string, rootLength: number): string[] {
+    function getNormalizedParts(normalizedSlashedPath: string, rootLength: int): string[] {
         const parts = normalizedSlashedPath.substr(rootLength).split(directorySeparator);
         const normalized: string[] = [];
         for (const part of parts) {
@@ -1500,7 +1500,7 @@ namespace ts {
             : getRelativePathToDirectoryOrUrl(basePath, absoluteOrRelativePath, basePath, getCanonicalFileName, /*isAbsolutePathAnUrl*/ false);
     }
 
-    function normalizedPathComponents(path: string, rootLength: number) {
+    function normalizedPathComponents(path: string, rootLength: int) {
         const normalizedParts = getNormalizedParts(path, rootLength);
         return [path.substr(0, rootLength)].concat(normalizedParts);
     }
@@ -1588,7 +1588,7 @@ namespace ts {
         }
 
         // Find the component that differs
-        let joinStartIndex: number;
+        let joinStartIndex: int;
         for (joinStartIndex = 0; joinStartIndex < pathComponents.length && joinStartIndex < directoryComponents.length; joinStartIndex++) {
             if (getCanonicalFileName(directoryComponents[joinStartIndex]) !== getCanonicalFileName(pathComponents[joinStartIndex])) {
                 break;
@@ -2128,10 +2128,10 @@ namespace ts {
     }
 
     export interface ObjectAllocator {
-        getNodeConstructor(): new (kind: SyntaxKind, pos?: number, end?: number) => Node;
-        getTokenConstructor(): new <TKind extends SyntaxKind>(kind: TKind, pos?: number, end?: number) => Token<TKind>;
-        getIdentifierConstructor(): new (kind: SyntaxKind.Identifier, pos?: number, end?: number) => Identifier;
-        getSourceFileConstructor(): new (kind: SyntaxKind.SourceFile, pos?: number, end?: number) => SourceFile;
+        getNodeConstructor(): new (kind: SyntaxKind, pos?: int, end?: int) => Node;
+        getTokenConstructor(): new <TKind extends SyntaxKind>(kind: TKind, pos?: int, end?: int) => Token<TKind>;
+        getIdentifierConstructor(): new (kind: SyntaxKind.Identifier, pos?: int, end?: int) => Identifier;
+        getSourceFileConstructor(): new (kind: SyntaxKind.SourceFile, pos?: int, end?: int) => SourceFile;
         getSymbolConstructor(): new (flags: SymbolFlags, name: string) => Symbol;
         getTypeConstructor(): new (checker: TypeChecker, flags: TypeFlags) => Type;
         getSignatureConstructor(): new (checker: TypeChecker) => Signature;
@@ -2214,7 +2214,7 @@ namespace ts {
     }
 
     /** Remove an item by index from an array, moving everything to its right one space left. */
-    export function orderedRemoveItemAt<T>(array: T[], index: number): void {
+    export function orderedRemoveItemAt<T>(array: T[], index: int): void {
         // This seems to be faster than either `array.splice(i, 1)` or `array.copyWithin(i, i+ 1)`.
         for (let i = index; i < array.length - 1; i++) {
             array[i] = array[i + 1];
@@ -2222,7 +2222,7 @@ namespace ts {
         array.pop();
     }
 
-    export function unorderedRemoveItemAt<T>(array: T[], index: number): void {
+    export function unorderedRemoveItemAt<T>(array: T[], index: int): void {
         // Fill in the "hole" left at `index`.
         array[index] = array[array.length - 1];
         array.pop();
@@ -2321,7 +2321,7 @@ namespace ts {
         };
     }
 
-    export function positionIsSynthesized(pos: number): boolean {
+    export function positionIsSynthesized(pos: int): boolean {
         // This is a fast way of testing the following conditions:
         //  pos === undefined || pos === null || isNaN(pos) || pos < 0;
         return !(pos >= 0);

@@ -271,11 +271,11 @@ namespace ts.server.protocol {
         /**
          * The base position in the document that the indent should be relative to
          */
-        position: number;
+        position: int;
         /**
          * The number of columns the indent should be at relative to the position's column.
          */
-        indentation: number;
+        indentation: int;
     }
 
     /**
@@ -350,8 +350,8 @@ namespace ts.server.protocol {
      */
     export interface DiagnosticWithLinePosition {
         message: string;
-        start: number;
-        length: number;
+        start: int;
+        length: int;
         startLocation: Location;
         endLocation: Location;
         category: string;
@@ -380,18 +380,18 @@ namespace ts.server.protocol {
         /**
           * The line number for the request (1-based).
           */
-        line: number;
+        line: int;
 
         /**
           * The character offset (on the line) for the request (1-based).
           */
-        offset: number;
+        offset: int;
 
         /**
          * Position (can be specified instead of line/offset pair)
          */
         /* @internal */
-        position?: number;
+        position?: int;
     }
 
     /**
@@ -409,34 +409,34 @@ namespace ts.server.protocol {
         /**
           * The line number for the request (1-based).
           */
-        startLine: number;
+        startLine: int;
 
         /**
           * The character offset (on the line) for the request (1-based).
           */
-        startOffset: number;
+        startOffset: int;
 
         /**
          * Position (can be specified instead of line/offset pair)
          */
         /* @internal */
-        startPosition?: number;
+        startPosition?: int;
 
         /**
           * The line number for the request (1-based).
           */
-        endLine: number;
+        endLine: int;
 
         /**
           * The character offset (on the line) for the request (1-based).
           */
-        endOffset: number;
+        endOffset: int;
 
         /**
          * Position (can be specified instead of line/offset pair)
          */
         /* @internal */
-        endPosition?: number;
+        endPosition?: int;
 
         /**
           * Errorcodes we want to get the fixes for.
@@ -490,11 +490,11 @@ namespace ts.server.protocol {
         /**
          * Start position of the span.
          */
-        start: number;
+        start: int;
         /**
          * Length of the span.
          */
-        length: number;
+        length: int;
     }
 
     /**
@@ -539,8 +539,8 @@ namespace ts.server.protocol {
       * Location in source code expressed as (one-based) line and character offset.
       */
     export interface Location {
-        line: number;
-        offset: number;
+        line: int;
+        offset: int;
     }
 
     /**
@@ -717,7 +717,7 @@ namespace ts.server.protocol {
         /**
           * The start character offset of the symbol (on the line provided by the references request).
           */
-        symbolStartOffset: number;
+        symbolStartOffset: int;
 
         /**
           * The full display name of the symbol.
@@ -1335,18 +1335,18 @@ namespace ts.server.protocol {
         /**
           * Last line of range for which to format text in file.
           */
-        endLine: number;
+        endLine: int;
 
         /**
           * Character offset on last line of range for which to format text in file.
           */
-        endOffset: number;
+        endOffset: int;
 
         /**
          * End position of the range for which to format text in file.
          */
         /* @internal */
-        endPosition?: number;
+        endPosition?: int;
         /**
          * Format options to be used.
          */
@@ -1639,17 +1639,17 @@ namespace ts.server.protocol {
         /**
          * The item selected in the set of available help items.
          */
-        selectedItemIndex: number;
+        selectedItemIndex: int;
 
         /**
          * The argument selected in the set of parameters.
          */
-        argumentIndex: number;
+        argumentIndex: int;
 
         /**
          * The argument count
          */
-        argumentCount: number;
+        argumentCount: int;
     }
 
     /**
@@ -1941,7 +1941,7 @@ namespace ts.server.protocol {
         /**
           *  Optional limit on the number of items to return.
           */
-        maxResultCount?: number;
+        maxResultCount?: int;
         /**
           * Optional flag to indicate we want results for just the current file
           * or the entire project.
@@ -2108,7 +2108,7 @@ namespace ts.server.protocol {
         /**
           * Number of levels deep this item should appear.
           */
-        indent: number;
+        indent: int;
     }
 
     /** protocol.NavigationTree is identical to ts.NavigationTree, except using protocol.TextSpan instead of ts.TextSpan */
@@ -2217,9 +2217,9 @@ namespace ts.server.protocol {
     export type IndentStyle = IndentStyle.None | IndentStyle.Block | IndentStyle.Smart;
 
     export interface EditorSettings {
-        baseIndentSize?: number;
-        indentSize?: number;
-        tabSize?: number;
+        baseIndentSize?: int;
+        indentSize?: int;
+        tabSize?: int;
         newLineCharacter?: string;
         convertTabsToSpaces?: boolean;
         indentStyle?: IndentStyle | ts.IndentStyle;

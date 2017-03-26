@@ -32,8 +32,8 @@ namespace ts.OutliningElementsCollector {
             const comments = ts.getLeadingCommentRangesOfNode(n, sourceFile);
 
             if (comments) {
-                let firstSingleLineCommentStart: number = -1;
-                let lastSingleLineCommentEnd: number = -1;
+                let firstSingleLineCommentStart = -1;
+                let lastSingleLineCommentEnd = -1;
                 let isFirstSingleLineComment = true;
                 let singleLineCommentCount = 0;
 
@@ -64,7 +64,7 @@ namespace ts.OutliningElementsCollector {
             }
         }
 
-        function combineAndAddMultipleSingleLineComments(count: number, start: number, end: number) {
+        function combineAndAddMultipleSingleLineComments(count: int, start: int, end: int) {
 
             // Only outline spans of two or more consecutive single line comments
             if (count > 1) {

@@ -26,10 +26,10 @@ let debugObjectHost = (function (this: any) { return this; })();
 namespace ts {
     export interface ScriptSnapshotShim {
         /** Gets a portion of the script snapshot specified by [start, end). */
-        getText(start: number, end: number): string;
+        getText(start: int, end: int): string;
 
         /** Gets the length of this script snapshot. */
-        getLength(): number;
+        getLength(): int;
 
         /**
          * Returns a JSON-encoded value of the type:
@@ -108,8 +108,8 @@ namespace ts {
     // When changing this make sure the changes are reflected in the managed side as well
     export interface IFileReference {
         path: string;
-        position: number;
-        length: number;
+        position: int;
+        length: int;
     }
 
     /** Public interface of a language service instance shim. */
@@ -135,32 +135,32 @@ namespace ts {
         getSemanticDiagnostics(fileName: string): string;
         getCompilerOptionsDiagnostics(): string;
 
-        getSyntacticClassifications(fileName: string, start: number, length: number): string;
-        getSemanticClassifications(fileName: string, start: number, length: number): string;
-        getEncodedSyntacticClassifications(fileName: string, start: number, length: number): string;
-        getEncodedSemanticClassifications(fileName: string, start: number, length: number): string;
+        getSyntacticClassifications(fileName: string, start: int, length: int): string;
+        getSemanticClassifications(fileName: string, start: int, length: int): string;
+        getEncodedSyntacticClassifications(fileName: string, start: int, length: int): string;
+        getEncodedSemanticClassifications(fileName: string, start: int, length: int): string;
 
-        getCompletionsAtPosition(fileName: string, position: number): string;
-        getCompletionEntryDetails(fileName: string, position: number, entryName: string): string;
+        getCompletionsAtPosition(fileName: string, position: int): string;
+        getCompletionEntryDetails(fileName: string, position: int, entryName: string): string;
 
-        getQuickInfoAtPosition(fileName: string, position: number): string;
+        getQuickInfoAtPosition(fileName: string, position: int): string;
 
-        getNameOrDottedNameSpan(fileName: string, startPos: number, endPos: number): string;
-        getBreakpointStatementAtPosition(fileName: string, position: number): string;
+        getNameOrDottedNameSpan(fileName: string, startPos: int, endPos: int): string;
+        getBreakpointStatementAtPosition(fileName: string, position: int): string;
 
-        getSignatureHelpItems(fileName: string, position: number): string;
+        getSignatureHelpItems(fileName: string, position: int): string;
 
         /**
          * Returns a JSON-encoded value of the type:
          * { canRename: boolean, localizedErrorMessage: string, displayName: string, fullDisplayName: string, kind: string, kindModifiers: string, triggerSpan: { start; length } }
          */
-        getRenameInfo(fileName: string, position: number): string;
+        getRenameInfo(fileName: string, position: int): string;
 
         /**
          * Returns a JSON-encoded value of the type:
          * { fileName: string, textSpan: { start: number, length: number } }[]
          */
-        findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean): string;
+        findRenameLocations(fileName: string, position: int, findInStrings: boolean, findInComments: boolean): string;
 
         /**
          * Returns a JSON-encoded value of the type:
@@ -168,7 +168,7 @@ namespace ts {
          *
          * Or undefined value if no definition can be found.
          */
-        getDefinitionAtPosition(fileName: string, position: number): string;
+        getDefinitionAtPosition(fileName: string, position: int): string;
 
         /**
          * Returns a JSON-encoded value of the type:
@@ -176,19 +176,19 @@ namespace ts {
          *
          * Or undefined value if no definition can be found.
          */
-        getTypeDefinitionAtPosition(fileName: string, position: number): string;
+        getTypeDefinitionAtPosition(fileName: string, position: int): string;
 
         /**
          * Returns a JSON-encoded value of the type:
          * { fileName: string; textSpan: { start: number; length: number}; }[]
          */
-        getImplementationAtPosition(fileName: string, position: number): string;
+        getImplementationAtPosition(fileName: string, position: int): string;
 
         /**
          * Returns a JSON-encoded value of the type:
          * { fileName: string; textSpan: { start: number; length: number}; isWriteAccess: boolean, isDefinition?: boolean }[]
          */
-        getReferencesAtPosition(fileName: string, position: number): string;
+        getReferencesAtPosition(fileName: string, position: int): string;
 
         /**
          * Returns a JSON-encoded value of the type:
@@ -201,7 +201,7 @@ namespace ts {
          * Returns a JSON-encoded value of the type:
          * { fileName: string; textSpan: { start: number; length: number}; isWriteAccess: boolean }[]
          */
-        getOccurrencesAtPosition(fileName: string, position: number): string;
+        getOccurrencesAtPosition(fileName: string, position: int): string;
 
         /**
          * Returns a JSON-encoded value of the type:
@@ -210,13 +210,13 @@ namespace ts {
          * @param fileToSearch A JSON encoded string[] containing the file names that should be
          *  considered when searching.
          */
-        getDocumentHighlights(fileName: string, position: number, filesToSearch: string): string;
+        getDocumentHighlights(fileName: string, position: int, filesToSearch: string): string;
 
         /**
          * Returns a JSON-encoded value of the type:
          * { name: string; kind: string; kindModifiers: string; containerName: string; containerKind: string; matchKind: string; fileName: string; textSpan: { start: number; length: number}; } [] = [];
          */
-        getNavigateToItems(searchValue: string, maxResultCount?: number, fileName?: string): string;
+        getNavigateToItems(searchValue: string, maxResultCount?: int, fileName?: string): string;
 
         /**
          * Returns a JSON-encoded value of the type:
@@ -235,24 +235,24 @@ namespace ts {
 
         getTodoComments(fileName: string, todoCommentDescriptors: string): string;
 
-        getBraceMatchingAtPosition(fileName: string, position: number): string;
-        getIndentationAtPosition(fileName: string, position: number, options: string/*Services.EditorOptions*/): string;
+        getBraceMatchingAtPosition(fileName: string, position: int): string;
+        getIndentationAtPosition(fileName: string, position: int, options: string/*Services.EditorOptions*/): string;
 
-        getFormattingEditsForRange(fileName: string, start: number, end: number, options: string/*Services.FormatCodeOptions*/): string;
+        getFormattingEditsForRange(fileName: string, start: int, end: int, options: string/*Services.FormatCodeOptions*/): string;
         getFormattingEditsForDocument(fileName: string, options: string/*Services.FormatCodeOptions*/): string;
-        getFormattingEditsAfterKeystroke(fileName: string, position: number, key: string, options: string/*Services.FormatCodeOptions*/): string;
+        getFormattingEditsAfterKeystroke(fileName: string, position: int, key: string, options: string/*Services.FormatCodeOptions*/): string;
 
         /**
          * Returns JSON-encoded value of the type TextInsertion.
          */
-        getDocCommentTemplateAtPosition(fileName: string, position: number): string;
+        getDocCommentTemplateAtPosition(fileName: string, position: int): string;
 
         /**
          * Returns JSON-encoded boolean to indicate whether we should support brace location
          * at the current position.
          * E.g. we don't want brace completion inside string-literals, comments, etc.
          */
-        isValidBraceCompletionAtPosition(fileName: string, position: number, openingBrace: number): string;
+        isValidBraceCompletionAtPosition(fileName: string, position: int, openingBrace: number): string;
 
         getEmitOutput(fileName: string): string;
         getEmitOutputObject(fileName: string): EmitOutput;
@@ -281,11 +281,11 @@ namespace ts {
         constructor(private scriptSnapshotShim: ScriptSnapshotShim) {
         }
 
-        public getText(start: number, end: number): string {
+        public getText(start: int, end: int): string {
             return this.scriptSnapshotShim.getText(start, end);
         }
 
-        public getLength(): number {
+        public getLength(): int {
             return this.scriptSnapshotShim.getLength();
         }
 
@@ -297,7 +297,7 @@ namespace ts {
                 return null;
             }
 
-            const decoded: { span: { start: number; length: number; }; newLength: number; } = JSON.parse(encoded);
+            const decoded: { span: { start: int; length: int; }; newLength: int; } = JSON.parse(encoded);
             return createTextChangeRange(
                 createTextSpan(decoded.span.start, decoded.span.length), decoded.newLength);
         }
@@ -446,7 +446,7 @@ namespace ts {
             return this.shimHost.getDefaultLibFileName(JSON.stringify(options));
         }
 
-        public readDirectory(path: string, extensions?: string[], exclude?: string[], include?: string[], depth?: number): string[] {
+        public readDirectory(path: string, extensions?: string[], exclude?: string[], include?: string[], depth?: int): string[] {
             const pattern = getFileMatcherPatterns(path, exclude, include,
                 this.shimHost.useCaseSensitiveFileNames(), this.shimHost.getCurrentDirectory());
             return JSON.parse(this.shimHost.readDirectory(
@@ -485,7 +485,7 @@ namespace ts {
             }
         }
 
-        public readDirectory(rootDir: string, extensions: string[], exclude: string[], include: string[], depth?: number): string[] {
+        public readDirectory(rootDir: string, extensions: string[], exclude: string[], include: string[], depth?: int): string[] {
             // Wrap the API changes for 2.0 release. This try/catch
             // should be removed once TypeScript 2.0 has shipped.
             try {
@@ -585,11 +585,11 @@ namespace ts {
         }
     }
 
-    export function realizeDiagnostics(diagnostics: Diagnostic[], newLine: string): { message: string; start: number; length: number; category: string; code: number; }[] {
+    export function realizeDiagnostics(diagnostics: Diagnostic[], newLine: string): { message: string; start: int; length: int; category: string; code: number; }[] {
         return diagnostics.map(d => realizeDiagnostic(d, newLine));
     }
 
-    function realizeDiagnostic(diagnostic: Diagnostic, newLine: string): { message: string; start: number; length: number; category: string; code: number; } {
+    function realizeDiagnostic(diagnostic: Diagnostic, newLine: string): { message: string; start: int; length: int; category: string; code: number; } {
         return {
             message: flattenDiagnosticMessageText(diagnostic.messageText, newLine),
             start: diagnostic.start,
@@ -658,26 +658,26 @@ namespace ts {
                 });
         }
 
-        private realizeDiagnostics(diagnostics: Diagnostic[]): { message: string; start: number; length: number; category: string; }[] {
+        private realizeDiagnostics(diagnostics: Diagnostic[]): { message: string; start: int; length: int; category: string; }[] {
             const newLine = getNewLineOrDefaultFromHost(this.host);
             return ts.realizeDiagnostics(diagnostics, newLine);
         }
 
-        public getSyntacticClassifications(fileName: string, start: number, length: number): string {
+        public getSyntacticClassifications(fileName: string, start: int, length: int): string {
             return this.forwardJSONCall(
                 `getSyntacticClassifications('${fileName}', ${start}, ${length})`,
                 () => this.languageService.getSyntacticClassifications(fileName, createTextSpan(start, length))
             );
         }
 
-        public getSemanticClassifications(fileName: string, start: number, length: number): string {
+        public getSemanticClassifications(fileName: string, start: int, length: int): string {
             return this.forwardJSONCall(
                 `getSemanticClassifications('${fileName}', ${start}, ${length})`,
                 () => this.languageService.getSemanticClassifications(fileName, createTextSpan(start, length))
             );
         }
 
-        public getEncodedSyntacticClassifications(fileName: string, start: number, length: number): string {
+        public getEncodedSyntacticClassifications(fileName: string, start: int, length: int): string {
             return this.forwardJSONCall(
                 `getEncodedSyntacticClassifications('${fileName}', ${start}, ${length})`,
                 // directly serialize the spans out to a string.  This is much faster to decode
@@ -686,7 +686,7 @@ namespace ts {
             );
         }
 
-        public getEncodedSemanticClassifications(fileName: string, start: number, length: number): string {
+        public getEncodedSemanticClassifications(fileName: string, start: int, length: int): string {
             return this.forwardJSONCall(
                 `getEncodedSemanticClassifications('${fileName}', ${start}, ${length})`,
                 // directly serialize the spans out to a string.  This is much faster to decode
@@ -728,7 +728,7 @@ namespace ts {
          * Computes a string representation of the type at the requested position
          * in the active file.
          */
-        public getQuickInfoAtPosition(fileName: string, position: number): string {
+        public getQuickInfoAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getQuickInfoAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getQuickInfoAtPosition(fileName, position)
@@ -742,7 +742,7 @@ namespace ts {
          * Computes span information of the name or dotted name at the requested position
          * in the active file.
          */
-        public getNameOrDottedNameSpan(fileName: string, startPos: number, endPos: number): string {
+        public getNameOrDottedNameSpan(fileName: string, startPos: int, endPos: int): string {
             return this.forwardJSONCall(
                 `getNameOrDottedNameSpan('${fileName}', ${startPos}, ${endPos})`,
                 () => this.languageService.getNameOrDottedNameSpan(fileName, startPos, endPos)
@@ -753,7 +753,7 @@ namespace ts {
          * STATEMENTSPAN
          * Computes span information of statement at the requested position in the active file.
          */
-        public getBreakpointStatementAtPosition(fileName: string, position: number): string {
+        public getBreakpointStatementAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getBreakpointStatementAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getBreakpointStatementAtPosition(fileName, position)
@@ -762,7 +762,7 @@ namespace ts {
 
         /// SIGNATUREHELP
 
-        public getSignatureHelpItems(fileName: string, position: number): string {
+        public getSignatureHelpItems(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getSignatureHelpItems('${fileName}', ${position})`,
                 () => this.languageService.getSignatureHelpItems(fileName, position)
@@ -775,7 +775,7 @@ namespace ts {
          * Computes the definition location and file for the symbol
          * at the requested position.
          */
-        public getDefinitionAtPosition(fileName: string, position: number): string {
+        public getDefinitionAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getDefinitionAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getDefinitionAtPosition(fileName, position)
@@ -788,7 +788,7 @@ namespace ts {
          * Computes the definition location of the type of the symbol
          * at the requested position.
          */
-        public getTypeDefinitionAtPosition(fileName: string, position: number): string {
+        public getTypeDefinitionAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getTypeDefinitionAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getTypeDefinitionAtPosition(fileName, position)
@@ -801,21 +801,21 @@ namespace ts {
          * Computes the implementation location of the symbol
          * at the requested position.
          */
-        public getImplementationAtPosition(fileName: string, position: number): string {
+        public getImplementationAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getImplementationAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getImplementationAtPosition(fileName, position)
             );
         }
 
-        public getRenameInfo(fileName: string, position: number): string {
+        public getRenameInfo(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getRenameInfo('${fileName}', ${position})`,
                 () => this.languageService.getRenameInfo(fileName, position)
             );
         }
 
-        public findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean): string {
+        public findRenameLocations(fileName: string, position: int, findInStrings: boolean, findInComments: boolean): string {
             return this.forwardJSONCall(
                 `findRenameLocations('${fileName}', ${position}, ${findInStrings}, ${findInComments})`,
                 () => this.languageService.findRenameLocations(fileName, position, findInStrings, findInComments)
@@ -823,14 +823,14 @@ namespace ts {
         }
 
         /// GET BRACE MATCHING
-        public getBraceMatchingAtPosition(fileName: string, position: number): string {
+        public getBraceMatchingAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getBraceMatchingAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getBraceMatchingAtPosition(fileName, position)
             );
         }
 
-        public isValidBraceCompletionAtPosition(fileName: string, position: number, openingBrace: number): string {
+        public isValidBraceCompletionAtPosition(fileName: string, position: int, openingBrace: int): string {
             return this.forwardJSONCall(
                 `isValidBraceCompletionAtPosition('${fileName}', ${position}, ${openingBrace})`,
                 () => this.languageService.isValidBraceCompletionAtPosition(fileName, position, openingBrace)
@@ -838,7 +838,7 @@ namespace ts {
         }
 
         /// GET SMART INDENT
-        public getIndentationAtPosition(fileName: string, position: number, options: string /*Services.EditorOptions*/): string {
+        public getIndentationAtPosition(fileName: string, position: int, options: string /*Services.EditorOptions*/): string {
             return this.forwardJSONCall(
                 `getIndentationAtPosition('${fileName}', ${position})`,
                 () => {
@@ -849,28 +849,28 @@ namespace ts {
 
         /// GET REFERENCES
 
-        public getReferencesAtPosition(fileName: string, position: number): string {
+        public getReferencesAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getReferencesAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getReferencesAtPosition(fileName, position)
             );
         }
 
-        public findReferences(fileName: string, position: number): string {
+        public findReferences(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `findReferences('${fileName}', ${position})`,
                 () => this.languageService.findReferences(fileName, position)
             );
         }
 
-        public getOccurrencesAtPosition(fileName: string, position: number): string {
+        public getOccurrencesAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getOccurrencesAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getOccurrencesAtPosition(fileName, position)
             );
         }
 
-        public getDocumentHighlights(fileName: string, position: number, filesToSearch: string): string {
+        public getDocumentHighlights(fileName: string, position: int, filesToSearch: string): string {
             return this.forwardJSONCall(
                 `getDocumentHighlights('${fileName}', ${position})`,
                 () => {
@@ -888,7 +888,7 @@ namespace ts {
          * to provide at the given source position and providing a member completion
          * list if requested.
          */
-        public getCompletionsAtPosition(fileName: string, position: number) {
+        public getCompletionsAtPosition(fileName: string, position: int) {
             return this.forwardJSONCall(
                 `getCompletionsAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getCompletionsAtPosition(fileName, position)
@@ -896,14 +896,14 @@ namespace ts {
         }
 
         /** Get a string based representation of a completion list entry details */
-        public getCompletionEntryDetails(fileName: string, position: number, entryName: string) {
+        public getCompletionEntryDetails(fileName: string, position: int, entryName: string) {
             return this.forwardJSONCall(
                 `getCompletionEntryDetails('${fileName}', ${position}, '${entryName}')`,
                 () => this.languageService.getCompletionEntryDetails(fileName, position, entryName)
             );
         }
 
-        public getFormattingEditsForRange(fileName: string, start: number, end: number, options: string/*Services.FormatCodeOptions*/): string {
+        public getFormattingEditsForRange(fileName: string, start: int, end: int, options: string/*Services.FormatCodeOptions*/): string {
             return this.forwardJSONCall(
                 `getFormattingEditsForRange('${fileName}', ${start}, ${end})`,
                 () => {
@@ -921,7 +921,7 @@ namespace ts {
                 });
         }
 
-        public getFormattingEditsAfterKeystroke(fileName: string, position: number, key: string, options: string/*Services.FormatCodeOptions*/): string {
+        public getFormattingEditsAfterKeystroke(fileName: string, position: int, key: string, options: string/*Services.FormatCodeOptions*/): string {
             return this.forwardJSONCall(
                 `getFormattingEditsAfterKeystroke('${fileName}', ${position}, '${key}')`,
                 () => {
@@ -930,7 +930,7 @@ namespace ts {
                 });
         }
 
-        public getDocCommentTemplateAtPosition(fileName: string, position: number): string {
+        public getDocCommentTemplateAtPosition(fileName: string, position: int): string {
             return this.forwardJSONCall(
                 `getDocCommentTemplateAtPosition('${fileName}', ${position})`,
                 () => this.languageService.getDocCommentTemplateAtPosition(fileName, position)
@@ -940,7 +940,7 @@ namespace ts {
         /// NAVIGATE TO
 
         /** Return a list of symbols that are interesting to navigate to */
-        public getNavigateToItems(searchValue: string, maxResultCount?: number, fileName?: string): string {
+        public getNavigateToItems(searchValue: string, maxResultCount?: int, fileName?: string): string {
             return this.forwardJSONCall(
                 `getNavigateToItems('${searchValue}', ${maxResultCount}, ${fileName})`,
                 () => this.languageService.getNavigateToItems(searchValue, maxResultCount, fileName)

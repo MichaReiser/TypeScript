@@ -1,6 +1,6 @@
 /* @internal */
 namespace ts.DocumentHighlights {
-    export function getDocumentHighlights(typeChecker: TypeChecker, cancellationToken: CancellationToken, sourceFile: SourceFile, position: number, sourceFilesToSearch: SourceFile[]): DocumentHighlights[] {
+    export function getDocumentHighlights(typeChecker: TypeChecker, cancellationToken: CancellationToken, sourceFile: SourceFile, position: int, sourceFilesToSearch: SourceFile[]): DocumentHighlights[] {
         const node = getTouchingWord(sourceFile, position);
         return node && (getSemanticDocumentHighlights(node, typeChecker, cancellationToken, sourceFilesToSearch) || getSyntacticDocumentHighlights(node, sourceFile));
     }

@@ -4,8 +4,8 @@
 namespace ts {
     interface ModuleElementDeclarationEmitInfo {
         node: Node;
-        outputPos: number;
-        indent: number;
+        outputPos: int;
+        indent: int;
         asynchronousOutput?: string; // If the output for alias was written asynchronously, the corresponding output
         subModuleElementDeclarationEmitInfo?: ModuleElementDeclarationEmitInfo[];
         isVisible?: boolean;
@@ -60,7 +60,7 @@ namespace ts {
         let enclosingDeclaration: Node;
         let resultHasExternalModuleIndicator: boolean;
         let currentText: string;
-        let currentLineMap: number[];
+        let currentLineMap: int[];
         let currentIdentifiers: Map<string>;
         let isCurrentFileExternalModule: boolean;
         let reportedDeclarationError = false;
@@ -1869,7 +1869,7 @@ namespace ts {
         return emitSkipped;
 
         function getDeclarationOutput(synchronousDeclarationOutput: string, moduleElementDeclarationEmitInfo: ModuleElementDeclarationEmitInfo[]) {
-            let appliedSyncOutputPos = 0.0;
+            let appliedSyncOutputPos = 0;
             let declarationOutput = "";
             // apply asynchronous additions to the synchronous output
             forEach(moduleElementDeclarationEmitInfo, aliasEmitInfo => {

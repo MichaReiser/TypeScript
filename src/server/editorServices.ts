@@ -8,7 +8,7 @@
 /// <reference path="typingsCache.ts"/>
 
 namespace ts.server {
-    export const maxProgramSizeForNonTsFiles = 20 * 1024 * 1024;
+    export const maxProgramSizeForNonTsFiles: number = 20 * 1024 * 1024;
 
     export const ContextEvent = "context";
     export const ConfigFileDiagEvent = "configFileDiag";

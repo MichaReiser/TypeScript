@@ -20,7 +20,7 @@ namespace ts.formatting {
          * when inserting some text after open brace we would like to get the value of indentation as if newline was already there.
          * However by default indentation at position | will be 0 so 'assumeNewLineBeforeCloseBrace' allows to override this behavior,
          */
-        export function getIndentation(position: number, sourceFile: SourceFile, options: EditorSettings, assumeNewLineBeforeCloseBrace = false): number {
+        export function getIndentation(position: int, sourceFile: SourceFile, options: EditorSettings, assumeNewLineBeforeCloseBrace = false): int {
             if (position > sourceFile.text.length) {
                 return getBaseIndentation(options); // past EOF
             }
@@ -77,7 +77,7 @@ namespace ts.formatting {
             let previous: Node;
             let current = precedingToken;
             let currentStart: LineAndCharacter;
-            let indentationDelta: number;
+            let indentationDelta: int;
 
             while (current) {
                 if (positionBelongsToNode(current, position, sourceFile) && shouldIndentChildNode(current, previous)) {
@@ -116,7 +116,7 @@ namespace ts.formatting {
             return getIndentationForNodeWorker(current, currentStart, /*ignoreActualIndentationRange*/ undefined, indentationDelta, sourceFile, options);
         }
 
-        export function getIndentationForNode(n: Node, ignoreActualIndentationRange: TextRange, sourceFile: SourceFile, options: EditorSettings): number {
+        export function getIndentationForNode(n: Node, ignoreActualIndentationRange: TextRange, sourceFile: SourceFile, options: EditorSettings): int {
             const start = sourceFile.getLineAndCharacterOfPosition(n.getStart(sourceFile));
             return getIndentationForNodeWorker(n, start, ignoreActualIndentationRange, /*indentationDelta*/ 0, sourceFile, options);
         }
@@ -129,9 +129,9 @@ namespace ts.formatting {
             current: Node,
             currentStart: LineAndCharacter,
             ignoreActualIndentationRange: TextRange,
-            indentationDelta: number,
+            indentationDelta: int,
             sourceFile: SourceFile,
-            options: EditorSettings): number {
+            options: EditorSettings): int {
 
             let parent: Node = current.parent;
             let parentStart: LineAndCharacter;
@@ -195,7 +195,7 @@ namespace ts.formatting {
         /*
          * Function returns Value.Unknown if indentation cannot be determined
          */
-        function getActualIndentationForListItemBeforeComma(commaToken: Node, sourceFile: SourceFile, options: EditorSettings): number {
+        function getActualIndentationForListItemBeforeComma(commaToken: Node, sourceFile: SourceFile, options: EditorSettings): int {
             // previous token is comma that separates items in list - find the previous item and try to derive indentation from it
             const commaItemInfo = findListItemInfo(commaToken);
             if (commaItemInfo && commaItemInfo.listItemIndex > 0) {
@@ -215,7 +215,7 @@ namespace ts.formatting {
             currentLineAndChar: LineAndCharacter,
             parentAndChildShareLine: boolean,
             sourceFile: SourceFile,
-            options: EditorSettings): number {
+            options: EditorSettings): int {
 
             // actual indentation is used for statements\declarations if one of cases below is true:
             // - parent is SourceFile - by default immediate children of SourceFile are not indented except when user indents them manually
@@ -237,7 +237,7 @@ namespace ts.formatting {
             CloseBrace
         }
 
-        function nextTokenIsCurlyBraceOnSameLineAsCursor(precedingToken: Node, current: Node, lineAtPosition: number, sourceFile: SourceFile): NextTokenKind {
+        function nextTokenIsCurlyBraceOnSameLineAsCursor(precedingToken: Node, current: Node, lineAtPosition: int, sourceFile: SourceFile): NextTokenKind {
             const nextToken = findNextToken(precedingToken, current);
             if (!nextToken) {
                 return NextTokenKind.Unknown;
@@ -268,7 +268,7 @@ namespace ts.formatting {
             return sourceFile.getLineAndCharacterOfPosition(n.getStart(sourceFile));
         }
 
-        export function childStartsOnTheSameLineWithElseInIfStatement(parent: Node, child: TextRangeWithKind, childStartLine: number, sourceFile: SourceFileLike): boolean {
+        export function childStartsOnTheSameLineWithElseInIfStatement(parent: Node, child: TextRangeWithKind, childStartLine: int, sourceFile: SourceFileLike): boolean {
             if (parent.kind === SyntaxKind.IfStatement && (<IfStatement>parent).elseStatement === child) {
                 const elseKeyword = findChildOfKind(parent, SyntaxKind.ElseKeyword, sourceFile);
                 Debug.assert(elseKeyword !== undefined);
@@ -280,7 +280,7 @@ namespace ts.formatting {
             return false;
         }
 
-        function getListIfStartEndIsInListRange(list: NodeArray<Node>, start: number, end: number) {
+        function getListIfStartEndIsInListRange(list: NodeArray<Node>, start: int, end: int) {
             return list && rangeContainsStartEnd(list, start, end) ? list : undefined;
         }
 
@@ -324,17 +324,17 @@ namespace ts.formatting {
             return undefined;
         }
 
-        function getActualIndentationForListItem(node: Node, sourceFile: SourceFile, options: EditorSettings): number {
+        function getActualIndentationForListItem(node: Node, sourceFile: SourceFile, options: EditorSettings): int {
             const containingList = getContainingList(node, sourceFile);
             return containingList ? getActualIndentationFromList(containingList) : Value.Unknown;
 
-            function getActualIndentationFromList(list: Node[]): number {
+            function getActualIndentationFromList(list: Node[]): int {
                 const index = indexOf(list, node);
                 return index !== -1 ? deriveActualIndentationFromList(list, index, sourceFile, options) : Value.Unknown;
             }
         }
 
-        function getLineIndentationWhenExpressionIsInMultiLine(node: Node, sourceFile: SourceFile, options: EditorSettings): number {
+        function getLineIndentationWhenExpressionIsInMultiLine(node: Node, sourceFile: SourceFile, options: EditorSettings): int {
             // actual indentation should not be used when:
             // - node is close parenthesis - this is the end of the expression
             if (node.kind === SyntaxKind.CloseParenToken) {
@@ -381,7 +381,7 @@ namespace ts.formatting {
             }
         }
 
-        function deriveActualIndentationFromList(list: Node[], index: number, sourceFile: SourceFile, options: EditorSettings): number {
+        function deriveActualIndentationFromList(list: Node[], index: int, sourceFile: SourceFile, options: EditorSettings): int {
             Debug.assert(index >= 0 && index < list.length);
             const node = list[index];
 
@@ -403,7 +403,7 @@ namespace ts.formatting {
             return Value.Unknown;
         }
 
-        function findColumnForFirstNonWhitespaceCharacterInLine(lineAndCharacter: LineAndCharacter, sourceFile: SourceFile, options: EditorSettings): number {
+        function findColumnForFirstNonWhitespaceCharacterInLine(lineAndCharacter: LineAndCharacter, sourceFile: SourceFile, options: EditorSettings): int {
             const lineStart = sourceFile.getPositionOfLineAndCharacter(lineAndCharacter.line, 0);
             return findFirstNonWhitespaceColumn(lineStart, lineStart + lineAndCharacter.character, sourceFile, options);
         }
@@ -415,9 +415,9 @@ namespace ts.formatting {
             value of 'character' for '$' is 3
             value of 'column' for '$' is 6 (assuming that tab size is 4)
         */
-        export function findFirstNonWhitespaceCharacterAndColumn(startPos: number, endPos: number, sourceFile: SourceFileLike, options: EditorSettings) {
+        export function findFirstNonWhitespaceCharacterAndColumn(startPos: int, endPos: int, sourceFile: SourceFileLike, options: EditorSettings) {
             let character = 0;
-            let column = 0.0;
+            let column = 0;
             for (let pos = startPos; pos < endPos; pos++) {
                 const ch = sourceFile.text.charCodeAt(pos);
                 if (!isWhiteSpaceSingleLine(ch)) {
@@ -436,7 +436,7 @@ namespace ts.formatting {
             return { column, character };
         }
 
-        export function findFirstNonWhitespaceColumn(startPos: number, endPos: number, sourceFile: SourceFileLike, options: EditorSettings): number {
+        export function findFirstNonWhitespaceColumn(startPos: int, endPos: int, sourceFile: SourceFileLike, options: EditorSettings): int {
             return findFirstNonWhitespaceCharacterAndColumn(startPos, endPos, sourceFile, options).column;
         }
 

@@ -2106,7 +2106,7 @@ namespace ts {
          * Emits any prologue directives at the start of a Statement list, returning the
          * number of prologue directives written to the output.
          */
-        function emitPrologueDirectives(statements: Node[], startWithNewLine?: boolean, seenPrologueDirectives?: Map<String>): number {
+        function emitPrologueDirectives(statements: Node[], startWithNewLine?: boolean, seenPrologueDirectives?: Map<String>): int {
             for (let i = 0; i < statements.length; i++) {
                 const statement = statements[i];
                 if (isPrologueDirective(statement)) {
@@ -2241,11 +2241,11 @@ namespace ts {
             emitList(parentNode, parameters, ListFormat.IndexSignatureParameters);
         }
 
-        function emitList(parentNode: Node, children: NodeArray<Node>, format: ListFormat, start?: number, count?: number) {
+        function emitList(parentNode: Node, children: NodeArray<Node>, format: ListFormat, start?: int, count?: int) {
             emitNodeList(emit, parentNode, children, format, start, count);
         }
 
-        function emitExpressionList(parentNode: Node, children: NodeArray<Node>, format: ListFormat, start?: number, count?: number) {
+        function emitExpressionList(parentNode: Node, children: NodeArray<Node>, format: ListFormat, start?: int, count?: int) {
             emitNodeList(emitExpression, parentNode, children, format, start, count);
         }
 
@@ -2420,13 +2420,13 @@ namespace ts {
             }
         }
 
-        function writeToken(token: SyntaxKind, pos: number, contextNode?: Node) {
+        function writeToken(token: SyntaxKind, pos: int, contextNode?: Node) {
             return onEmitSourceMapOfToken
                 ? onEmitSourceMapOfToken(contextNode, token, pos, writeTokenText)
                 : writeTokenText(token, pos);
         }
 
-        function writeTokenText(token: SyntaxKind, pos?: number) {
+        function writeTokenText(token: SyntaxKind, pos?: int) {
             const tokenString = tokenToString(token);
             write(tokenString);
             return pos < 0 ? pos : pos + tokenString.length;
@@ -2455,7 +2455,7 @@ namespace ts {
         }
 
         function guessIndentation(lines: string[]) {
-            let indentation: number;
+            let indentation: int;
             for (const line of lines) {
                 for (let i = 0; i < line.length && (indentation === undefined || i < indentation); i++) {
                     if (!isWhiteSpace(line.charCodeAt(i))) {

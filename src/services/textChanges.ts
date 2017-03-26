@@ -9,7 +9,7 @@ namespace ts.textChanges {
         return (<any>n)["__pos"];
     }
 
-    function setPos(n: TextRange, pos: number) {
+    function setPos(n: TextRange, pos: int) {
         (<any>n)["__pos"] = pos;
     }
 
@@ -17,7 +17,7 @@ namespace ts.textChanges {
         return (<any>n)["__end"];
     }
 
-    function setEnd(n: TextRange, end: number) {
+    function setEnd(n: TextRange, end: int) {
         (<any>n)["__end"] = end;
     }
 
@@ -33,11 +33,11 @@ namespace ts.textChanges {
         Start
     }
 
-    function skipWhitespacesAndLineBreaks(text: string, start: number) {
+    function skipWhitespacesAndLineBreaks(text: string, start: int) {
         return skipTrivia(text, start, /*stopAfterLineBreak*/ false, /*stopAtComments*/ true);
     }
 
-    function hasCommentsBeforeLineBreak(text: string, start: number) {
+    function hasCommentsBeforeLineBreak(text: string, start: int) {
         let i = start;
         while (i < text.length) {
             const ch = text.charCodeAt(i);
@@ -76,11 +76,11 @@ namespace ts.textChanges {
         /**
          * Text of inserted node will be formatted with this indentation, otherwise indentation will be inferred from the old node
          */
-        indentation?: number;
+        indentation?: int;
         /**
          * Text of inserted node will be formatted with this delta, otherwise delta will be inferred from the new node kind
          */
-        delta?: number;
+        delta?: int;
     }
 
     export type ChangeNodeOptions = ConfigurableStartEnd & InsertNodeOptions;
@@ -145,7 +145,7 @@ namespace ts.textChanges {
         return candidate && node.parent && (candidate.kind === SyntaxKind.CommaToken || (candidate.kind === SyntaxKind.SemicolonToken && node.parent.kind === SyntaxKind.ObjectLiteralExpression));
     }
 
-    function spaces(count: number) {
+    function spaces(count: int) {
         let s = "";
         for (let i = 0; i < count; i++) {
             s += " ";
@@ -241,7 +241,7 @@ namespace ts.textChanges {
             return this;
         }
 
-        public insertNodeAt(sourceFile: SourceFile, pos: number, newNode: Node, options: InsertNodeOptions = {}) {
+        public insertNodeAt(sourceFile: SourceFile, pos: int, newNode: Node, options: InsertNodeOptions = {}) {
             this.changes.push({ sourceFile, options, node: newNode, range: { pos: pos, end: pos } });
             return this;
         }
@@ -315,7 +315,7 @@ namespace ts.textChanges {
                     // find line and character of the token that precedes next element (usually it is separator)
                     const lineAndCharOfNextToken = getLineAndCharacterOfPosition(sourceFile, nextToken.end);
                     let prefix: string;
-                    let startPos: number;
+                    let startPos: int;
                     if (lineAndCharOfNextToken.line === lineAndCharOfNextElement.line) {
                         // next element is located on the same line with separator:
                         // a,$$$$b
@@ -505,7 +505,7 @@ namespace ts.textChanges {
         return { text: writer.getText(), node: assignPositionsToNode(node) };
     }
 
-    export function applyFormatting(nonFormattedText: NonFormattedText, sourceFile: SourceFile, initialIndentation: number, delta: number, rulesProvider: formatting.RulesProvider) {
+    export function applyFormatting(nonFormattedText: NonFormattedText, sourceFile: SourceFile, initialIndentation: int, delta: int, rulesProvider: formatting.RulesProvider) {
         const lineMap = computeLineStarts(nonFormattedText.text);
         const file: SourceFileLike = {
             text: nonFormattedText.text,
@@ -561,7 +561,7 @@ namespace ts.textChanges {
         function Proxy() { }
     }
 
-    function assignPositionsToNodeArray(nodes: NodeArray<any>, visitor: Visitor, test?: (node: Node) => boolean, start?: number, count?: number) {
+    function assignPositionsToNodeArray(nodes: NodeArray<any>, visitor: Visitor, test?: (node: Node) => boolean, start?: int, count?: int) {
         const visited = visitNodes(nodes, visitor, test, start, count);
         if (!visited) {
             return visited;
@@ -574,7 +574,7 @@ namespace ts.textChanges {
     }
 
     class Writer implements EmitTextWriter, PrintHandlers {
-        private lastNonTriviaPosition = 0.0;
+        private lastNonTriviaPosition = 0;
         private readonly writer: EmitTextWriter;
 
         public readonly onEmitNode: PrintHandlers["onEmitNode"];
@@ -643,16 +643,16 @@ namespace ts.textChanges {
             this.writer.writeLiteral(s);
             this.setLastNonTriviaPosition(s, /*force*/ true);
         }
-        getTextPos(): number {
+        getTextPos(): int {
             return this.writer.getTextPos();
         }
-        getLine(): number {
+        getLine(): int {
             return this.writer.getLine();
         }
-        getColumn(): number {
+        getColumn(): int {
             return this.writer.getColumn();
         }
-        getIndent(): number {
+        getIndent(): int {
             return this.writer.getIndent();
         }
         isAtStartOfLine(): boolean {

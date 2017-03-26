@@ -6,14 +6,14 @@ namespace ts {
         getChildren(sourceFile?: SourceFile): Node[];
         /* @internal */
         getChildren(sourceFile?: SourceFileLike): Node[];
-        getStart(sourceFile?: SourceFile, includeJsDocComment?: boolean): number;
+        getStart(sourceFile?: SourceFile, includeJsDocComment?: boolean): int;
         /* @internal */
-        getStart(sourceFile?: SourceFileLike, includeJsDocComment?: boolean): number;
-        getFullStart(): number;
-        getEnd(): number;
-        getWidth(sourceFile?: SourceFile): number;
-        getFullWidth(): number;
-        getLeadingTriviaWidth(sourceFile?: SourceFile): number;
+        getStart(sourceFile?: SourceFileLike, includeJsDocComment?: boolean): int;
+        getFullStart(): int;
+        getEnd(): int;
+        getWidth(sourceFile?: SourceFile): int;
+        getFullWidth(): int;
+        getLeadingTriviaWidth(sourceFile?: SourceFile): int;
         getFullText(sourceFile?: SourceFile): string;
         getText(sourceFile?: SourceFile): string;
         getFirstToken(sourceFile?: SourceFile): Node;
@@ -58,15 +58,15 @@ namespace ts {
 
         /* @internal */ getNamedDeclarations(): Map<Declaration[]>;
 
-        getLineAndCharacterOfPosition(pos: number): LineAndCharacter;
-        getLineEndOfPosition(pos: number): number;
-        getLineStarts(): number[];
-        getPositionOfLineAndCharacter(line: number, character: number): number;
+        getLineAndCharacterOfPosition(pos: int): LineAndCharacter;
+        getLineEndOfPosition(pos: int): int;
+        getLineStarts(): int[];
+        getPositionOfLineAndCharacter(line: int, character: number): int;
         update(newText: string, textChangeRange: TextChangeRange): SourceFile;
     }
 
     export interface SourceFileLike {
-        getLineAndCharacterOfPosition(pos: number): LineAndCharacter;
+        getLineAndCharacterOfPosition(pos: int): LineAndCharacter;
     }
 
     /**
@@ -76,10 +76,10 @@ namespace ts {
      */
     export interface IScriptSnapshot {
         /** Gets a portion of the script snapshot specified by [start, end). */
-        getText(start: number, end: number): string;
+        getText(start: int, end: int): string;
 
         /** Gets the length of this script snapshot. */
-        getLength(): number;
+        getLength(): int;
 
         /**
          * Gets the TextChangeRange that describe how the text changed between this text and
@@ -100,13 +100,13 @@ namespace ts {
             constructor(private text: string) {
             }
 
-            public getText(start: number, end: number): string {
+            public getText(start: int, end: int): string {
                 return start === 0 && end === this.text.length
                     ? this.text
                     : this.text.substring(start, end);
             }
 
-            public getLength(): number {
+            public getLength(): int {
                 return this.text.length;
             }
 
@@ -215,50 +215,50 @@ namespace ts {
         getEncodedSyntacticClassifications(fileName: string, span: TextSpan): Classifications;
         getEncodedSemanticClassifications(fileName: string, span: TextSpan): Classifications;
 
-        getCompletionsAtPosition(fileName: string, position: number): CompletionInfo;
-        getCompletionEntryDetails(fileName: string, position: number, entryName: string): CompletionEntryDetails;
-        getCompletionEntrySymbol(fileName: string, position: number, entryName: string): Symbol;
+        getCompletionsAtPosition(fileName: string, position: int): CompletionInfo;
+        getCompletionEntryDetails(fileName: string, position: int, entryName: string): CompletionEntryDetails;
+        getCompletionEntrySymbol(fileName: string, position: int, entryName: string): Symbol;
 
-        getQuickInfoAtPosition(fileName: string, position: number): QuickInfo;
+        getQuickInfoAtPosition(fileName: string, position: int): QuickInfo;
 
-        getNameOrDottedNameSpan(fileName: string, startPos: number, endPos: number): TextSpan;
+        getNameOrDottedNameSpan(fileName: string, startPos: int, endPos: int): TextSpan;
 
-        getBreakpointStatementAtPosition(fileName: string, position: number): TextSpan;
+        getBreakpointStatementAtPosition(fileName: string, position: int): TextSpan;
 
-        getSignatureHelpItems(fileName: string, position: number): SignatureHelpItems;
+        getSignatureHelpItems(fileName: string, position: int): SignatureHelpItems;
 
-        getRenameInfo(fileName: string, position: number): RenameInfo;
-        findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean): RenameLocation[];
+        getRenameInfo(fileName: string, position: int): RenameInfo;
+        findRenameLocations(fileName: string, position: int, findInStrings: boolean, findInComments: boolean): RenameLocation[];
 
-        getDefinitionAtPosition(fileName: string, position: number): DefinitionInfo[];
-        getTypeDefinitionAtPosition(fileName: string, position: number): DefinitionInfo[];
-        getImplementationAtPosition(fileName: string, position: number): ImplementationLocation[];
+        getDefinitionAtPosition(fileName: string, position: int): DefinitionInfo[];
+        getTypeDefinitionAtPosition(fileName: string, position: int): DefinitionInfo[];
+        getImplementationAtPosition(fileName: string, position: int): ImplementationLocation[];
 
-        getReferencesAtPosition(fileName: string, position: number): ReferenceEntry[];
-        findReferences(fileName: string, position: number): ReferencedSymbol[];
-        getDocumentHighlights(fileName: string, position: number, filesToSearch: string[]): DocumentHighlights[];
+        getReferencesAtPosition(fileName: string, position: int): ReferenceEntry[];
+        findReferences(fileName: string, position: int): ReferencedSymbol[];
+        getDocumentHighlights(fileName: string, position: int, filesToSearch: string[]): DocumentHighlights[];
 
         /** @deprecated */
-        getOccurrencesAtPosition(fileName: string, position: number): ReferenceEntry[];
+        getOccurrencesAtPosition(fileName: string, position: int): ReferenceEntry[];
 
-        getNavigateToItems(searchValue: string, maxResultCount?: number, fileName?: string, excludeDtsFiles?: boolean): NavigateToItem[];
+        getNavigateToItems(searchValue: string, maxResultCount?: int, fileName?: string, excludeDtsFiles?: boolean): NavigateToItem[];
         getNavigationBarItems(fileName: string): NavigationBarItem[];
         getNavigationTree(fileName: string): NavigationTree;
 
         getOutliningSpans(fileName: string): OutliningSpan[];
         getTodoComments(fileName: string, descriptors: TodoCommentDescriptor[]): TodoComment[];
-        getBraceMatchingAtPosition(fileName: string, position: number): TextSpan[];
-        getIndentationAtPosition(fileName: string, position: number, options: EditorOptions | EditorSettings): number;
+        getBraceMatchingAtPosition(fileName: string, position: int): TextSpan[];
+        getIndentationAtPosition(fileName: string, position: int, options: EditorOptions | EditorSettings): int;
 
-        getFormattingEditsForRange(fileName: string, start: number, end: number, options: FormatCodeOptions | FormatCodeSettings): TextChange[];
+        getFormattingEditsForRange(fileName: string, start: int, end: int, options: FormatCodeOptions | FormatCodeSettings): TextChange[];
         getFormattingEditsForDocument(fileName: string, options: FormatCodeOptions | FormatCodeSettings): TextChange[];
-        getFormattingEditsAfterKeystroke(fileName: string, position: number, key: string, options: FormatCodeOptions | FormatCodeSettings): TextChange[];
+        getFormattingEditsAfterKeystroke(fileName: string, position: int, key: string, options: FormatCodeOptions | FormatCodeSettings): TextChange[];
 
-        getDocCommentTemplateAtPosition(fileName: string, position: number): TextInsertion;
+        getDocCommentTemplateAtPosition(fileName: string, position: int): TextInsertion;
 
-        isValidBraceCompletionAtPosition(fileName: string, position: number, openingBrace: number): boolean;
+        isValidBraceCompletionAtPosition(fileName: string, position: int, openingBrace: int): boolean;
 
-        getCodeFixesAtPosition(fileName: string, start: number, end: number, errorCodes: number[], formatOptions: FormatCodeSettings): CodeAction[];
+        getCodeFixesAtPosition(fileName: string, start: int, end: int, errorCodes: number[], formatOptions: FormatCodeSettings): CodeAction[];
 
         getEmitOutput(fileName: string, emitOnlyDtsFiles?: boolean): EmitOutput;
 
@@ -276,7 +276,7 @@ namespace ts {
     }
 
     export interface Classifications {
-        spans: number[];
+        spans: int[];
         endOfLineState: EndOfLineState;
     }
 
@@ -297,7 +297,7 @@ namespace ts {
         kindModifiers: string;
         spans: TextSpan[];
         childItems: NavigationBarItem[];
-        indent: number;
+        indent: int;
         bolded: boolean;
         grayed: boolean;
     }
@@ -330,7 +330,7 @@ namespace ts {
     export interface TodoComment {
         descriptor: TodoCommentDescriptor;
         message: string;
-        position: number;
+        position: int;
     }
 
     export class TextChange {
@@ -353,7 +353,7 @@ namespace ts {
     export interface TextInsertion {
         newText: string;
         /** The position in newText the caret should point to after the insertion. */
-        caretOffset: number;
+        caretOffset: int;
     }
 
     export interface DocumentSpan {
@@ -566,9 +566,9 @@ namespace ts {
     export interface SignatureHelpItems {
         items: SignatureHelpItem[];
         applicableSpan: TextSpan;
-        selectedItemIndex: number;
-        argumentIndex: number;
-        argumentCount: number;
+        selectedItemIndex: int;
+        argumentIndex: int;
+        argumentCount: int;
     }
 
     export interface CompletionInfo {
@@ -665,7 +665,7 @@ namespace ts {
     }
 
     export interface ClassificationInfo {
-        length: number;
+        length: int;
         classification: TokenClass;
     }
 

@@ -187,7 +187,7 @@ namespace ts.server {
         referencedBy: ModuleBuilderFileInfo[] = [];
         scriptVersionForReferences: string;
 
-        static compareFileInfos(lf: ModuleBuilderFileInfo, rf: ModuleBuilderFileInfo): number {
+        static compareFileInfos(lf: ModuleBuilderFileInfo, rf: ModuleBuilderFileInfo): int {
             const l = lf.scriptInfo.fileName;
             const r = rf.scriptInfo.fileName;
             return (l < r ? -1 : (l > r ? 1 : 0));

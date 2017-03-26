@@ -8,7 +8,7 @@ namespace ts.server {
         private svcVersion = 0;
 
         private text: string;
-        private lineMap: number[];
+        private lineMap: int[];
         private textVersion = 0;
 
         constructor(private readonly host: ServerHost, private readonly fileName: NormalizedPath) {
@@ -33,7 +33,7 @@ namespace ts.server {
             this.setText(newText);
         }
 
-        public edit(start: number, end: number, newText: string) {
+        public edit(start: int, end: int, newText: string) {
             this.switchToScriptVersionCache().edit(start, end - start, newText);
         }
 
@@ -61,13 +61,13 @@ namespace ts.server {
                 : ScriptSnapshot.fromString(this.getOrLoadText());
         }
 
-        public getLineInfo(line: number) {
+        public getLineInfo(line: int) {
             return this.switchToScriptVersionCache().getSnapshot().index.lineNumberToInfo(line);
         }
         /**
          *  @param line 0 based index
          */
-        lineToTextSpan(line: number) {
+        lineToTextSpan(line: int) {
             if (!this.svc) {
                 const lineMap = this.getLineMap();
                 const start = lineMap[line]; // -1 since line is 1-based
@@ -76,7 +76,7 @@ namespace ts.server {
             }
             const index = this.svc.getSnapshot().index;
             const lineInfo = index.lineNumberToInfo(line + 1);
-            let len: number;
+            let len: int;
             if (lineInfo.leaf) {
                 len = lineInfo.leaf.text.length;
             }
@@ -91,7 +91,7 @@ namespace ts.server {
          * @param line 1 based index
          * @param offset 1 based index
          */
-        lineOffsetToPosition(line: number, offset: number): number {
+        lineOffsetToPosition(line: int, offset: int): int {
             if (!this.svc) {
                 return computePositionOfLineAndCharacter(this.getLineMap(), line - 1, offset - 1);
             }
@@ -106,7 +106,7 @@ namespace ts.server {
          * @param line 1-based index
          * @param offset 1-based index
          */
-        positionToLineOffset(position: number): ILineInfo {
+        positionToLineOffset(position: int): ILineInfo {
             if (!this.svc) {
                 const { line, character } = computeLineAndCharacterOfPosition(this.getLineMap(), position);
                 return { line: line + 1, offset: character + 1 };
@@ -318,11 +318,11 @@ namespace ts.server {
             }
         }
 
-        getLineInfo(line: number) {
+        getLineInfo(line: int) {
             return this.textStorage.getLineInfo(line);
         }
 
-        editContent(start: number, end: number, newText: string): void {
+        editContent(start: int, end: int, newText: string): void {
             this.textStorage.edit(start, end, newText);
             this.markContainingProjectsAsDirty();
         }
@@ -336,7 +336,7 @@ namespace ts.server {
         /**
          *  @param line 1 based index
          */
-        lineToTextSpan(line: number) {
+        lineToTextSpan(line: int) {
             return this.textStorage.lineToTextSpan(line);
         }
 
@@ -344,7 +344,7 @@ namespace ts.server {
          * @param line 1 based index
          * @param offset 1 based index
          */
-        lineOffsetToPosition(line: number, offset: number): number {
+        lineOffsetToPosition(line: int, offset: int): int {
             return this.textStorage.lineOffsetToPosition(line, offset);
         }
 
@@ -352,7 +352,7 @@ namespace ts.server {
          * @param line 1-based index
          * @param offset 1-based index
          */
-        positionToLineOffset(position: number): ILineInfo {
+        positionToLineOffset(position: int): ILineInfo {
             return this.textStorage.positionToLineOffset(position);
         }
 

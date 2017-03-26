@@ -176,11 +176,11 @@ namespace ts.SignatureHelp {
         kind: ArgumentListKind;
         invocation: CallLikeExpression;
         argumentsSpan: TextSpan;
-        argumentIndex?: number;
-        argumentCount: number;
+        argumentIndex?: int;
+        argumentCount: int;
     }
 
-    export function getSignatureHelpItems(program: Program, sourceFile: SourceFile, position: number, cancellationToken: CancellationToken): SignatureHelpItems {
+    export function getSignatureHelpItems(program: Program, sourceFile: SourceFile, position: int, cancellationToken: CancellationToken): SignatureHelpItems {
         const typeChecker = program.getTypeChecker();
 
         // Decide whether to show signature help
@@ -261,7 +261,7 @@ namespace ts.SignatureHelp {
      * Returns relevant information for the argument list and the current argument if we are
      * in the argument of an invocation; returns undefined otherwise.
      */
-    export function getImmediatelyContainingArgumentInfo(node: Node, position: number, sourceFile: SourceFile): ArgumentListInfo {
+    export function getImmediatelyContainingArgumentInfo(node: Node, position: int, sourceFile: SourceFile): ArgumentListInfo {
         if (node.parent.kind === SyntaxKind.CallExpression || node.parent.kind === SyntaxKind.NewExpression) {
             const callExpression = <CallExpression>node.parent;
             // There are 3 cases to handle:
@@ -423,7 +423,7 @@ namespace ts.SignatureHelp {
 
     // spanIndex is either the index for a given template span.
     // This does not give appropriate results for a NoSubstitutionTemplateLiteral
-    function getArgumentIndexForTemplatePiece(spanIndex: number, node: Node, position: number): number {
+    function getArgumentIndexForTemplatePiece(spanIndex: int, node: Node, position: int): int {
         // Because the TemplateStringsArray is the first argument, we have to offset each substitution expression by 1.
         // There are three cases we can encounter:
         //      1. We are precisely in the template literal (argIndex = 0).
@@ -445,7 +445,7 @@ namespace ts.SignatureHelp {
         return spanIndex + 1;
     }
 
-    function getArgumentListInfoForTemplate(tagExpression: TaggedTemplateExpression, argumentIndex: number, sourceFile: SourceFile): ArgumentListInfo {
+    function getArgumentListInfoForTemplate(tagExpression: TaggedTemplateExpression, argumentIndex: int, sourceFile: SourceFile): ArgumentListInfo {
         // argumentCount is either 1 or (numSpans + 1) to account for the template strings array argument.
         const argumentCount = tagExpression.template.kind === SyntaxKind.NoSubstitutionTemplateLiteral
             ? 1
@@ -499,7 +499,7 @@ namespace ts.SignatureHelp {
         return createTextSpan(applicableSpanStart, applicableSpanEnd - applicableSpanStart);
     }
 
-    export function getContainingArgumentInfo(node: Node, position: number, sourceFile: SourceFile): ArgumentListInfo {
+    export function getContainingArgumentInfo(node: Node, position: int, sourceFile: SourceFile): ArgumentListInfo {
         for (let n = node; n.kind !== SyntaxKind.SourceFile; n = n.parent) {
             if (isFunctionBlock(n)) {
                 return undefined;
@@ -537,7 +537,7 @@ namespace ts.SignatureHelp {
      * either the first one that has an appropriate number of parameters,
      * or the one with the most parameters.
      */
-    function selectBestInvalidOverloadIndex(candidates: Signature[], argumentCount: number): number {
+    function selectBestInvalidOverloadIndex(candidates: Signature[], argumentCount: int): int {
         let maxParamsSignatureIndex = -1;
         let maxParams = -1;
         for (let i = 0; i < candidates.length; i++) {

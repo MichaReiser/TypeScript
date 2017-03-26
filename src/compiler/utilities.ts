@@ -184,7 +184,7 @@ namespace ts {
         return false;
     }
 
-    export function getStartPositionOfLine(line: number, sourceFile: SourceFileLike): number {
+    export function getStartPositionOfLine(line: int, sourceFile: SourceFileLike): int {
         Debug.assert(line >= 0);
         return getLineStarts(sourceFile)[line];
     }
@@ -196,7 +196,7 @@ namespace ts {
         return `${file.fileName}(${loc.line + 1},${loc.character + 1})`;
     }
 
-    export function getStartPosOfNode(node: Node): number {
+    export function getStartPosOfNode(node: Node): int {
         return node.pos;
     }
 
@@ -204,7 +204,7 @@ namespace ts {
         return value !== undefined;
     }
 
-    export function getEndLinePosition(line: number, sourceFile: SourceFileLike): number {
+    export function getEndLinePosition(line: int, sourceFile: SourceFileLike): int {
         Debug.assert(line >= 0);
         const lineStarts = getLineStarts(sourceFile);
 
@@ -259,7 +259,7 @@ namespace ts {
         return n.kind >= SyntaxKind.FirstToken && n.kind <= SyntaxKind.LastToken;
     }
 
-    export function getTokenPosOfNode(node: Node, sourceFile?: SourceFileLike, includeJsDoc?: boolean): number {
+    export function getTokenPosOfNode(node: Node, sourceFile?: SourceFileLike, includeJsDoc?: boolean): int {
         // With nodes that have no width (i.e. 'Missing' nodes), we actually *don't*
         // want to skip trivia because this will launch us forward to the next token.
         if (nodeIsMissing(node)) {
@@ -293,7 +293,7 @@ namespace ts {
         return node.kind >= SyntaxKind.FirstJSDocTagNode && node.kind <= SyntaxKind.LastJSDocTagNode;
     }
 
-    export function getNonDecoratorTokenPosOfNode(node: Node, sourceFile?: SourceFileLike): number {
+    export function getNonDecoratorTokenPosOfNode(node: Node, sourceFile?: SourceFileLike): int {
         if (nodeIsMissing(node) || !node.decorators) {
             return getTokenPosOfNode(node, sourceFile);
         }
@@ -579,7 +579,7 @@ namespace ts {
         };
     }
 
-    export function getSpanOfTokenAtPosition(sourceFile: SourceFile, pos: number): TextSpan {
+    export function getSpanOfTokenAtPosition(sourceFile: SourceFile, pos: int): TextSpan {
         const scanner = createScanner(sourceFile.languageVersion, /*skipTrivia*/ true, sourceFile.languageVariant, sourceFile.text, /*onError:*/ undefined, pos);
         scanner.scan();
         const start = scanner.getTokenPos();
@@ -1418,7 +1418,7 @@ namespace ts {
         return isRequire && (!checkArgumentIsStringLiteral || (<CallExpression>expression).arguments[0].kind === SyntaxKind.StringLiteral);
     }
 
-    export function isSingleOrDoubleQuote(charCode: number) {
+    export function isSingleOrDoubleQuote(charCode: int) {
         return charCode === CharacterCodes.singleQuote || charCode === CharacterCodes.doubleQuote;
     }
 
@@ -2470,7 +2470,7 @@ namespace ts {
         return ch.toLowerCase() === ch;
     }
 
-    function get16BitUnicodeEscapeSequence(charCode: number): string {
+    function get16BitUnicodeEscapeSequence(charCode: int): string {
         const hexCharCode = charCode.toString(16).toUpperCase();
         const paddedHexCode = ("0000" + hexCharCode).slice(-4);
         return "\\u" + paddedHexCode;
@@ -2486,7 +2486,7 @@ namespace ts {
     }
 
     const indentStrings: string[] = ["", "    "];
-    export function getIndentString(level: number) {
+    export function getIndentString(level: int) {
         if (indentStrings[level] === undefined) {
             indentStrings[level] = getIndentString(level - 1) + indentStrings[1];
         }
@@ -2499,10 +2499,10 @@ namespace ts {
 
     export function createTextWriter(newLine: string): EmitTextWriter {
         let output: string;
-        let indent: number;
+        let indent: int;
         let lineStart: boolean;
-        let lineCount: number;
-        let linePos: number;
+        let lineCount: int;
+        let linePos: int;
 
         function write(s: string) {
             if (s && s.length) {
@@ -2727,11 +2727,11 @@ namespace ts {
         }, sourceFiles);
     }
 
-    export function getLineOfLocalPosition(currentSourceFile: SourceFile, pos: number) {
+    export function getLineOfLocalPosition(currentSourceFile: SourceFile, pos: int) {
         return getLineAndCharacterOfPosition(currentSourceFile, pos).line;
     }
 
-    export function getLineOfLocalPositionFromLineMap(lineMap: number[], pos: number) {
+    export function getLineOfLocalPositionFromLineMap(lineMap: int[], pos: int) {
         return computeLineAndCharacterOfPosition(lineMap, pos).line;
     }
 
@@ -2829,11 +2829,11 @@ namespace ts {
         };
     }
 
-    export function emitNewLineBeforeLeadingComments(lineMap: number[], writer: EmitTextWriter, node: TextRange, leadingComments: CommentRange[]) {
+    export function emitNewLineBeforeLeadingComments(lineMap: int[], writer: EmitTextWriter, node: TextRange, leadingComments: CommentRange[]) {
         emitNewLineBeforeLeadingCommentsOfPosition(lineMap, writer, node.pos, leadingComments);
     }
 
-    export function emitNewLineBeforeLeadingCommentsOfPosition(lineMap: number[], writer: EmitTextWriter, pos: number, leadingComments: CommentRange[]) {
+    export function emitNewLineBeforeLeadingCommentsOfPosition(lineMap: int[], writer: EmitTextWriter, pos: int, leadingComments: CommentRange[]) {
         // If the leading comments start on different line than the start of node, write new line
         if (leadingComments && leadingComments.length && pos !== leadingComments[0].pos &&
             getLineOfLocalPositionFromLineMap(lineMap, pos) !== getLineOfLocalPositionFromLineMap(lineMap, leadingComments[0].pos)) {
@@ -2841,7 +2841,7 @@ namespace ts {
         }
     }
 
-    export function emitNewLineBeforeLeadingCommentOfPosition(lineMap: number[], writer: EmitTextWriter, pos: number, commentPos: number) {
+    export function emitNewLineBeforeLeadingCommentOfPosition(lineMap: int[], writer: EmitTextWriter, pos: int, commentPos: int) {
         // If the leading comments start on different line than the start of node, write new line
         if (pos !== commentPos &&
             getLineOfLocalPositionFromLineMap(lineMap, pos) !== getLineOfLocalPositionFromLineMap(lineMap, commentPos)) {
@@ -2849,8 +2849,8 @@ namespace ts {
         }
     }
 
-    export function emitComments(text: string, lineMap: number[], writer: EmitTextWriter, comments: CommentRange[], leadingSeparator: boolean, trailingSeparator: boolean, newLine: string,
-        writeComment: (text: string, lineMap: number[], writer: EmitTextWriter, commentPos: number, commentEnd: number, newLine: string) => void) {
+    export function emitComments(text: string, lineMap: int[], writer: EmitTextWriter, comments: CommentRange[], leadingSeparator: boolean, trailingSeparator: boolean, newLine: string,
+        writeComment: (text: string, lineMap: int[], writer: EmitTextWriter, commentPos: int, commentEnd: int, newLine: string) => void) {
         if (comments && comments.length > 0) {
             if (leadingSeparator) {
                 writer.write(" ");
@@ -2882,11 +2882,11 @@ namespace ts {
      * Detached comment is a comment at the top of file or function body that is separated from
      * the next statement by space.
      */
-    export function emitDetachedComments(text: string, lineMap: number[], writer: EmitTextWriter,
-        writeComment: (text: string, lineMap: number[], writer: EmitTextWriter, commentPos: number, commentEnd: number, newLine: string) => void,
+    export function emitDetachedComments(text: string, lineMap: int[], writer: EmitTextWriter,
+        writeComment: (text: string, lineMap: int[], writer: EmitTextWriter, commentPos: int, commentEnd: int, newLine: string) => void,
         node: TextRange, newLine: string, removeComments: boolean) {
         let leadingComments: CommentRange[];
-        let currentDetachedCommentInfo: { nodePos: number, detachedCommentEndPos: number };
+        let currentDetachedCommentInfo: { nodePos: int, detachedCommentEndPos: int };
         if (removeComments) {
             // removeComments is true, only reserve pinned comment at the top of file
             // For example:
@@ -2947,11 +2947,11 @@ namespace ts {
 
     }
 
-    export function writeCommentRange(text: string, lineMap: number[], writer: EmitTextWriter, commentPos: number, commentEnd: number, newLine: string) {
+    export function writeCommentRange(text: string, lineMap: int[], writer: EmitTextWriter, commentPos: int, commentEnd: int, newLine: string) {
         if (text.charCodeAt(commentPos + 1) === CharacterCodes.asterisk) {
             const firstCommentLineAndCharacter = computeLineAndCharacterOfPosition(lineMap, commentPos);
             const lineCount = lineMap.length;
-            let firstCommentLineIndent: number;
+            let firstCommentLineIndent: int;
             for (let pos = commentPos, currentLine = firstCommentLineAndCharacter.line; pos < commentEnd; currentLine++) {
                 const nextLineStart = (currentLine + 1) === lineCount
                     ? text.length + 1
@@ -3012,7 +3012,7 @@ namespace ts {
         }
     }
 
-    function writeTrimmedCurrentLine(text: string, commentEnd: number, writer: EmitTextWriter, newLine: string, pos: number, nextLineStart: number) {
+    function writeTrimmedCurrentLine(text: string, commentEnd: int, writer: EmitTextWriter, newLine: string, pos: int, nextLineStart: int) {
         const end = Math.min(commentEnd, nextLineStart - 1);
         const currentLineText = text.substring(pos, end).replace(/^\s+|\s+$/g, "");
         if (currentLineText) {
@@ -3028,7 +3028,7 @@ namespace ts {
         }
     }
 
-    function calculateIndent(text: string, pos: number, end: number) {
+    function calculateIndent(text: string, pos: int, end: int) {
         let currentLineIndent = 0;
         for (; pos < end && isWhiteSpaceSingleLine(text.charCodeAt(pos)); pos++) {
             if (text.charCodeAt(pos) === CharacterCodes.tab) {
@@ -3195,8 +3195,8 @@ namespace ts {
      * Replace each instance of non-ascii characters by one, two, three, or four escape sequences
      * representing the UTF-8 encoding of the character, and return the expanded char code list.
      */
-    function getExpandedCharCodes(input: string): number[] {
-        const output: number[] = [];
+    function getExpandedCharCodes(input: string): int[] {
+        const output: int[] = [];
         const length = input.length;
 
         for (let i = 0; i < length; i++) {
@@ -3239,7 +3239,7 @@ namespace ts {
         const charCodes = getExpandedCharCodes(input);
         let i = 0;
         const length = charCodes.length;
-        let byte1: number, byte2: number, byte3: number, byte4: number;
+        let byte1: int, byte2: int, byte3: int, byte4: int;
 
         while (i < length) {
             // Convert every 6-bits in the input 3 character points
@@ -3292,7 +3292,7 @@ namespace ts {
         return isSimpleExpressionWorker(node, 0);
     }
 
-    function isSimpleExpressionWorker(node: Expression, depth: number): boolean {
+    function isSimpleExpressionWorker(node: Expression, depth: int): boolean {
         if (depth <= 5) {
             const kind = node.kind;
             if (kind === SyntaxKind.StringLiteral
@@ -3394,7 +3394,7 @@ namespace ts {
      * @param pos The position.
      * @param value The delta.
      */
-    export function movePos(pos: number, value: number) {
+    export function movePos(pos: int, value: number) {
         return positionIsSynthesized(pos) ? -1 : pos + value;
     }
 
@@ -3404,7 +3404,7 @@ namespace ts {
      * @param pos The start position.
      * @param end The end position.
      */
-    export function createRange(pos: number, end: number): TextRange {
+    export function createRange(pos: int, end: int): TextRange {
         return { pos, end };
     }
 
@@ -3414,7 +3414,7 @@ namespace ts {
      * @param range A TextRange.
      * @param end The new end position.
      */
-    export function moveRangeEnd(range: TextRange, end: number): TextRange {
+    export function moveRangeEnd(range: TextRange, end: int): TextRange {
         return createRange(range.pos, end);
     }
 
@@ -3424,7 +3424,7 @@ namespace ts {
      * @param range A TextRange.
      * @param pos The new Start position.
      */
-    export function moveRangePos(range: TextRange, pos: number): TextRange {
+    export function moveRangePos(range: TextRange, pos: int): TextRange {
         return createRange(pos, range.end);
     }
 
@@ -3481,7 +3481,7 @@ namespace ts {
      * @param pos The start position.
      * @param token The token.
      */
-    export function createTokenRange(pos: number, token: SyntaxKind): TextRange {
+    export function createTokenRange(pos: int, token: SyntaxKind): TextRange {
         return createRange(pos, pos + tokenToString(token).length);
     }
 
@@ -3505,7 +3505,7 @@ namespace ts {
         return positionsAreOnSameLine(range1.end, getStartPositionOfRange(range2, sourceFile), sourceFile);
     }
 
-    export function positionsAreOnSameLine(pos1: number, pos2: number, sourceFile: SourceFile) {
+    export function positionsAreOnSameLine(pos1: int, pos2: int, sourceFile: SourceFile) {
         return pos1 === pos2 ||
             getLineOfLocalPosition(sourceFile, pos1) === getLineOfLocalPosition(sourceFile, pos2);
     }
@@ -4271,7 +4271,7 @@ namespace ts {
         return span.length === 0;
     }
 
-    export function textSpanContainsPosition(span: TextSpan, position: number) {
+    export function textSpanContainsPosition(span: TextSpan, position: int) {
         return position >= span.start && position < textSpanEnd(span);
     }
 
@@ -4299,18 +4299,18 @@ namespace ts {
         return other.start <= textSpanEnd(span) && textSpanEnd(other) >= span.start;
     }
 
-    export function textSpanIntersectsWith(span: TextSpan, start: number, length: number) {
+    export function textSpanIntersectsWith(span: TextSpan, start: int, length: int) {
         const end = start + length;
         return start <= textSpanEnd(span) && end >= span.start;
     }
 
-    export function decodedTextSpanIntersectsWith(start1: number, length1: number, start2: number, length2: number) {
+    export function decodedTextSpanIntersectsWith(start1: int, length1: int, start2: int, length2: int) {
         const end1 = start1 + length1;
         const end2 = start2 + length2;
         return start2 <= end1 && end2 >= start1;
     }
 
-    export function textSpanIntersectsWithPosition(span: TextSpan, position: number) {
+    export function textSpanIntersectsWithPosition(span: TextSpan, position: int) {
         return position <= textSpanEnd(span) && position >= span.start;
     }
 
@@ -4323,7 +4323,7 @@ namespace ts {
         return undefined;
     }
 
-    export function createTextSpan(start: number, length: number): TextSpan {
+    export function createTextSpan(start: int, length: int): TextSpan {
         if (start < 0) {
             throw new Error("start < 0");
         }
@@ -4334,7 +4334,7 @@ namespace ts {
         return { start, length };
     }
 
-    export function createTextSpanFromBounds(start: number, end: number) {
+    export function createTextSpanFromBounds(start: int, end: int) {
         return createTextSpan(start, end - start);
     }
 
@@ -4346,7 +4346,7 @@ namespace ts {
         return textSpanIsEmpty(range.span) && range.newLength === 0;
     }
 
-    export function createTextChangeRange(span: TextSpan, newLength: number): TextChangeRange {
+    export function createTextChangeRange(span: TextSpan, newLength: int): TextChangeRange {
         if (newLength < 0) {
             throw new Error("newLength < 0");
         }

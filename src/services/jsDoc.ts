@@ -131,7 +131,7 @@ namespace ts.JsDoc {
      * @param position The (character-indexed) position in the file where the check should
      * be performed.
      */
-    export function getDocCommentTemplateAtPosition(newLine: string, sourceFile: SourceFile, position: number): TextInsertion {
+    export function getDocCommentTemplateAtPosition(newLine: string, sourceFile: SourceFile, position: int): TextInsertion {
         // Check if in a context where we don't want to perform any insertion
         if (isInString(sourceFile, position) || isInComment(sourceFile, position) || hasDocComment(sourceFile, position)) {
             return undefined;

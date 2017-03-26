@@ -30,7 +30,7 @@ namespace ts.formatting {
         RescanJsxText,
     }
 
-    export function getFormattingScanner(text: string, languageVariant: LanguageVariant, startPos: number, endPos: number): FormattingScanner {
+    export function getFormattingScanner(text: string, languageVariant: LanguageVariant, startPos: int, endPos: int): FormattingScanner {
         Debug.assert(scanner === undefined, "Scanner should be undefined");
         scanner = languageVariant === LanguageVariant.JSX ? jsxScanner : standardScanner;
 
@@ -41,7 +41,7 @@ namespace ts.formatting {
         let leadingTrivia: TextRangeWithKind[] | undefined;
         let trailingTrivia: TextRangeWithKind[] | undefined;
 
-        let savedPos: number;
+        let savedPos: int;
         let lastScanAction: ScanAction | undefined;
         let lastTokenInfo: TokenInfo | undefined;
 

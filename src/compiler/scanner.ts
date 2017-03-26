@@ -3,7 +3,7 @@
 
 namespace ts {
     export interface ErrorCallback {
-        (message: DiagnosticMessage, length: number): void;
+        (message: DiagnosticMessage, length: int): void;
     }
 
     /* @internal */
@@ -12,10 +12,10 @@ namespace ts {
     }
 
     export interface Scanner {
-        getStartPos(): number;
+        getStartPos(): int;
         getToken(): SyntaxKind;
-        getTextPos(): number;
-        getTokenPos(): number;
+        getTextPos(): int;
+        getTokenPos(): int;
         getTokenText(): string;
         getTokenValue(): string;
         hasExtendedUnicodeEscape(): boolean;
@@ -35,11 +35,11 @@ namespace ts {
         getText(): string;
         // Sets the text for the scanner to scan.  An optional subrange starting point and length
         // can be provided to have the scanner only scan a portion of the text.
-        setText(text: string, start?: number, length?: number): void;
+        setText(text: string, start?: int, length?: int): void;
         setOnError(onError: ErrorCallback): void;
         setScriptTarget(scriptTarget: ScriptTarget): void;
         setLanguageVariant(variant: LanguageVariant): void;
-        setTextPos(textPos: number): void;
+        setTextPos(textPos: int): void;
         // Invokes the provided callback then unconditionally restores the scanner to the state it
         // was in immediately prior to invoking the callback.  The result of invoking the callback
         // is returned from this function.
@@ -47,7 +47,7 @@ namespace ts {
 
         // Invokes the callback with the scanner set to scan the specified range. When the callback
         // returns, the scanner is restored to the state it was in before scanRange was called.
-        scanRange<T>(start: number, length: number, callback: () => T): T;
+        scanRange<T>(start: int, length: int, callback: () => T): T;
 
         // Invokes the provided callback.  If the callback returns something falsy, then it restores
         // the scanner to the state it was in immediately prior to invoking the callback.  If the
@@ -295,8 +295,8 @@ namespace ts {
     }
 
     /* @internal */
-    export function computeLineStarts(text: string): number[] {
-        const result: number[] = new Array();
+    export function computeLineStarts(text: string): int[] {
+        const result: int[] = new Array();
         let pos = 0;
         let lineStart = 0;
         while (pos < text.length) {
@@ -323,18 +323,18 @@ namespace ts {
         return result;
     }
 
-    export function getPositionOfLineAndCharacter(sourceFile: SourceFile, line: number, character: number): number {
+    export function getPositionOfLineAndCharacter(sourceFile: SourceFile, line: int, character: int): int {
         return computePositionOfLineAndCharacter(getLineStarts(sourceFile), line, character);
     }
 
     /* @internal */
-    export function computePositionOfLineAndCharacter(lineStarts: number[], line: number, character: number): number {
+    export function computePositionOfLineAndCharacter(lineStarts: int[], line: int, character: int): int {
         Debug.assert(line >= 0 && line < lineStarts.length);
         return lineStarts[line] + character;
     }
 
     /* @internal */
-    export function getLineStarts(sourceFile: SourceFileLike): number[] {
+    export function getLineStarts(sourceFile: SourceFileLike): int[] {
         return sourceFile.lineMap || (sourceFile.lineMap = computeLineStarts(sourceFile.text));
     }
 
@@ -342,7 +342,7 @@ namespace ts {
     /**
      * We assume the first line starts at position 0 and 'position' is non-negative.
      */
-    export function computeLineAndCharacterOfPosition(lineStarts: number[], position: number) {
+    export function computeLineAndCharacterOfPosition(lineStarts: int[], position: int) {
         let lineNumber = binarySearch(lineStarts, position);
         if (lineNumber < 0) {
             // If the actual position was not found,
@@ -361,16 +361,16 @@ namespace ts {
         };
     }
 
-    export function getLineAndCharacterOfPosition(sourceFile: SourceFile, position: number): LineAndCharacter {
+    export function getLineAndCharacterOfPosition(sourceFile: SourceFile, position: int): LineAndCharacter {
         return computeLineAndCharacterOfPosition(getLineStarts(sourceFile), position);
     }
 
-    export function isWhiteSpace(ch: number): boolean {
+    export function isWhiteSpace(ch: int): boolean {
         return isWhiteSpaceSingleLine(ch) || isLineBreak(ch);
     }
 
     /** Does not include line breaks. For that, see isWhiteSpaceLike. */
-    export function isWhiteSpaceSingleLine(ch: number): boolean {
+    export function isWhiteSpaceSingleLine(ch: int): boolean {
         // Note: nextLine is in the Zs space, and should be considered to be a whitespace.
         // It is explicitly not a line-break as it isn't in the exact set specified by EcmaScript.
         return ch === CharacterCodes.space ||
@@ -387,7 +387,7 @@ namespace ts {
             ch === CharacterCodes.byteOrderMark;
       }
 
-      export function isLineBreak(ch: number): boolean {
+      export function isLineBreak(ch: int): boolean {
           // ES5 7.3:
           // The ECMAScript line terminator characters are listed in Table 3.
           //     Table 3: Line Terminator Characters
@@ -405,16 +405,16 @@ namespace ts {
               ch === CharacterCodes.paragraphSeparator;
       }
 
-      function isDigit(ch: number): boolean {
+      function isDigit(ch: int): boolean {
           return ch >= CharacterCodes._0 && ch <= CharacterCodes._9;
       }
 
       /* @internal */
-      export function isOctalDigit(ch: number): boolean {
+      export function isOctalDigit(ch: int): boolean {
           return ch >= CharacterCodes._0 && ch <= CharacterCodes._7;
       }
 
-      export function couldStartTrivia(text: string, pos: number): boolean {
+      export function couldStartTrivia(text: string, pos: int): boolean {
           // Keep in sync with skipTrivia
           const ch = text.charCodeAt(pos);
           switch (ch) {
@@ -440,7 +440,7 @@ namespace ts {
       }
 
       /* @internal */
-      export function skipTrivia(text: string, pos: number, stopAfterLineBreak?: boolean, stopAtComments = false): number {
+      export function skipTrivia(text: string, pos: int, stopAfterLineBreak?: boolean, stopAtComments = false): int {
           if (positionIsSynthesized(pos)) {
               return pos;
           }
@@ -523,7 +523,7 @@ namespace ts {
       // a <<<<<<< or >>>>>>> marker then it is also followed by a space.
     const mergeConflictMarkerLength = "<<<<<<<".length;
 
-    function isConflictMarkerTrivia(text: string, pos: number) {
+    function isConflictMarkerTrivia(text: string, pos: int) {
         Debug.assert(pos >= 0);
 
         // Conflict markers must be at the start of a line.
@@ -545,7 +545,7 @@ namespace ts {
         return false;
     }
 
-    function scanConflictMarkerTrivia(text: string, pos: number, error?: ErrorCallback) {
+    function scanConflictMarkerTrivia(text: string, pos: int, error?: ErrorCallback) {
         if (error) {
             error(Diagnostics.Merge_conflict_marker_encountered, mergeConflictMarkerLength);
         }
@@ -577,13 +577,13 @@ namespace ts {
 
     const shebangTriviaRegex = /^#!.*/;
 
-    function isShebangTrivia(text: string, pos: number) {
+    function isShebangTrivia(text: string, pos: int) {
         // Shebangs check must only be done at the start of the file
         Debug.assert(pos === 0);
         return shebangTriviaRegex.test(text);
     }
 
-    function scanShebangTrivia(text: string, pos: number) {
+    function scanShebangTrivia(text: string, pos: int) {
         const shebang = shebangTriviaRegex.exec(text)[0];
         pos = pos + shebang.length;
         return pos;
@@ -609,9 +609,9 @@ namespace ts {
      * @returns If "reduce" is true, the accumulated value. If "reduce" is false, the first truthy
      *      return value of the callback.
      */
-    function iterateCommentRanges<T, U>(reduce: boolean, text: string, pos: number, trailing: boolean, cb: (pos: number, end: number, kind: CommentKind, hasTrailingNewLine: boolean, state: T, memo: U) => U, state: T, initial?: U): U {
-        let pendingPos: number;
-        let pendingEnd: number;
+    function iterateCommentRanges<T, U>(reduce: boolean, text: string, pos: int, trailing: boolean, cb: (pos: int, end: int, kind: CommentKind, hasTrailingNewLine: boolean, state: T, memo: U) => U, state: T, initial?: U): U {
+        let pendingPos: int;
+        let pendingEnd: int;
         let pendingKind: CommentKind;
         let pendingHasTrailingNewLine: boolean;
         let hasPendingCommentRange = false;
@@ -708,23 +708,23 @@ namespace ts {
         return accumulator;
     }
 
-    export function forEachLeadingCommentRange<T, U>(text: string, pos: number, cb: (pos: number, end: number, kind: CommentKind, hasTrailingNewLine: boolean, state: T) => U, state?: T) {
+    export function forEachLeadingCommentRange<T, U>(text: string, pos: int, cb: (pos: int, end: int, kind: CommentKind, hasTrailingNewLine: boolean, state: T) => U, state?: T) {
         return iterateCommentRanges(/*reduce*/ false, text, pos, /*trailing*/ false, cb, state);
     }
 
-    export function forEachTrailingCommentRange<T, U>(text: string, pos: number, cb: (pos: number, end: number, kind: CommentKind, hasTrailingNewLine: boolean, state: T) => U, state?: T) {
+    export function forEachTrailingCommentRange<T, U>(text: string, pos: int, cb: (pos: int, end: int, kind: CommentKind, hasTrailingNewLine: boolean, state: T) => U, state?: T) {
         return iterateCommentRanges(/*reduce*/ false, text, pos, /*trailing*/ true, cb, state);
     }
 
-    export function reduceEachLeadingCommentRange<T, U>(text: string, pos: number, cb: (pos: number, end: number, kind: CommentKind, hasTrailingNewLine: boolean, state: T, memo: U) => U, state: T, initial: U) {
+    export function reduceEachLeadingCommentRange<T, U>(text: string, pos: int, cb: (pos: int, end: int, kind: CommentKind, hasTrailingNewLine: boolean, state: T, memo: U) => U, state: T, initial: U) {
         return iterateCommentRanges(/*reduce*/ true, text, pos, /*trailing*/ false, cb, state, initial);
     }
 
-    export function reduceEachTrailingCommentRange<T, U>(text: string, pos: number, cb: (pos: number, end: number, kind: CommentKind, hasTrailingNewLine: boolean, state: T, memo: U) => U, state: T, initial: U) {
+    export function reduceEachTrailingCommentRange<T, U>(text: string, pos: int, cb: (pos: int, end: int, kind: CommentKind, hasTrailingNewLine: boolean, state: T, memo: U) => U, state: T, initial: U) {
         return iterateCommentRanges(/*reduce*/ true, text, pos, /*trailing*/ true, cb, state, initial);
     }
 
-    function appendCommentRange(pos: number, end: number, kind: CommentKind, hasTrailingNewLine: boolean, _state: any, comments: CommentRange[]) {
+    function appendCommentRange(pos: int, end: int, kind: CommentKind, hasTrailingNewLine: boolean, _state: any, comments: CommentRange[]) {
         if (!comments) {
             comments = [];
         }
@@ -733,11 +733,11 @@ namespace ts {
         return comments;
     }
 
-    export function getLeadingCommentRanges(text: string, pos: number): CommentRange[] | undefined {
+    export function getLeadingCommentRanges(text: string, pos: int): CommentRange[] | undefined {
         return reduceEachLeadingCommentRange(text, pos, appendCommentRange, undefined, undefined);
     }
 
-    export function getTrailingCommentRanges(text: string, pos: number): CommentRange[] | undefined {
+    export function getTrailingCommentRanges(text: string, pos: int): CommentRange[] | undefined {
         return reduceEachTrailingCommentRange(text, pos, appendCommentRange, undefined, undefined);
     }
 
@@ -781,19 +781,19 @@ namespace ts {
                                   languageVariant = LanguageVariant.Standard,
                                   text?: string,
                                   onError?: ErrorCallback,
-                                  start?: number,
-                                  length?: number): Scanner {
+                                  start?: int,
+                                  length?: int): Scanner {
         // Current position (end position of text of current token)
-        let pos: number;
+        let pos: int;
 
         // end of text
-        let end: number;
+        let end: int;
 
         // Start position of whitespace before current token
-        let startPos: number;
+        let startPos: int;
 
         // Start position of text of current token
-        let tokenPos: number;
+        let tokenPos: int;
 
         let token: SyntaxKind;
         let tokenValue: string;
@@ -835,7 +835,7 @@ namespace ts {
             scanRange,
         };
 
-        function error(message: DiagnosticMessage, length?: number): void {
+        function error(message: DiagnosticMessage, length?: int): void {
             if (onError) {
                 onError(message, length || 0);
             }
@@ -1164,7 +1164,7 @@ namespace ts {
             let result = "";
             let start = pos;
             while (pos < end) {
-                let ch = text.charCodeAt(pos);
+                let ch: number = text.charCodeAt(pos);
                 if (isIdentifierPart(ch, languageVersion)) {
                     pos++;
                 }
@@ -1858,7 +1858,7 @@ namespace ts {
             return result;
         }
 
-        function scanRange<T>(start: number, length: number, callback: () => T): T {
+        function scanRange<T>(start: int, length: int, callback: () => T): T {
             const saveEnd = end;
             const savePos = pos;
             const saveStartPos = startPos;
@@ -1897,7 +1897,7 @@ namespace ts {
             return text;
         }
 
-        function setText(newText: string, start: number, length: number) {
+        function setText(newText: string, start: int, length: int) {
             text = newText || "";
             end = length === undefined ? text.length : start + length;
             setTextPos(start || 0);
@@ -1915,7 +1915,7 @@ namespace ts {
             languageVariant = variant;
         }
 
-        function setTextPos(textPos: number) {
+        function setTextPos(textPos: int) {
             Debug.assert(textPos >= 0);
             pos = textPos;
             startPos = textPos;

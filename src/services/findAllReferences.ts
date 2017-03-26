@@ -53,7 +53,7 @@ namespace ts.FindAllReferences {
         }
     }
 
-    export function findReferencedSymbols(typeChecker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: number, findInStrings: boolean, findInComments: boolean, isForRename: boolean): ReferencedSymbol[] | undefined {
+    export function findReferencedSymbols(typeChecker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: int, findInStrings: boolean, findInComments: boolean, isForRename: boolean): ReferencedSymbol[] | undefined {
         const node = getTouchingPropertyName(sourceFile, position, /*includeJsDocComment*/ true);
         return getReferencedSymbolsForNode(new DefaultFindReferencesContext(typeChecker, cancellationToken), node, sourceFiles, findInStrings, findInComments, isForRename);
     }
@@ -369,8 +369,8 @@ namespace ts.FindAllReferences {
         return scope;
     }
 
-    function getPossibleSymbolReferencePositions(sourceFile: SourceFile, symbolName: string, start: number, end: number, cancellationToken: CancellationToken): number[] {
-        const positions: number[] = [];
+    function getPossibleSymbolReferencePositions(sourceFile: SourceFile, symbolName: string, start: int, end: int, cancellationToken: CancellationToken): int[] {
+        const positions: int[] = [];
 
         /// TODO: Cache symbol existence for files to save text search
         // Also, need to make this work for unicode escapes.
@@ -981,7 +981,7 @@ namespace ts.FindAllReferences {
 
         const references: T[] = [];
 
-        let possiblePositions: number[];
+        let possiblePositions: int[];
         if (searchSpaceNode.kind === SyntaxKind.SourceFile) {
             forEach(sourceFiles, sourceFile => {
                 possiblePositions = getPossibleSymbolReferencePositions(sourceFile, "this", sourceFile.getStart(), sourceFile.getEnd(), cancellationToken);
@@ -1012,7 +1012,7 @@ namespace ts.FindAllReferences {
             references: references
         }];
 
-        function getThisReferencesInFile(sourceFile: SourceFile, searchSpaceNode: Node, possiblePositions: number[], result: T[]): void {
+        function getThisReferencesInFile(sourceFile: SourceFile, searchSpaceNode: Node, possiblePositions: int[], result: T[]): void {
             forEach(possiblePositions, position => {
                 cancellationToken.throwIfCancellationRequested();
 
@@ -1083,7 +1083,7 @@ namespace ts.FindAllReferences {
             references: references
         }];
 
-        function getReferencesForStringLiteralInFile(sourceFile: SourceFile, searchType: Type, possiblePositions: number[], references: T[]): void {
+        function getReferencesForStringLiteralInFile(sourceFile: SourceFile, searchType: Type, possiblePositions: int[], references: T[]): void {
             for (const position of possiblePositions) {
                 cancellationToken.throwIfCancellationRequested();
 

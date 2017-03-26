@@ -5177,7 +5177,7 @@ namespace ts {
         }
 
         function createSignature(declaration: SignatureDeclaration, typeParameters: TypeParameter[], thisParameter: Symbol | undefined, parameters: Symbol[],
-            resolvedReturnType: Type, typePredicate: TypePredicate, minArgumentCount: number, hasRestParameter: boolean, hasLiteralTypes: boolean): Signature {
+            resolvedReturnType: Type, typePredicate: TypePredicate, minArgumentCount: int, hasRestParameter: boolean, hasLiteralTypes: boolean): Signature {
             const sig = new Signature(checker);
             sig.declaration = declaration;
             sig.typeParameters = typeParameters;
@@ -6426,7 +6426,7 @@ namespace ts {
             return type;
         }
 
-        function getTypeReferenceArity(type: TypeReference): number {
+        function getTypeReferenceArity(type: TypeReference): int {
             return length(type.target.typeParameters);
         }
 
@@ -6857,7 +6857,7 @@ namespace ts {
             containsString?: boolean;
             containsNumber?: boolean;
             containsStringOrNumberLiteral?: boolean;
-            unionIndex?: number;
+            unionIndex?: int;
         }
 
         function binarySearchTypes(types: Type[], type: Type): number {
@@ -10227,7 +10227,7 @@ namespace ts {
             return constraint && maybeTypeOfKind(constraint, TypeFlags.Primitive | TypeFlags.Index);
         }
 
-        function getInferredType(context: InferenceContext, index: number): Type {
+        function getInferredType(context: InferenceContext, index: int): Type {
             let inferredType = context.inferredTypes[index];
             let inferenceSucceeded: boolean;
             if (!inferredType) {
@@ -11359,7 +11359,7 @@ namespace ts {
                 return getTypeWithFacts(type, facts);
             }
 
-            function narrowTypeBySwitchOnDiscriminant(type: Type, switchStatement: SwitchStatement, clauseStart: number, clauseEnd: number) {
+            function narrowTypeBySwitchOnDiscriminant(type: Type, switchStatement: SwitchStatement, clauseStart: int, clauseEnd: int) {
                 // We only narrow if all case expressions specify values with unit types
                 const switchTypes = getSwitchClauseTypes(switchStatement);
                 if (!switchTypes.length) {
@@ -14191,9 +14191,9 @@ namespace ts {
             let lastParent: Node;
             let lastSymbol: Symbol;
             let cutoffIndex = 0;
-            let index: number;
+            let index: int;
             let specializedIndex = -1;
-            let spliceIndex: number;
+            let spliceIndex: int;
             Debug.assert(!result.length);
             for (const signature of signatures) {
                 const symbol = signature.declaration && getSymbolOfNode(signature.declaration);
@@ -23850,7 +23850,7 @@ namespace ts {
             }
         }
 
-        function grammarErrorAtPos(sourceFile: SourceFile, start: number, length: number, message: DiagnosticMessage, arg0?: any, arg1?: any, arg2?: any): boolean {
+        function grammarErrorAtPos(sourceFile: SourceFile, start: int, length: int, message: DiagnosticMessage, arg0?: any, arg1?: any, arg2?: any): boolean {
             if (!hasParseDiagnostics(sourceFile)) {
                 diagnostics.add(createFileDiagnostic(sourceFile, start, length, message, arg0, arg1, arg2));
                 return true;

@@ -8,21 +8,21 @@ namespace ts {
         setWriter(writer: EmitTextWriter): void;
         emitNodeWithComments(hint: EmitHint, node: Node, emitCallback: (hint: EmitHint, node: Node) => void): void;
         emitBodyWithDetachedComments(node: Node, detachedRange: TextRange, emitCallback: (node: Node) => void): void;
-        emitTrailingCommentsOfPosition(pos: number): void;
-        emitLeadingCommentsOfPosition(pos: number): void;
+        emitTrailingCommentsOfPosition(pos: int): void;
+        emitLeadingCommentsOfPosition(pos: int): void;
     }
 
-    export function createCommentWriter(printerOptions: PrinterOptions, emitPos: ((pos: number) => void) | undefined): CommentWriter {
+    export function createCommentWriter(printerOptions: PrinterOptions, emitPos: ((pos: int) => void) | undefined): CommentWriter {
         const extendedDiagnostics = printerOptions.extendedDiagnostics;
         const newLine = getNewLineCharacter(printerOptions);
         let writer: EmitTextWriter;
-        let containerPos: number = -1;
-        let containerEnd: number = -1;
-        let declarationListContainerEnd: number = -1;
+        let containerPos: int = -1;
+        let containerEnd: int = -1;
+        let declarationListContainerEnd: int = -1;
         let currentSourceFile: SourceFile;
         let currentText: string;
-        let currentLineMap: number[];
-        let detachedCommentsInfo: { nodePos: number, detachedCommentEndPos: number}[];
+        let currentLineMap: int[];
+        let detachedCommentsInfo: { nodePos: int, detachedCommentEndPos: int}[];
         let hasWrittenComment = false;
         let disabled: boolean = printerOptions.removeComments;
 
@@ -233,7 +233,7 @@ namespace ts {
             }
         }
 
-        function emitLeadingComments(pos: number, isEmittedNode: boolean) {
+        function emitLeadingComments(pos: int, isEmittedNode: boolean) {
             hasWrittenComment = false;
 
             if (isEmittedNode) {
@@ -252,13 +252,13 @@ namespace ts {
             }
         }
 
-        function emitTripleSlashLeadingComment(commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean, rangePos: number) {
+        function emitTripleSlashLeadingComment(commentPos: int, commentEnd: int, kind: SyntaxKind, hasTrailingNewLine: boolean, rangePos: int) {
             if (isTripleSlashComment(commentPos, commentEnd)) {
                 emitLeadingComment(commentPos, commentEnd, kind, hasTrailingNewLine, rangePos);
             }
         }
 
-        function emitLeadingComment(commentPos: number, commentEnd: number, _kind: SyntaxKind, hasTrailingNewLine: boolean, rangePos: number) {
+        function emitLeadingComment(commentPos: int, commentEnd: int, _kind: SyntaxKind, hasTrailingNewLine: boolean, rangePos: int) {
             if (!hasWrittenComment) {
                 emitNewLineBeforeLeadingCommentOfPosition(currentLineMap, writer, rangePos, commentPos);
                 hasWrittenComment = true;
@@ -277,7 +277,7 @@ namespace ts {
             }
         }
 
-        function emitLeadingCommentsOfPosition(pos: number) {
+        function emitLeadingCommentsOfPosition(pos: int) {
             if (disabled || pos === -1) {
                 return;
             }
@@ -285,11 +285,11 @@ namespace ts {
             emitLeadingComments(pos, /*isEmittedNode*/ true);
         }
 
-        function emitTrailingComments(pos: number) {
+        function emitTrailingComments(pos: int) {
             forEachTrailingCommentToEmit(pos, emitTrailingComment);
         }
 
-        function emitTrailingComment(commentPos: number, commentEnd: number, _kind: SyntaxKind, hasTrailingNewLine: boolean) {
+        function emitTrailingComment(commentPos: int, commentEnd: int, _kind: SyntaxKind, hasTrailingNewLine: boolean) {
             // trailing comments are emitted at space/*trailing comment1 */space/*trailing comment2*/
             if (!writer.isAtStartOfLine()) {
                 writer.write(" ");
@@ -304,7 +304,7 @@ namespace ts {
             }
         }
 
-        function emitTrailingCommentsOfPosition(pos: number) {
+        function emitTrailingCommentsOfPosition(pos: int) {
             if (disabled) {
                 return;
             }
@@ -320,7 +320,7 @@ namespace ts {
             }
         }
 
-        function emitTrailingCommentOfPosition(commentPos: number, commentEnd: number, _kind: SyntaxKind, hasTrailingNewLine: boolean) {
+        function emitTrailingCommentOfPosition(commentPos: int, commentEnd: int, _kind: SyntaxKind, hasTrailingNewLine: boolean) {
             // trailing comments of a position are emitted at /*trailing comment1 */space/*trailing comment*/space
 
             if (emitPos) emitPos(commentPos);
@@ -335,7 +335,7 @@ namespace ts {
             }
         }
 
-        function forEachLeadingCommentToEmit(pos: number, cb: (commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean, rangePos: number) => void) {
+        function forEachLeadingCommentToEmit(pos: int, cb: (commentPos: int, commentEnd: int, kind: SyntaxKind, hasTrailingNewLine: boolean, rangePos: int) => void) {
             // Emit the leading comments only if the container's pos doesn't match because the container should take care of emitting these comments
             if (containerPos === -1 || pos !== containerPos) {
                 if (hasDetachedComments(pos)) {
@@ -347,7 +347,7 @@ namespace ts {
             }
         }
 
-        function forEachTrailingCommentToEmit(end: number, cb: (commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean) => void) {
+        function forEachTrailingCommentToEmit(end: int, cb: (commentPos: int, commentEnd: int, kind: SyntaxKind, hasTrailingNewLine: boolean) => void) {
             // Emit the trailing comments only if the container's end doesn't match because the container should take care of emitting these comments
             if (containerEnd === -1 || (end !== containerEnd && end !== declarationListContainerEnd)) {
                 forEachTrailingCommentRange(currentText, end, cb);
@@ -372,11 +372,11 @@ namespace ts {
             detachedCommentsInfo = undefined;
         }
 
-        function hasDetachedComments(pos: number) {
+        function hasDetachedComments(pos: int) {
             return detachedCommentsInfo !== undefined && lastOrUndefined(detachedCommentsInfo).nodePos === pos;
         }
 
-        function forEachLeadingCommentWithoutDetachedComments(cb: (commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean, rangePos: number) => void) {
+        function forEachLeadingCommentWithoutDetachedComments(cb: (commentPos: int, commentEnd: int, kind: SyntaxKind, hasTrailingNewLine: boolean, rangePos: int) => void) {
             // get the leading comments from detachedPos
             const pos = lastOrUndefined(detachedCommentsInfo).detachedCommentEndPos;
             if (detachedCommentsInfo.length - 1) {
@@ -401,7 +401,7 @@ namespace ts {
             }
         }
 
-        function writeComment(text: string, lineMap: number[], writer: EmitTextWriter, commentPos: number, commentEnd: number, newLine: string) {
+        function writeComment(text: string, lineMap: int[], writer: EmitTextWriter, commentPos: int, commentEnd: int, newLine: string) {
             if (emitPos) emitPos(commentPos);
             writeCommentRange(text, lineMap, writer, commentPos, commentEnd, newLine);
             if (emitPos) emitPos(commentEnd);
@@ -412,7 +412,7 @@ namespace ts {
          *
          * @return true if the comment is a triple-slash comment else false
          **/
-        function isTripleSlashComment(commentPos: number, commentEnd: number) {
+        function isTripleSlashComment(commentPos: int, commentEnd: int) {
             // Verify this is /// comment, but do the regexp match only when we first can find /// in the comment text
             // so that we don't end up computing comment string and doing match for all // comments
             if (currentText.charCodeAt(commentPos + 1) === CharacterCodes.slash &&

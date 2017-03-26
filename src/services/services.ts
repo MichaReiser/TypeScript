@@ -32,7 +32,7 @@ namespace ts {
     /** The version of the language service API */
     export const servicesVersion = "0.5";
 
-    function createNode<TKind extends SyntaxKind>(kind: TKind, pos: number, end: number, parent?: Node): NodeObject | TokenObject<TKind> | IdentifierObject {
+    function createNode<TKind extends SyntaxKind>(kind: TKind, pos: int, end: int, parent?: Node): NodeObject | TokenObject<TKind> | IdentifierObject {
         const node = kind >= SyntaxKind.FirstNode ? new NodeObject(kind, pos, end) :
             kind === SyntaxKind.Identifier ? new IdentifierObject(SyntaxKind.Identifier, pos, end) :
                 new TokenObject(kind, pos, end);
@@ -42,8 +42,8 @@ namespace ts {
 
     class NodeObject implements Node {
         public kind: SyntaxKind;
-        public pos: number;
-        public end: number;
+        public pos: int;
+        public end: int;
         public flags: NodeFlags;
         public parent: Node;
         public jsDoc: JSDoc[];
@@ -51,7 +51,7 @@ namespace ts {
         public transformFlags: TransformFlags;
         private _children: Node[];
 
-        constructor(kind: SyntaxKind, pos: number, end: number) {
+        constructor(kind: SyntaxKind, pos: int, end: int) {
             this.pos = pos;
             this.end = end;
             this.flags = NodeFlags.None;
@@ -64,27 +64,27 @@ namespace ts {
             return getSourceFileOfNode(this);
         }
 
-        public getStart(sourceFile?: SourceFileLike, includeJsDocComment?: boolean): number {
+        public getStart(sourceFile?: SourceFileLike, includeJsDocComment?: boolean): int {
             return getTokenPosOfNode(this, sourceFile, includeJsDocComment);
         }
 
-        public getFullStart(): number {
+        public getFullStart(): int {
             return this.pos;
         }
 
-        public getEnd(): number {
+        public getEnd(): int {
             return this.end;
         }
 
-        public getWidth(sourceFile?: SourceFile): number {
+        public getWidth(sourceFile?: SourceFile): int {
             return this.getEnd() - this.getStart(sourceFile);
         }
 
-        public getFullWidth(): number {
+        public getFullWidth(): int {
             return this.end - this.pos;
         }
 
-        public getLeadingTriviaWidth(sourceFile?: SourceFile): number {
+        public getLeadingTriviaWidth(sourceFile?: SourceFile): int {
             return this.getStart(sourceFile) - this.pos;
         }
 
@@ -99,7 +99,7 @@ namespace ts {
             return sourceFile.text.substring(this.getStart(sourceFile), this.getEnd());
         }
 
-        private addSyntheticNodes(nodes: Node[], pos: number, end: number, useJSDocScanner?: boolean): number {
+        private addSyntheticNodes(nodes: Node[], pos: int, end: int, useJSDocScanner?: boolean): int {
             scanner.setTextPos(pos);
             while (pos < end) {
                 const token = useJSDocScanner ? scanner.scanJSDocToken() : scanner.scan();
@@ -178,7 +178,7 @@ namespace ts {
             return this._children.length;
         }
 
-        public getChildAt(index: number, sourceFile?: SourceFile): Node {
+        public getChildAt(index: int, sourceFile?: SourceFile): Node {
             if (!this._children) this.createChildren(sourceFile);
             return this._children[index];
         }
@@ -218,13 +218,13 @@ namespace ts {
 
     class TokenOrIdentifierObject implements Node {
         public kind: SyntaxKind;
-        public pos: number;
-        public end: number;
+        public pos: int;
+        public end: int;
         public flags: NodeFlags;
         public parent: Node;
         public jsDocComments: JSDoc[];
 
-        constructor(pos: number, end: number) {
+        constructor(pos: int, end: int) {
             // Set properties in same order as NodeObject
             this.pos = pos;
             this.end = end;
@@ -236,27 +236,27 @@ namespace ts {
             return getSourceFileOfNode(this);
         }
 
-        public getStart(sourceFile?: SourceFileLike, includeJsDocComment?: boolean): number {
+        public getStart(sourceFile?: SourceFileLike, includeJsDocComment?: boolean): int {
             return getTokenPosOfNode(this, sourceFile, includeJsDocComment);
         }
 
-        public getFullStart(): number {
+        public getFullStart(): int {
             return this.pos;
         }
 
-        public getEnd(): number {
+        public getEnd(): int {
             return this.end;
         }
 
-        public getWidth(sourceFile?: SourceFile): number {
+        public getWidth(sourceFile?: SourceFile): int {
             return this.getEnd() - this.getStart(sourceFile);
         }
 
-        public getFullWidth(): number {
+        public getFullWidth(): int {
             return this.end - this.pos;
         }
 
-        public getLeadingTriviaWidth(sourceFile?: SourceFile): number {
+        public getLeadingTriviaWidth(sourceFile?: SourceFile): int {
             return this.getStart(sourceFile) - this.pos;
         }
 
@@ -331,7 +331,7 @@ namespace ts {
     class TokenObject<TKind extends SyntaxKind> extends TokenOrIdentifierObject implements Token<TKind> {
         public kind: TKind;
 
-        constructor(kind: TKind, pos: number, end: number) {
+        constructor(kind: TKind, pos: int, end: int) {
             super(pos, end);
             this.kind = kind;
         }
@@ -346,7 +346,7 @@ namespace ts {
         _incrementExpressionBrand: any;
         _unaryExpressionBrand: any;
         _expressionBrand: any;
-        constructor(_kind: SyntaxKind.Identifier, pos: number, end: number) {
+        constructor(_kind: SyntaxKind.Identifier, pos: int, end: int) {
             super(pos, end);
         }
     }
@@ -406,8 +406,8 @@ namespace ts {
         parameters: Symbol[];
         thisParameter: Symbol;
         resolvedReturnType: Type;
-        minTypeArgumentCount: number;
-        minArgumentCount: number;
+        minTypeArgumentCount: int;
+        minArgumentCount: int;
         hasRestParameter: boolean;
         hasLiteralTypes: boolean;
 
@@ -447,7 +447,7 @@ namespace ts {
         public path: Path;
         public text: string;
         public scriptSnapshot: IScriptSnapshot;
-        public lineMap: number[];
+        public lineMap: int[];
 
         public statements: NodeArray<Statement>;
         public endOfFileToken: Token<SyntaxKind.EndOfFileToken>;
@@ -484,7 +484,7 @@ namespace ts {
         public ambientModuleNames: string[];
         public checkJsDirective: CheckJsDirective | undefined;
 
-        constructor(kind: SyntaxKind, pos: number, end: number) {
+        constructor(kind: SyntaxKind, pos: int, end: int) {
             super(kind, pos, end);
         }
 
@@ -492,23 +492,23 @@ namespace ts {
             return updateSourceFile(this, newText, textChangeRange);
         }
 
-        public getLineAndCharacterOfPosition(position: number): LineAndCharacter {
+        public getLineAndCharacterOfPosition(position: int): LineAndCharacter {
             return ts.getLineAndCharacterOfPosition(this, position);
         }
 
-        public getLineStarts(): number[] {
+        public getLineStarts(): int[] {
             return getLineStarts(this);
         }
 
-        public getPositionOfLineAndCharacter(line: number, character: number): number {
+        public getPositionOfLineAndCharacter(line: int, character: int): int {
             return ts.getPositionOfLineAndCharacter(this, line, character);
         }
 
-        public getLineEndOfPosition(pos: number): number {
+        public getLineEndOfPosition(pos: int): int {
             const { line } = this.getLineAndCharacterOfPosition(pos);
             const lineStarts = this.getLineStarts();
 
-            let lastCharPos: number;
+            let lastCharPos: int;
             if (line + 1 >= lineStarts.length) {
                 lastCharPos = this.getEnd();
             }
@@ -988,9 +988,9 @@ namespace ts {
         // Store when we last tried to cancel.  Checking cancellation can be expensive (as we have
         // to marshall over to the host layer).  So we only bother actually checking once enough
         // time has passed.
-        private lastCancellationCheckTime = 0;
+        private lastCancellationCheckTime: number = 0;
 
-        constructor(private hostCancellationToken: HostCancellationToken, private readonly throttleWaitMilliseconds = 20) {
+        constructor(private hostCancellationToken: HostCancellationToken, private readonly throttleWaitMilliseconds = 20.0) {
         }
 
         public isCancellationRequested(): boolean {
@@ -1312,22 +1312,22 @@ namespace ts {
                    program.getGlobalDiagnostics(cancellationToken));
         }
 
-        function getCompletionsAtPosition(fileName: string, position: number): CompletionInfo {
+        function getCompletionsAtPosition(fileName: string, position: int): CompletionInfo {
             synchronizeHostData();
             return Completions.getCompletionsAtPosition(host, program.getTypeChecker(), log, program.getCompilerOptions(), getValidSourceFile(fileName), position);
         }
 
-        function getCompletionEntryDetails(fileName: string, position: number, entryName: string): CompletionEntryDetails {
+        function getCompletionEntryDetails(fileName: string, position: int, entryName: string): CompletionEntryDetails {
             synchronizeHostData();
             return Completions.getCompletionEntryDetails(program.getTypeChecker(), log, program.getCompilerOptions(), getValidSourceFile(fileName), position, entryName);
         }
 
-        function getCompletionEntrySymbol(fileName: string, position: number, entryName: string): Symbol {
+        function getCompletionEntrySymbol(fileName: string, position: int, entryName: string): Symbol {
             synchronizeHostData();
             return Completions.getCompletionEntrySymbol(program.getTypeChecker(), log, program.getCompilerOptions(), getValidSourceFile(fileName), position, entryName);
         }
 
-        function getQuickInfoAtPosition(fileName: string, position: number): QuickInfo {
+        function getQuickInfoAtPosition(fileName: string, position: int): QuickInfo {
             synchronizeHostData();
 
             const sourceFile = getValidSourceFile(fileName);
@@ -1379,24 +1379,24 @@ namespace ts {
         }
 
         /// Goto definition
-        function getDefinitionAtPosition(fileName: string, position: number): DefinitionInfo[] {
+        function getDefinitionAtPosition(fileName: string, position: int): DefinitionInfo[] {
             synchronizeHostData();
             return GoToDefinition.getDefinitionAtPosition(program, getValidSourceFile(fileName), position);
         }
 
         /// Goto implementation
-        function getImplementationAtPosition(fileName: string, position: number): ImplementationLocation[] {
+        function getImplementationAtPosition(fileName: string, position: int): ImplementationLocation[] {
             synchronizeHostData();
             return GoToImplementation.getImplementationAtPosition(program.getTypeChecker(), cancellationToken,
                 program.getSourceFiles(), getTouchingPropertyName(getValidSourceFile(fileName), position));
         }
 
-        function getTypeDefinitionAtPosition(fileName: string, position: number): DefinitionInfo[] {
+        function getTypeDefinitionAtPosition(fileName: string, position: int): DefinitionInfo[] {
             synchronizeHostData();
             return GoToDefinition.getTypeDefinitionAtPosition(program.getTypeChecker(), getValidSourceFile(fileName), position);
         }
 
-        function getOccurrencesAtPosition(fileName: string, position: number): ReferenceEntry[] {
+        function getOccurrencesAtPosition(fileName: string, position: int): ReferenceEntry[] {
             let results = getOccurrencesAtPositionCore(fileName, position);
 
             if (results) {
@@ -1410,7 +1410,7 @@ namespace ts {
             return results;
         }
 
-        function getDocumentHighlights(fileName: string, position: number, filesToSearch: string[]): DocumentHighlights[] {
+        function getDocumentHighlights(fileName: string, position: int, filesToSearch: string[]): DocumentHighlights[] {
             synchronizeHostData();
             const sourceFilesToSearch = map(filesToSearch, f => program.getSourceFile(f));
             const sourceFile = getValidSourceFile(fileName);
@@ -1418,7 +1418,7 @@ namespace ts {
         }
 
         /// References and Occurrences
-        function getOccurrencesAtPositionCore(fileName: string, position: number): ReferenceEntry[] {
+        function getOccurrencesAtPositionCore(fileName: string, position: int): ReferenceEntry[] {
             synchronizeHostData();
 
             return convertDocumentHighlights(getDocumentHighlights(fileName, position, [fileName]));
@@ -1445,29 +1445,29 @@ namespace ts {
             }
         }
 
-        function findRenameLocations(fileName: string, position: number, findInStrings: boolean, findInComments: boolean): RenameLocation[] {
+        function findRenameLocations(fileName: string, position: int, findInStrings: boolean, findInComments: boolean): RenameLocation[] {
             const referencedSymbols = findReferencedSymbols(fileName, position, findInStrings, findInComments, /*isForRename*/true);
             return FindAllReferences.convertReferences(referencedSymbols);
         }
 
-        function getReferencesAtPosition(fileName: string, position: number): ReferenceEntry[] {
+        function getReferencesAtPosition(fileName: string, position: int): ReferenceEntry[] {
             const referencedSymbols = findReferencedSymbols(fileName, position, /*findInStrings*/ false, /*findInComments*/ false, /*isForRename*/false);
             return FindAllReferences.convertReferences(referencedSymbols);
         }
 
-        function findReferences(fileName: string, position: number): ReferencedSymbol[] {
+        function findReferences(fileName: string, position: int): ReferencedSymbol[] {
             const referencedSymbols = findReferencedSymbols(fileName, position, /*findInStrings*/ false, /*findInComments*/ false, /*isForRename*/false);
             // Only include referenced symbols that have a valid definition.
             return filter(referencedSymbols, rs => !!rs.definition);
         }
 
-        function findReferencedSymbols(fileName: string, position: number, findInStrings: boolean, findInComments: boolean, isForRename: boolean): ReferencedSymbol[] {
+        function findReferencedSymbols(fileName: string, position: int, findInStrings: boolean, findInComments: boolean, isForRename: boolean): ReferencedSymbol[] {
             synchronizeHostData();
             return FindAllReferences.findReferencedSymbols(program.getTypeChecker(), cancellationToken, program.getSourceFiles(), getValidSourceFile(fileName), position, findInStrings, findInComments, isForRename);
         }
 
         /// NavigateTo
-        function getNavigateToItems(searchValue: string, maxResultCount?: number, fileName?: string, excludeDtsFiles?: boolean): NavigateToItem[] {
+        function getNavigateToItems(searchValue: string, maxResultCount?: int, fileName?: string, excludeDtsFiles?: boolean): NavigateToItem[] {
             synchronizeHostData();
 
             const sourceFiles = fileName ? [getValidSourceFile(fileName)] : program.getSourceFiles();
@@ -1501,7 +1501,7 @@ namespace ts {
         /**
          * This is a semantic operation.
          */
-        function getSignatureHelpItems(fileName: string, position: number): SignatureHelpItems {
+        function getSignatureHelpItems(fileName: string, position: int): SignatureHelpItems {
             synchronizeHostData();
 
             const sourceFile = getValidSourceFile(fileName);
@@ -1518,7 +1518,7 @@ namespace ts {
             return getNonBoundSourceFile(fileName);
         }
 
-        function getNameOrDottedNameSpan(fileName: string, startPos: number, _endPos: number): TextSpan {
+        function getNameOrDottedNameSpan(fileName: string, startPos: int, _endPos: int): TextSpan {
             const sourceFile = syntaxTreeCache.getCurrentSourceFile(fileName);
 
             // Get node at the location
@@ -1575,7 +1575,7 @@ namespace ts {
             return createTextSpanFromBounds(nodeForStartPos.getStart(), node.getEnd());
         }
 
-        function getBreakpointStatementAtPosition(fileName: string, position: number) {
+        function getBreakpointStatementAtPosition(fileName: string, position: int) {
             // doesn't use compiler - no need to synchronize with host
             const sourceFile = syntaxTreeCache.getCurrentSourceFile(fileName);
 
@@ -1629,7 +1629,7 @@ namespace ts {
             return OutliningElementsCollector.collectElements(sourceFile, cancellationToken);
         }
 
-        function getBraceMatchingAtPosition(fileName: string, position: number) {
+        function getBraceMatchingAtPosition(fileName: string, position: int) {
             const sourceFile = syntaxTreeCache.getCurrentSourceFile(fileName);
             const result: TextSpan[] = [];
 
@@ -1680,7 +1680,7 @@ namespace ts {
             }
         }
 
-        function getIndentationAtPosition(fileName: string, position: number, editorOptions: EditorOptions | EditorSettings) {
+        function getIndentationAtPosition(fileName: string, position: int, editorOptions: EditorOptions | EditorSettings) {
             let start = timestamp();
             const settings = toEditorSettings(editorOptions);
             const sourceFile = syntaxTreeCache.getCurrentSourceFile(fileName);
@@ -1694,7 +1694,7 @@ namespace ts {
             return result;
         }
 
-        function getFormattingEditsForRange(fileName: string, start: number, end: number, options: FormatCodeOptions | FormatCodeSettings): TextChange[] {
+        function getFormattingEditsForRange(fileName: string, start: int, end: int, options: FormatCodeOptions | FormatCodeSettings): TextChange[] {
             const sourceFile = syntaxTreeCache.getCurrentSourceFile(fileName);
             const settings = toEditorSettings(options);
             return formatting.formatSelection(start, end, sourceFile, getRuleProvider(settings), settings);
@@ -1706,7 +1706,7 @@ namespace ts {
             return formatting.formatDocument(sourceFile, getRuleProvider(settings), settings);
         }
 
-        function getFormattingEditsAfterKeystroke(fileName: string, position: number, key: string, options: FormatCodeOptions | FormatCodeSettings): TextChange[] {
+        function getFormattingEditsAfterKeystroke(fileName: string, position: int, key: string, options: FormatCodeOptions | FormatCodeSettings): TextChange[] {
             const sourceFile = syntaxTreeCache.getCurrentSourceFile(fileName);
             const settings = toEditorSettings(options);
 
@@ -1723,7 +1723,7 @@ namespace ts {
             return [];
         }
 
-        function getCodeFixesAtPosition(fileName: string, start: number, end: number, errorCodes: number[], formatOptions: FormatCodeSettings): CodeAction[] {
+        function getCodeFixesAtPosition(fileName: string, start: int, end: int, errorCodes: number[], formatOptions: FormatCodeSettings): CodeAction[] {
             synchronizeHostData();
             const sourceFile = getValidSourceFile(fileName);
             const span = { start, length: end - start };
@@ -1754,11 +1754,11 @@ namespace ts {
             return allFixes;
         }
 
-        function getDocCommentTemplateAtPosition(fileName: string, position: number): TextInsertion {
+        function getDocCommentTemplateAtPosition(fileName: string, position: int): TextInsertion {
             return JsDoc.getDocCommentTemplateAtPosition(getNewLineOrDefaultFromHost(host), syntaxTreeCache.getCurrentSourceFile(fileName), position);
         }
 
-        function isValidBraceCompletionAtPosition(fileName: string, position: number, openingBrace: number): boolean {
+        function isValidBraceCompletionAtPosition(fileName: string, position: int, openingBrace: number): boolean {
             // '<' is currently not supported, figuring out if we're in a Generic Type vs. a comparison is too
             // expensive to do during typing scenarios
             // i.e. whether we're dealing with:
@@ -1934,7 +1934,7 @@ namespace ts {
             }
         }
 
-        function getRenameInfo(fileName: string, position: number): RenameInfo {
+        function getRenameInfo(fileName: string, position: int): RenameInfo {
             synchronizeHostData();
             const defaultLibFileName = host.getDefaultLibFileName(host.getCompilationSettings());
             return Rename.getRenameInfo(program.getTypeChecker(), defaultLibFileName, getCanonicalFileName, getValidSourceFile(fileName), position);

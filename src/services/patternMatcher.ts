@@ -515,7 +515,7 @@ namespace ts {
     }
 
     // Assumes 'value' is already lowercase.
-    function indexOfIgnoringCase(string: string, value: string): number {
+    function indexOfIgnoringCase(string: string, value: string): int {
         const n = string.length - value.length;
         for (let i = 0; i <= n; i++) {
             if (startsWithIgnoringCase(string, value, i)) {
@@ -527,7 +527,7 @@ namespace ts {
     }
 
     // Assumes 'value' is already lowercase.
-    function startsWithIgnoringCase(string: string, value: string, start: number): boolean {
+    function startsWithIgnoringCase(string: string, value: string, start: int): boolean {
         for (let i = 0; i < value.length; i++) {
             const ch1 = toLowerCase(string.charCodeAt(i + start));
             const ch2 = value.charCodeAt(i);
@@ -673,7 +673,7 @@ namespace ts {
         return false;
     }
 
-    function isAllPunctuation(identifier: string, start: number, end: number): boolean {
+    function isAllPunctuation(identifier: string, start: int, end: int): boolean {
         for (let i = start; i < end; i++) {
             const ch = identifier.charCodeAt(i);
 
@@ -686,7 +686,7 @@ namespace ts {
         return true;
     }
 
-    function transitionFromUpperToLower(identifier: string, word: boolean, index: number, wordStart: number): boolean {
+    function transitionFromUpperToLower(identifier: string, word: boolean, index: int, wordStart: int): boolean {
         if (word) {
             // Cases this supports:
             // 1) IDisposable -> I, Disposable
@@ -722,7 +722,7 @@ namespace ts {
         return false;
     }
 
-    function transitionFromLowerToUpper(identifier: string, word: boolean, index: number): boolean {
+    function transitionFromLowerToUpper(identifier: string, word: boolean, index: int): boolean {
         const lastIsUpper = isUpperCaseLetter(identifier.charCodeAt(index - 1));
         const currentIsUpper = isUpperCaseLetter(identifier.charCodeAt(index));
 

@@ -4,7 +4,7 @@
 namespace ts.Completions {
     export type Log = (message: string) => void;
 
-    export function getCompletionsAtPosition(host: LanguageServiceHost, typeChecker: TypeChecker, log: Log, compilerOptions: CompilerOptions, sourceFile: SourceFile, position: number): CompletionInfo | undefined {
+    export function getCompletionsAtPosition(host: LanguageServiceHost, typeChecker: TypeChecker, log: Log, compilerOptions: CompilerOptions, sourceFile: SourceFile, position: int): CompletionInfo | undefined {
         if (isInReferenceComment(sourceFile, position)) {
             return PathCompletions.getTripleSlashReferenceCompletion(sourceFile, position, compilerOptions, host);
         }
@@ -68,7 +68,7 @@ namespace ts.Completions {
         return { isGlobalCompletion, isMemberCompletion, isNewIdentifierLocation: isNewIdentifierLocation, entries };
     }
 
-    function getJavaScriptCompletionEntries(sourceFile: SourceFile, position: number, uniqueNames: Map<string>, target: ScriptTarget): CompletionEntry[] {
+    function getJavaScriptCompletionEntries(sourceFile: SourceFile, position: int, uniqueNames: Map<string>, target: ScriptTarget): CompletionEntry[] {
         const entries: CompletionEntry[] = [];
 
         const nameTable = getNameTable(sourceFile);
@@ -141,7 +141,7 @@ namespace ts.Completions {
         return uniqueNames;
     }
 
-    function getStringLiteralCompletionEntries(sourceFile: SourceFile, position: number, typeChecker: TypeChecker, compilerOptions: CompilerOptions, host: LanguageServiceHost, log: Log): CompletionInfo | undefined {
+    function getStringLiteralCompletionEntries(sourceFile: SourceFile, position: int, typeChecker: TypeChecker, compilerOptions: CompilerOptions, host: LanguageServiceHost, log: Log): CompletionInfo | undefined {
         const node = findPrecedingToken(position, sourceFile);
         if (!node || node.kind !== SyntaxKind.StringLiteral) {
             return undefined;
@@ -280,7 +280,7 @@ namespace ts.Completions {
         }
     }
 
-    export function getCompletionEntryDetails(typeChecker: TypeChecker, log: (message: string) => void, compilerOptions: CompilerOptions, sourceFile: SourceFile, position: number, entryName: string): CompletionEntryDetails {
+    export function getCompletionEntryDetails(typeChecker: TypeChecker, log: (message: string) => void, compilerOptions: CompilerOptions, sourceFile: SourceFile, position: int, entryName: string): CompletionEntryDetails {
         // Compute all the completion symbols again.
         const completionData = getCompletionData(typeChecker, log, sourceFile, position);
         if (completionData) {
@@ -319,7 +319,7 @@ namespace ts.Completions {
         return undefined;
     }
 
-    export function getCompletionEntrySymbol(typeChecker: TypeChecker, log: (message: string) => void, compilerOptions: CompilerOptions, sourceFile: SourceFile, position: number, entryName: string): Symbol {
+    export function getCompletionEntrySymbol(typeChecker: TypeChecker, log: (message: string) => void, compilerOptions: CompilerOptions, sourceFile: SourceFile, position: int, entryName: string): Symbol {
         // Compute all the completion symbols again.
         const completionData = getCompletionData(typeChecker, log, sourceFile, position);
         if (completionData) {
@@ -335,7 +335,7 @@ namespace ts.Completions {
         return undefined;
     }
 
-    function getCompletionData(typeChecker: TypeChecker, log: (message: string) => void, sourceFile: SourceFile, position: number) {
+    function getCompletionData(typeChecker: TypeChecker, log: (message: string) => void, sourceFile: SourceFile, position: int) {
         const isJavaScriptFile = isSourceFileJavaScript(sourceFile);
 
         // JsDoc tag-name is just the name of the JSDoc tagname (exclude "@")
@@ -680,7 +680,7 @@ namespace ts.Completions {
          * Finds the first node that "embraces" the position, so that one may
          * accurately aggregate locals from the closest containing scope.
          */
-        function getScopeNode(initialToken: Node, position: number, sourceFile: SourceFile) {
+        function getScopeNode(initialToken: Node, position: int, sourceFile: SourceFile) {
             let scope = initialToken;
             while (scope && !positionBelongsToNode(scope, position, sourceFile)) {
                 scope = scope.parent;

@@ -16,7 +16,7 @@ namespace ts {
         delete(key: string): boolean;
         clear(): void;
         forEach(action: (value: T, key: string) => void): void;
-        readonly size: number;
+        readonly size: int;
         keys(): Iterator<string>;
         values(): Iterator<T>;
         entries(): Iterator<[string, T]>;
@@ -43,8 +43,8 @@ namespace ts {
     }
 
     export interface TextRange {
-        pos: number;
-        end: number;
+        pos: int;
+        end: int;
     }
 
     // token > SyntaxKind.Identifer => token is a keyword
@@ -2196,8 +2196,8 @@ namespace ts {
 
     export interface FlowSwitchClause extends FlowNode {
         switchStatement: SwitchStatement;
-        clauseStart: number;   // Start index of case/default clause range
-        clauseEnd: number;     // End index of case/default clause range
+        clauseStart: int;   // Start index of case/default clause range
+        clauseEnd: int;     // End index of case/default clause range
         antecedent: FlowNode;
     }
 
@@ -2229,7 +2229,7 @@ namespace ts {
      */
     export interface SourceFileLike {
         readonly text: string;
-        lineMap: number[];
+        lineMap: int[];
     }
 
 
@@ -2289,7 +2289,7 @@ namespace ts {
 
         // Stores a line map for the file.
         // This field should never be used directly to obtain line map, use getLineMap function instead.
-        /* @internal */ lineMap: number[];
+        /* @internal */ lineMap: int[];
         /* @internal */ classifiableNames?: Map<string>;
         // Stores a mapping 'external module reference text' -> 'resolved file name' | undefined
         // It is used to resolve module names in the checker.
@@ -2407,17 +2407,17 @@ namespace ts {
 
     export interface SourceMapSpan {
         /** Line number in the .js file. */
-        emittedLine: number;
+        emittedLine: int;
         /** Column number in the .js file. */
-        emittedColumn: number;
+        emittedColumn: int;
         /** Line number in the .ts file. */
-        sourceLine: number;
+        sourceLine: int;
         /** Column number in the .ts file. */
-        sourceColumn: number;
+        sourceColumn: int;
         /** Optional name (index into names array) associated with this span. */
-        nameIndex?: number;
+        nameIndex?: int;
         /** .ts file (index into sources array) associated with this span */
-        sourceIndex: number;
+        sourceIndex: int;
     }
 
     export interface SourceMapData {
@@ -2480,7 +2480,7 @@ namespace ts {
          * Gets the type of a parameter at a given position in a signature.
          * Returns `any` if the index is not valid.
          */
-        /* @internal */ getParameterType(signature: Signature, parameterIndex: number): Type;
+        /* @internal */ getParameterType(signature: Signature, parameterIndex: int): Type;
         getNonNullableType(type: Type): Type;
 
         /** Note that the resulting nodes cannot be checked. */
@@ -2650,7 +2650,7 @@ namespace ts {
     export interface IdentifierTypePredicate extends TypePredicateBase {
         kind: TypePredicateKind.Identifier;
         parameterName: string;
-        parameterIndex: number;
+        parameterIndex: int;
     }
 
     export type TypePredicate = IdentifierTypePredicate | ThisTypePredicate;
@@ -3226,7 +3226,7 @@ namespace ts {
         /* @internal */
         resolvedReturnType: Type;           // Resolved return type
         /* @internal */
-        minArgumentCount: number;           // Number of non-optional parameters
+        minArgumentCount: int;           // Number of non-optional parameters
         /* @internal */
         hasRestParameter: boolean;          // True if last parameter is rest parameter
         /* @internal */
@@ -3284,7 +3284,7 @@ namespace ts {
         inferences: TypeInferences[];       // Inferences made for each type parameter
         inferredTypes: Type[];              // Inferred type for each type parameter
         mapper?: TypeMapper;                // Type mapper for this inference context
-        failedTypeParameterIndex?: number;  // Index of type parameter for which inference failed
+        failedTypeParameterIndex?: int;  // Index of type parameter for which inference failed
         // It is optional because in contextual signature instantiation, nothing fails
         useAnyForNoInferences?: boolean;    // Use any instead of {} for no inferences
     }
@@ -3331,8 +3331,8 @@ namespace ts {
 
     export interface Diagnostic {
         file: SourceFile;
-        start: number;
-        length: number;
+        start: int;
+        length: int;
         messageText: string | DiagnosticMessageChain;
         category: DiagnosticCategory;
         code: number;
@@ -3389,7 +3389,7 @@ namespace ts {
         /*@internal*/listFiles?: boolean;
         locale?: string;
         mapRoot?: string;
-        maxNodeModuleJsDepth?: number;
+        maxNodeModuleJsDepth?: int;
         module?: ModuleKind;
         moduleResolution?: ModuleResolutionKind;
         newLine?: NewLineKind;
@@ -3484,11 +3484,11 @@ namespace ts {
     }
 
     export interface LineAndCharacter {
-        line: number;
+        line: int;
         /*
          * This value denotes the character position in line and is different from the 'column' because of tab characters.
          */
-        character: number;
+        character: int;
     }
 
     export const enum ScriptKind {
@@ -4183,8 +4183,8 @@ namespace ts {
          */
         substituteNode?(hint: EmitHint, node: Node): Node;
         /*@internal*/ onEmitSourceMapOfNode?: (hint: EmitHint, node: Node, emitCallback: (hint: EmitHint, node: Node) => void) => void;
-        /*@internal*/ onEmitSourceMapOfToken?: (node: Node, token: SyntaxKind, pos: number, emitCallback: (token: SyntaxKind, pos: number) => number) => number;
-        /*@internal*/ onEmitSourceMapOfPosition?: (pos: number) => void;
+        /*@internal*/ onEmitSourceMapOfToken?: (node: Node, token: SyntaxKind, pos: int, emitCallback: (token: SyntaxKind, pos: int) => int) => int;
+        /*@internal*/ onEmitSourceMapOfPosition?: (pos: int) => void;
         /*@internal*/ onEmitHelpers?: (node: Node, writeLines: (text: string) => void) => void;
         /*@internal*/ onSetSourceFile?: (node: SourceFile) => void;
         /*@internal*/ onBeforeEmitNodeArray?: (nodes: NodeArray<any>) => void;
@@ -4210,22 +4210,22 @@ namespace ts {
         getText(): string;
         rawWrite(s: string): void;
         writeLiteral(s: string): void;
-        getTextPos(): number;
-        getLine(): number;
-        getColumn(): number;
-        getIndent(): number;
+        getTextPos(): int;
+        getLine(): int;
+        getColumn(): int;
+        getIndent(): int;
         isAtStartOfLine(): boolean;
         reset(): void;
     }
 
     export interface TextSpan {
-        start: number;
-        length: number;
+        start: int;
+        length: int;
     }
 
     export interface TextChangeRange {
         span: TextSpan;
-        newLength: number;
+        newLength: int;
     }
 
     /* @internal */
@@ -4245,7 +4245,7 @@ namespace ts {
         // already in the collection).  As such, it can be used as a simple way to tell if any
         // operation caused diagnostics to be returned by storing and comparing the return value
         // of this method before/after the operation is performed.
-        getModificationCount(): number;
+        getModificationCount(): int;
 
         /* @internal */ reattachFileDiagnostics(newFile: SourceFile): void;
     }

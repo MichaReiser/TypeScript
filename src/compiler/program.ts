@@ -1300,7 +1300,7 @@ namespace ts {
             }
         }
 
-        function processSourceFile(fileName: string, isDefaultLib: boolean, refFile?: SourceFile, refPos?: number, refEnd?: number) {
+        function processSourceFile(fileName: string, isDefaultLib: boolean, refFile?: SourceFile, refPos?: int, refEnd?: int) {
             let diagnosticArgument: string[];
             let diagnostic: DiagnosticMessage;
             if (hasExtension(fileName)) {
@@ -1342,7 +1342,7 @@ namespace ts {
             }
         }
 
-        function reportFileNamesDifferOnlyInCasingError(fileName: string, existingFileName: string, refFile: SourceFile, refPos: number, refEnd: number): void {
+        function reportFileNamesDifferOnlyInCasingError(fileName: string, existingFileName: string, refFile: SourceFile, refPos: int, refEnd: int): void {
             if (refFile !== undefined && refPos !== undefined && refEnd !== undefined) {
                 fileProcessingDiagnostics.add(createFileDiagnostic(refFile, refPos, refEnd - refPos,
                     Diagnostics.File_name_0_differs_from_already_included_file_name_1_only_in_casing, fileName, existingFileName));
@@ -1353,7 +1353,7 @@ namespace ts {
         }
 
         // Get source file from normalized fileName
-        function findSourceFile(fileName: string, path: Path, isDefaultLib: boolean, refFile?: SourceFile, refPos?: number, refEnd?: number): SourceFile {
+        function findSourceFile(fileName: string, path: Path, isDefaultLib: boolean, refFile?: SourceFile, refPos?: int, refEnd?: int): SourceFile {
             if (filesByName.contains(path)) {
                 const file = filesByName.get(path);
                 // try to check if we've already seen this file but with a different casing in path
@@ -1456,7 +1456,7 @@ namespace ts {
         }
 
         function processTypeReferenceDirective(typeReferenceDirective: string, resolvedTypeReferenceDirective: ResolvedTypeReferenceDirective,
-            refFile?: SourceFile, refPos?: number, refEnd?: number): void {
+            refFile?: SourceFile, refPos?: int, refEnd?: int): void {
 
             // If we already found this library as a primary reference - nothing to do
             const previousResolution = resolvedTypeReferenceDirectives.get(typeReferenceDirective);
@@ -1503,7 +1503,7 @@ namespace ts {
             }
         }
 
-        function createDiagnostic(refFile: SourceFile, refPos: number, refEnd: number, message: DiagnosticMessage, ...args: any[]): Diagnostic {
+        function createDiagnostic(refFile: SourceFile, refPos: int, refEnd: int, message: DiagnosticMessage, ...args: any[]): Diagnostic {
             if (refFile === undefined || refPos === undefined || refEnd === undefined) {
                 return createCompilerDiagnostic(message, ...args);
             }

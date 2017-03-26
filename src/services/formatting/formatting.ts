@@ -31,8 +31,8 @@ namespace ts.formatting {
      * the first token in line so it should be indented
      */
     interface DynamicIndentation {
-        getIndentationForToken(tokenLine: number, tokenKind: SyntaxKind, container: Node): number;
-        getIndentationForComment(owningToken: SyntaxKind, tokenIndentation: number, container: Node): number;
+        getIndentationForToken(tokenLine: int, tokenKind: SyntaxKind, container: Node): int;
+        getIndentationForComment(owningToken: SyntaxKind, tokenIndentation: int, container: Node): int;
         /**
           * Indentation for open and close tokens of the node if it is block or another node that needs special indentation
           * ... {
@@ -41,7 +41,7 @@ namespace ts.formatting {
           *  ____ - indentation
           *      ____ - delta
           **/
-        getIndentation(): number;
+        getIndentation(): int;
         /**
           * Prefered relative indentation for child nodes.
           * Delta is used to carry the indentation info
@@ -54,7 +54,7 @@ namespace ts.formatting {
           * so bar inherits indentation from foo and bar.delta will be 4
           *
           */
-        getDelta(child: TextRangeWithKind): number;
+        getDelta(child: TextRangeWithKind): int;
         /**
           * Formatter calls this function when rule adds or deletes new lines from the text
           * so indentation scope can adjust values of indentation and delta.
@@ -63,11 +63,11 @@ namespace ts.formatting {
     }
 
     interface Indentation {
-        indentation: number;
-        delta: number;
+        indentation: int;
+        delta: int;
     }
 
-    export function formatOnEnter(position: number, sourceFile: SourceFile, rulesProvider: RulesProvider, options: FormatCodeSettings): TextChange[] {
+    export function formatOnEnter(position: int, sourceFile: SourceFile, rulesProvider: RulesProvider, options: FormatCodeSettings): TextChange[] {
         const line = sourceFile.getLineAndCharacterOfPosition(position).line;
         if (line === 0) {
             return [];
@@ -96,11 +96,11 @@ namespace ts.formatting {
         return formatSpan(span, sourceFile, options, rulesProvider, FormattingRequestKind.FormatOnEnter);
     }
 
-    export function formatOnSemicolon(position: number, sourceFile: SourceFile, rulesProvider: RulesProvider, options: FormatCodeSettings): TextChange[] {
+    export function formatOnSemicolon(position: int, sourceFile: SourceFile, rulesProvider: RulesProvider, options: FormatCodeSettings): TextChange[] {
         return formatOutermostParent(position, SyntaxKind.SemicolonToken, sourceFile, options, rulesProvider, FormattingRequestKind.FormatOnSemicolon);
     }
 
-    export function formatOnClosingCurly(position: number, sourceFile: SourceFile, rulesProvider: RulesProvider, options: FormatCodeSettings): TextChange[] {
+    export function formatOnClosingCurly(position: int, sourceFile: SourceFile, rulesProvider: RulesProvider, options: FormatCodeSettings): TextChange[] {
         return formatOutermostParent(position, SyntaxKind.CloseBraceToken, sourceFile, options, rulesProvider, FormattingRequestKind.FormatOnClosingCurlyBrace);
     }
 
@@ -112,7 +112,7 @@ namespace ts.formatting {
         return formatSpan(span, sourceFile, options, rulesProvider, FormattingRequestKind.FormatDocument);
     }
 
-    export function formatSelection(start: number, end: number, sourceFile: SourceFile, rulesProvider: RulesProvider, options: FormatCodeSettings): TextChange[] {
+    export function formatSelection(start: int, end: int, sourceFile: SourceFile, rulesProvider: RulesProvider, options: FormatCodeSettings): TextChange[] {
         // format from the beginning of the line
         const span = {
             pos: getLineStartPositionForPosition(start, sourceFile),
@@ -121,7 +121,7 @@ namespace ts.formatting {
         return formatSpan(span, sourceFile, options, rulesProvider, FormattingRequestKind.FormatSelection);
     }
 
-    function formatOutermostParent(position: number, expectedLastToken: SyntaxKind, sourceFile: SourceFile, options: FormatCodeSettings, rulesProvider: RulesProvider, requestKind: FormattingRequestKind): TextChange[] {
+    function formatOutermostParent(position: int, expectedLastToken: SyntaxKind, sourceFile: SourceFile, options: FormatCodeSettings, rulesProvider: RulesProvider, requestKind: FormattingRequestKind): TextChange[] {
         const parent = findOutermostParent(position, expectedLastToken, sourceFile);
         if (!parent) {
             return [];
@@ -133,7 +133,7 @@ namespace ts.formatting {
         return formatSpan(span, sourceFile, options, rulesProvider, requestKind);
     }
 
-    function findOutermostParent(position: number, expectedTokenKind: SyntaxKind, sourceFile: SourceFile): Node {
+    function findOutermostParent(position: int, expectedTokenKind: SyntaxKind, sourceFile: SourceFile): Node {
         const precedingToken = findPrecedingToken(position, sourceFile);
 
         // when it is claimed that trigger character was typed at given position
@@ -258,7 +258,7 @@ namespace ts.formatting {
       * This function will look for token that is located before the start of target range
       * and return its end as start position for the scanner.
       */
-    function getScanStartPosition(enclosingNode: Node, originalRange: TextRange, sourceFile: SourceFile): number {
+    function getScanStartPosition(enclosingNode: Node, originalRange: TextRange, sourceFile: SourceFile): int {
         const start = enclosingNode.getStart(sourceFile);
         if (start === originalRange.pos && enclosingNode.end === originalRange.end) {
             return start;
@@ -294,7 +294,7 @@ namespace ts.formatting {
      * if parent is on the different line - its delta was already contributed
      * to the initial indentation.
      */
-    function getOwnOrInheritedDelta(n: Node, options: FormatCodeSettings, sourceFile: SourceFile): number {
+    function getOwnOrInheritedDelta(n: Node, options: FormatCodeSettings, sourceFile: SourceFile): int {
         let previousLine = Constants.Unknown;
         let child: Node;
         while (n) {
@@ -315,7 +315,7 @@ namespace ts.formatting {
     }
 
     /* @internal */
-    export function formatNode(node: Node, sourceFileLike: SourceFileLike, languageVariant: LanguageVariant, initialIndentation: number, delta: number,  rulesProvider: RulesProvider): TextChange[] {
+    export function formatNode(node: Node, sourceFileLike: SourceFileLike, languageVariant: LanguageVariant, initialIndentation: int, delta: int,  rulesProvider: RulesProvider): TextChange[] {
         const range = { pos: 0, end: sourceFileLike.text.length };
         return formatSpanWorker(
             range,
@@ -352,8 +352,8 @@ namespace ts.formatting {
 
     function formatSpanWorker(originalRange: TextRange,
         enclosingNode: Node,
-        initialIndentation: number,
-        delta: number,
+        initialIndentation: int,
+        delta: int,
         formattingScanner: FormattingScanner,
         options: FormatCodeSettings,
         rulesProvider: RulesProvider,
@@ -366,10 +366,10 @@ namespace ts.formatting {
         let previousRangeHasError: boolean;
         let previousRange: TextRangeWithKind;
         let previousParent: Node;
-        let previousRangeStartLine: number;
+        let previousRangeStartLine: int;
 
-        let lastIndentedLine: number;
-        let indentationOnLastIndentedLine: number;
+        let lastIndentedLine: int;
+        let indentationOnLastIndentedLine: int;
 
         const edits: TextChange[] = [];
 
@@ -406,11 +406,11 @@ namespace ts.formatting {
           * If list element is in the range - its indentation will be equal
           * to inherited indentation from its predecessors.
           */
-        function tryComputeIndentationForListItem(startPos: number,
-            endPos: number,
-            parentStartLine: number,
+        function tryComputeIndentationForListItem(startPos: int,
+            endPos: int,
+            parentStartLine: int,
             range: TextRange,
-            inheritedIndentation: number): number {
+            inheritedIndentation: int): int {
 
             if (rangeOverlapsWithStartEnd(range, startPos, endPos) ||
                 rangeContainsStartEnd(range, startPos, endPos) /* Not to miss zero-range nodes e.g. JsxText */) {
@@ -436,14 +436,14 @@ namespace ts.formatting {
 
         function computeIndentation(
             node: TextRangeWithKind,
-            startLine: number,
-            inheritedIndentation: number,
+            startLine: int,
+            inheritedIndentation: int,
             parent: Node,
             parentDynamicIndentation: DynamicIndentation,
-            effectiveParentStartLine: number): Indentation {
+            effectiveParentStartLine: int): Indentation {
 
             let indentation = inheritedIndentation;
-            let delta: number = SmartIndenter.shouldIndentChildNode(node) ? options.indentSize : 0;
+            let delta: int = SmartIndenter.shouldIndentChildNode(node) ? options.indentSize : 0;
 
             if (effectiveParentStartLine === startLine) {
                 // if node is located on the same line with the parent
@@ -492,7 +492,7 @@ namespace ts.formatting {
             }
         }
 
-        function getDynamicIndentation(node: Node, nodeStartLine: number, indentation: number, delta: number): DynamicIndentation {
+        function getDynamicIndentation(node: Node, nodeStartLine: int, indentation: int, delta: int): DynamicIndentation {
             return {
                 getIndentationForComment: (kind, tokenIndentation, container) => {
                     switch (kind) {
@@ -566,13 +566,13 @@ namespace ts.formatting {
                 }
             };
 
-            function getEffectiveDelta(delta: number, child: TextRangeWithKind) {
+            function getEffectiveDelta(delta: int, child: TextRangeWithKind) {
                 // Delta value should be zero when the node explicitly prevents indentation of the child node
                 return SmartIndenter.nodeWillIndentChild(node, child, true) ? delta : 0;
             }
         }
 
-        function processNode(node: Node, contextNode: Node, nodeStartLine: number, undecoratedNodeStartLine: number, indentation: number, delta: number) {
+        function processNode(node: Node, contextNode: Node, nodeStartLine: int, undecoratedNodeStartLine: int, indentation: int, delta: int) {
             if (!rangeOverlapsWithStartEnd(originalRange, node.getStart(sourceFile), node.getEnd())) {
                 return;
             }
@@ -615,13 +615,13 @@ namespace ts.formatting {
 
             function processChildNode(
                 child: Node,
-                inheritedIndentation: number,
+                inheritedIndentation: int,
                 parent: Node,
                 parentDynamicIndentation: DynamicIndentation,
-                parentStartLine: number,
-                undecoratedParentStartLine: number,
+                parentStartLine: int,
+                undecoratedParentStartLine: int,
                 isListItem: boolean,
-                isFirstListItem?: boolean): number {
+                isFirstListItem?: boolean): int {
 
                 const childStartPos = child.getStart(sourceFile);
 
@@ -693,7 +693,7 @@ namespace ts.formatting {
 
             function processChildNodes(nodes: NodeArray<Node>,
                 parent: Node,
-                parentStartLine: number,
+                parentStartLine: int,
                 parentDynamicIndentation: DynamicIndentation): void {
 
                 const listStartToken = getOpenTokenForList(parent, nodes);
@@ -870,10 +870,10 @@ namespace ts.formatting {
         }
 
         function processPair(currentItem: TextRangeWithKind,
-            currentStartLine: number,
+            currentStartLine: int,
             currentParent: Node,
             previousItem: TextRangeWithKind,
-            previousStartLine: number,
+            previousStartLine: int,
             previousParent: Node,
             contextNode: Node,
             dynamicIndentation: DynamicIndentation): boolean {
@@ -920,7 +920,7 @@ namespace ts.formatting {
             return lineAdded;
         }
 
-        function insertIndentation(pos: number, indentation: number, lineAdded: boolean): void {
+        function insertIndentation(pos: int, indentation: int, lineAdded: boolean): void {
             const indentationString = getIndentationString(indentation, options);
             if (lineAdded) {
                 // new line is added before the token by the formatting rules
@@ -936,8 +936,8 @@ namespace ts.formatting {
             }
         }
 
-        function characterToColumn(startLinePosition: number, characterInLine: number): number {
-            let column = 0.0;
+        function characterToColumn(startLinePosition: int, characterInLine: number): int {
+            let column = 0;
             for (let i = 0; i < characterInLine; i++) {
                 if (sourceFile.text.charCodeAt(startLinePosition + i) === CharacterCodes.tab) {
                     column += options.tabSize - column % options.tabSize;
@@ -949,11 +949,11 @@ namespace ts.formatting {
             return column;
         }
 
-        function indentationIsDifferent(indentationString: string, startLinePosition: number): boolean {
+        function indentationIsDifferent(indentationString: string, startLinePosition: int): boolean {
             return indentationString !== sourceFile.text.substr(startLinePosition, indentationString.length);
         }
 
-        function indentMultilineComment(commentRange: TextRange, indentation: number, firstLineIsIndented: boolean) {
+        function indentMultilineComment(commentRange: TextRange, indentation: int, firstLineIsIndented: boolean) {
             // split comment in lines
             let startLine = sourceFile.getLineAndCharacterOfPosition(commentRange.pos).line;
             const endLine = sourceFile.getLineAndCharacterOfPosition(commentRange.end).line;
@@ -1012,7 +1012,7 @@ namespace ts.formatting {
             }
         }
 
-        function trimTrailingWhitespacesForLines(line1: number, line2: number, range?: TextRangeWithKind) {
+        function trimTrailingWhitespacesForLines(line1: int, line2: int, range?: TextRangeWithKind) {
             for (let line = line1; line < line2; line++) {
                 const lineStartPosition = getStartPositionOfLine(line, sourceFile);
                 const lineEndPosition = getEndLinePosition(line, sourceFile);
@@ -1034,7 +1034,7 @@ namespace ts.formatting {
          * @param start The position of the first character in range
          * @param end The position of the last character in range
          */
-        function getTrailingWhitespaceStartPosition(start: number, end: number) {
+        function getTrailingWhitespaceStartPosition(start: int, end: int) {
             let pos = end;
             while (pos >= start && isWhiteSpaceSingleLine(sourceFile.text.charCodeAt(pos))) {
                 pos--;
@@ -1057,17 +1057,17 @@ namespace ts.formatting {
             trimTrailingWhitespacesForLines(startLine, endLine + 1, previousRange);
         }
 
-        function newTextChange(start: number, len: number, newText: string): TextChange {
+        function newTextChange(start: int, len: int, newText: string): TextChange {
             return { span: createTextSpan(start, len), newText };
         }
 
-        function recordDelete(start: number, len: number) {
+        function recordDelete(start: int, len: int) {
             if (len) {
                 edits.push(newTextChange(start, len, ""));
             }
         }
 
-        function recordReplace(start: number, len: number, newText: string) {
+        function recordReplace(start: int, len: int, newText: string) {
             if (len || newText) {
                 edits.push(newTextChange(start, len, newText));
             }
@@ -1075,9 +1075,9 @@ namespace ts.formatting {
 
         function applyRuleEdits(rule: Rule,
             previousRange: TextRangeWithKind,
-            previousStartLine: number,
+            previousStartLine: int,
             currentRange: TextRangeWithKind,
-            currentStartLine: number): void {
+            currentStartLine: int): void {
 
             switch (rule.Operation.Action) {
                 case RuleAction.Ignore:
@@ -1162,11 +1162,11 @@ namespace ts.formatting {
         return SyntaxKind.Unknown;
     }
 
-    let internedSizes: { tabSize: number; indentSize: number };
+    let internedSizes: { tabSize: int; indentSize: int };
     let internedTabsIndentation: string[];
     let internedSpacesIndentation: string[];
 
-    export function getIndentationString(indentation: number, options: EditorSettings): string {
+    export function getIndentationString(indentation: int, options: EditorSettings): string {
         // reset interned strings if FormatCodeOptions were changed
         const resetInternedStrings =
             !internedSizes || (internedSizes.tabSize !== options.tabSize || internedSizes.indentSize !== options.indentSize);
@@ -1213,7 +1213,7 @@ namespace ts.formatting {
             return remainder ? spacesString + repeat(" ", remainder) : spacesString;
         }
 
-        function repeat(value: string, count: number): string {
+        function repeat(value: string, count: int): string {
             let s = "";
             for (let i = 0; i < count; i++) {
                 s += value;

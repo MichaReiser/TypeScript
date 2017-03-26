@@ -69,7 +69,7 @@ namespace ts {
         function convertClassifications(classifications: Classifications, text: string): ClassificationResult {
             const entries: ClassificationInfo[] = [];
             const dense = classifications.spans;
-            let lastEnd = 0.0;
+            let lastEnd = 0;
 
             for (let i = 0; i < dense.length; i += 3) {
                 const start = dense[i];
@@ -332,7 +332,7 @@ namespace ts {
                 }
             }
 
-            function addResult(start: number, end: number, classification: ClassificationType): void {
+            function addResult(start: int, end: int, classification: ClassificationType): void {
                 if (classification === ClassificationType.whiteSpace) {
                     // Don't bother with whitespace classifications.  They're not needed.
                     return;
@@ -489,12 +489,12 @@ namespace ts {
 
     /* @internal */
     export function getEncodedSemanticClassifications(typeChecker: TypeChecker, cancellationToken: CancellationToken, sourceFile: SourceFile, classifiableNames: Map<string>, span: TextSpan): Classifications {
-        const result: number[] = [];
+        const result: int[] = [];
         processNode(sourceFile);
 
         return { spans: result, endOfLineState: EndOfLineState.None };
 
-        function pushClassification(start: number, length: number, type: ClassificationType) {
+        function pushClassification(start: int, length: int, type: ClassificationType) {
             result.push(start);
             result.push(length);
             result.push(type);
@@ -630,18 +630,18 @@ namespace ts {
         const triviaScanner = createScanner(ScriptTarget.Latest, /*skipTrivia*/ false, sourceFile.languageVariant, sourceFile.text);
         const mergeConflictScanner = createScanner(ScriptTarget.Latest, /*skipTrivia*/ false, sourceFile.languageVariant, sourceFile.text);
 
-        const result: number[] = [];
+        const result: int[] = [];
         processElement(sourceFile);
 
         return { spans: result, endOfLineState: EndOfLineState.None };
 
-        function pushClassification(start: number, length: number, type: ClassificationType) {
+        function pushClassification(start: int, length: int, type: ClassificationType) {
             result.push(start);
             result.push(length);
             result.push(type);
         }
 
-        function classifyLeadingTriviaAndGetTokenStart(token: Node): number {
+        function classifyLeadingTriviaAndGetTokenStart(token: Node): int {
             triviaScanner.setTextPos(token.pos);
             while (true) {
                 const start = triviaScanner.getTextPos();
@@ -694,7 +694,7 @@ namespace ts {
             }
         }
 
-        function classifyComment(token: Node, kind: SyntaxKind, start: number, width: number) {
+        function classifyComment(token: Node, kind: SyntaxKind, start: int, width: int) {
             if (kind === SyntaxKind.MultiLineCommentTrivia) {
                 // See if this is a doc comment.  If so, we'll classify certain portions of it
                 // specially.
@@ -710,7 +710,7 @@ namespace ts {
             pushCommentRange(start, width);
         }
 
-        function pushCommentRange(start: number, width: number) {
+        function pushCommentRange(start: int, width: int) {
             pushClassification(start, width, ClassificationType.comment);
         }
 
@@ -782,10 +782,10 @@ namespace ts {
             }
         }
 
-        function classifyDisabledMergeCode(text: string, start: number, end: number) {
+        function classifyDisabledMergeCode(text: string, start: int, end: int) {
             // Classify the line that the ======= marker is on as a comment.  Then just lex
             // all further tokens and add them to the result.
-            let i: number;
+            let i: int;
             for (i = start; i < end; i++) {
                 if (isLineBreak(text.charCodeAt(i))) {
                     break;
