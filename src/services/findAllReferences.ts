@@ -1259,7 +1259,7 @@ namespace ts.FindAllReferences.Core {
 
         const references: Entry[] = [];
 
-        let possiblePositions: number[];
+        let possiblePositions: int[];
         if (searchSpaceNode.kind === SyntaxKind.SourceFile) {
             forEach(sourceFiles, sourceFile => {
                 cancellationToken.throwIfCancellationRequested();

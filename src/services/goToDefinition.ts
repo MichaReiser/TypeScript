@@ -1,6 +1,6 @@
 /* @internal */
 namespace ts.GoToDefinition {
-    export function getDefinitionAtPosition(program: Program, sourceFile: SourceFile, position: number): DefinitionInfo[] {
+    export function getDefinitionAtPosition(program: Program, sourceFile: SourceFile, position: int): DefinitionInfo[] {
         /// Triple slash reference comments
         const comment = findReferenceInPosition(sourceFile.referencedFiles, position);
         if (comment) {
@@ -120,7 +120,7 @@ namespace ts.GoToDefinition {
     }
 
     /// Goto type
-    export function getTypeDefinitionAtPosition(typeChecker: TypeChecker, sourceFile: SourceFile, position: number): DefinitionInfo[] {
+    export function getTypeDefinitionAtPosition(typeChecker: TypeChecker, sourceFile: SourceFile, position: int): DefinitionInfo[] {
         const node = getTouchingPropertyName(sourceFile, position);
         if (node === sourceFile) {
             return undefined;
@@ -264,7 +264,7 @@ namespace ts.GoToDefinition {
         return createDefinitionInfo(decl, symbolKind, symbolName, containerName);
     }
 
-    function findReferenceInPosition(refs: FileReference[], pos: number): FileReference {
+    function findReferenceInPosition(refs: FileReference[], pos: int): FileReference {
         for (const ref of refs) {
             if (ref.pos <= pos && pos < ref.end) {
                 return ref;

@@ -106,7 +106,7 @@ namespace ts.formatting {
             this.rulesInsertionIndexBitmap = 0;
         }
 
-        public GetInsertionIndex(maskPosition: RulesPosition): number {
+        public GetInsertionIndex(maskPosition: RulesPosition): int {
             let index = 0;
 
             let pos = 0.0;

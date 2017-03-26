@@ -3,12 +3,12 @@
 /// <reference path="factory.ts"/>
 
 namespace ts {
-    let NodeConstructor: new (kind: SyntaxKind, pos: number, end: number) => Node;
-    let TokenConstructor: new (kind: SyntaxKind, pos: number, end: number) => Node;
-    let IdentifierConstructor: new (kind: SyntaxKind, pos: number, end: number) => Node;
-    let SourceFileConstructor: new (kind: SyntaxKind, pos: number, end: number) => Node;
+    let NodeConstructor: new (kind: SyntaxKind, pos: int, end: int) => Node;
+    let TokenConstructor: new (kind: SyntaxKind, pos: int, end: int) => Node;
+    let IdentifierConstructor: new (kind: SyntaxKind, pos: int, end: int) => Node;
+    let SourceFileConstructor: new (kind: SyntaxKind, pos: int, end: int) => Node;
 
-    export function createNode(kind: SyntaxKind, pos?: number, end?: number): Node {
+    export function createNode(kind: SyntaxKind, pos?: int, end?: int): Node {
         if (kind === SyntaxKind.SourceFile) {
             return new (SourceFileConstructor || (SourceFileConstructor = objectAllocator.getSourceFileConstructor()))(kind, pos, end);
         }
@@ -477,7 +477,7 @@ namespace ts {
     }
 
     /* @internal */
-    export function parseIsolatedJSDocComment(content: string, start?: number, length?: number) {
+    export function parseIsolatedJSDocComment(content: string, start?: int, length?: int) {
         const result = Parser.JSDocParser.parseIsolatedJSDocComment(content, start, length);
         if (result && result.jsDoc) {
             // because the jsDocComment was parsed out of the source file, it might
@@ -490,7 +490,7 @@ namespace ts {
 
     /* @internal */
     // Exposed only for testing.
-    export function parseJSDocTypeExpressionForTests(content: string, start?: number, length?: number) {
+    export function parseJSDocTypeExpressionForTests(content: string, start?: int, length?: int) {
         return Parser.JSDocParser.parseJSDocTypeExpressionForTests(content, start, length);
     }
 
@@ -504,10 +504,10 @@ namespace ts {
         const disallowInAndDecoratorContext = NodeFlags.DisallowInContext | NodeFlags.DecoratorContext;
 
         // capture constructors in 'initializeState' to avoid null checks
-        let NodeConstructor: new (kind: SyntaxKind, pos: number, end: number) => Node;
-        let TokenConstructor: new (kind: SyntaxKind, pos: number, end: number) => Node;
-        let IdentifierConstructor: new (kind: SyntaxKind, pos: number, end: number) => Node;
-        let SourceFileConstructor: new (kind: SyntaxKind, pos: number, end: number) => Node;
+        let NodeConstructor: new (kind: SyntaxKind, pos: int, end: int) => Node;
+        let TokenConstructor: new (kind: SyntaxKind, pos: int, end: int) => Node;
+        let IdentifierConstructor: new (kind: SyntaxKind, pos: int, end: int) => Node;
+        let SourceFileConstructor: new (kind: SyntaxKind, pos: int, end: int) => Node;
 
         let sourceFile: SourceFile;
         let parseDiagnostics: Diagnostic[];
@@ -515,9 +515,9 @@ namespace ts {
 
         let currentToken: SyntaxKind;
         let sourceText: string;
-        let nodeCount: number;
+        let nodeCount: int;
         let identifiers: Map<string>;
-        let identifierCount: number;
+        let identifierCount: int;
 
         let parsingContext: ParsingContext;
 
@@ -880,7 +880,7 @@ namespace ts {
             parseErrorAtPosition(start, length, message, arg0);
         }
 
-        function parseErrorAtPosition(start: number, length: number, message: DiagnosticMessage, arg0?: any): void {
+        function parseErrorAtPosition(start: int, length: int, message: DiagnosticMessage, arg0?: any): void {
             // Don't report another error if it would just be at the same position as the last error.
             const lastError = lastOrUndefined(parseDiagnostics);
             if (!lastError || start !== lastError.start) {
@@ -892,16 +892,16 @@ namespace ts {
             parseErrorBeforeNextFinishedNode = true;
         }
 
-        function scanError(message: DiagnosticMessage, length?: number) {
+        function scanError(message: DiagnosticMessage, length?: int) {
             const pos = scanner.getTextPos();
             parseErrorAtPosition(pos, length || 0, message);
         }
 
-        function getNodePos(): number {
+        function getNodePos(): int {
             return scanner.getStartPos();
         }
 
-        function getNodeEnd(): number {
+        function getNodeEnd(): int {
             return scanner.getStartPos();
         }
 
@@ -1085,7 +1085,7 @@ namespace ts {
         }
 
         // note: this function creates only node
-        function createNode<TKind extends SyntaxKind>(kind: TKind, pos?: number): Node | Token<TKind> | Identifier {
+        function createNode<TKind extends SyntaxKind>(kind: TKind, pos?: int): Node | Token<TKind> | Identifier {
             nodeCount++;
             if (!(pos >= 0)) {
                 pos = scanner.getStartPos();
@@ -1096,7 +1096,7 @@ namespace ts {
                     new TokenConstructor(kind, pos, pos);
         }
 
-        function createNodeArray<T extends Node>(elements?: T[], pos?: number): NodeArray<T> {
+        function createNodeArray<T extends Node>(elements?: T[], pos?: int): NodeArray<T> {
             const array = <NodeArray<T>>(elements || []);
             if (!(pos >= 0)) {
                 pos = getNodePos();
@@ -1106,7 +1106,7 @@ namespace ts {
             return array;
         }
 
-        function finishNode<T extends Node>(node: T, end?: number): T {
+        function finishNode<T extends Node>(node: T, end?: int): T {
             node.end = end === undefined ? scanner.getStartPos() : end;
 
             if (contextFlags) {
@@ -1854,7 +1854,7 @@ namespace ts {
             parsingContext |= 1 << kind;
             const result = createNodeArray<T>();
 
-            let commaStart: number = -1; // Meaning the previous token was not a comma
+            let commaStart: int = -1; // Meaning the previous token was not a comma
             while (true) {
                 if (isListElement(kind, /*inErrorRecovery*/ false)) {
                     result.push(parseListElement(kind, parseElement));
@@ -2324,7 +2324,7 @@ namespace ts {
             return token() === SyntaxKind.ColonToken || token() === SyntaxKind.CommaToken || token() === SyntaxKind.CloseBracketToken;
         }
 
-        function parseIndexSignatureDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): IndexSignatureDeclaration {
+        function parseIndexSignatureDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): IndexSignatureDeclaration {
             const node = <IndexSignatureDeclaration>createNode(SyntaxKind.IndexSignature, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -2334,7 +2334,7 @@ namespace ts {
             return finishNode(node);
         }
 
-        function parsePropertyOrMethodSignature(fullStart: number, modifiers: NodeArray<Modifier>): PropertySignature | MethodSignature {
+        function parsePropertyOrMethodSignature(fullStart: int, modifiers: NodeArray<Modifier>): PropertySignature | MethodSignature {
             const name = parsePropertyName();
             const questionToken = parseOptionalToken(SyntaxKind.QuestionToken);
 
@@ -4244,7 +4244,7 @@ namespace ts {
             return finishNode(node);
         }
 
-        function tryParseAccessorDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): AccessorDeclaration {
+        function tryParseAccessorDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): AccessorDeclaration {
             if (parseContextualModifier(SyntaxKind.GetKeyword)) {
                 return parseAccessorDeclaration(SyntaxKind.GetAccessor, fullStart, decorators, modifiers);
             }
@@ -5081,7 +5081,7 @@ namespace ts {
             return nextTokenIsIdentifier() && nextToken() === SyntaxKind.CloseParenToken;
         }
 
-        function parseVariableStatement(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): VariableStatement {
+        function parseVariableStatement(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): VariableStatement {
             const node = <VariableStatement>createNode(SyntaxKind.VariableStatement, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5090,7 +5090,7 @@ namespace ts {
             return addJSDocComment(finishNode(node));
         }
 
-        function parseFunctionDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): FunctionDeclaration {
+        function parseFunctionDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): FunctionDeclaration {
             const node = <FunctionDeclaration>createNode(SyntaxKind.FunctionDeclaration, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5104,7 +5104,7 @@ namespace ts {
             return addJSDocComment(finishNode(node));
         }
 
-        function parseConstructorDeclaration(pos: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ConstructorDeclaration {
+        function parseConstructorDeclaration(pos: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ConstructorDeclaration {
             const node = <ConstructorDeclaration>createNode(SyntaxKind.Constructor, pos);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5114,7 +5114,7 @@ namespace ts {
             return addJSDocComment(finishNode(node));
         }
 
-        function parseMethodDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, asteriskToken: AsteriskToken, name: PropertyName, questionToken: QuestionToken, diagnosticMessage?: DiagnosticMessage): MethodDeclaration {
+        function parseMethodDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, asteriskToken: AsteriskToken, name: PropertyName, questionToken: QuestionToken, diagnosticMessage?: DiagnosticMessage): MethodDeclaration {
             const method = <MethodDeclaration>createNode(SyntaxKind.MethodDeclaration, fullStart);
             method.decorators = decorators;
             method.modifiers = modifiers;
@@ -5128,7 +5128,7 @@ namespace ts {
             return addJSDocComment(finishNode(method));
         }
 
-        function parsePropertyDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, name: PropertyName, questionToken: QuestionToken): ClassElement {
+        function parsePropertyDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, name: PropertyName, questionToken: QuestionToken): ClassElement {
             const property = <PropertyDeclaration>createNode(SyntaxKind.PropertyDeclaration, fullStart);
             property.decorators = decorators;
             property.modifiers = modifiers;
@@ -5153,7 +5153,7 @@ namespace ts {
             return addJSDocComment(finishNode(property));
         }
 
-        function parsePropertyOrMethodDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ClassElement {
+        function parsePropertyOrMethodDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ClassElement {
             const asteriskToken = parseOptionalToken(SyntaxKind.AsteriskToken);
             const name = parsePropertyName();
 
@@ -5172,7 +5172,7 @@ namespace ts {
             return parseInitializer(/*inParameter*/ false);
         }
 
-        function parseAccessorDeclaration(kind: SyntaxKind, fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): AccessorDeclaration {
+        function parseAccessorDeclaration(kind: SyntaxKind, fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): AccessorDeclaration {
             const node = <AccessorDeclaration>createNode(kind, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5394,11 +5394,11 @@ namespace ts {
                 SyntaxKind.ClassExpression);
         }
 
-        function parseClassDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ClassDeclaration {
+        function parseClassDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ClassDeclaration {
             return <ClassDeclaration>parseClassDeclarationOrExpression(fullStart, decorators, modifiers, SyntaxKind.ClassDeclaration);
         }
 
-        function parseClassDeclarationOrExpression(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, kind: SyntaxKind): ClassLikeDeclaration {
+        function parseClassDeclarationOrExpression(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, kind: SyntaxKind): ClassLikeDeclaration {
             const node = <ClassLikeDeclaration>createNode(kind, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5477,7 +5477,7 @@ namespace ts {
             return parseList(ParsingContext.ClassMembers, parseClassElement);
         }
 
-        function parseInterfaceDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): InterfaceDeclaration {
+        function parseInterfaceDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): InterfaceDeclaration {
             const node = <InterfaceDeclaration>createNode(SyntaxKind.InterfaceDeclaration, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5489,7 +5489,7 @@ namespace ts {
             return addJSDocComment(finishNode(node));
         }
 
-        function parseTypeAliasDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): TypeAliasDeclaration {
+        function parseTypeAliasDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): TypeAliasDeclaration {
             const node = <TypeAliasDeclaration>createNode(SyntaxKind.TypeAliasDeclaration, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5513,7 +5513,7 @@ namespace ts {
             return addJSDocComment(finishNode(node));
         }
 
-        function parseEnumDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): EnumDeclaration {
+        function parseEnumDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): EnumDeclaration {
             const node = <EnumDeclaration>createNode(SyntaxKind.EnumDeclaration, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5541,7 +5541,7 @@ namespace ts {
             return finishNode(node);
         }
 
-        function parseModuleOrNamespaceDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, flags: NodeFlags): ModuleDeclaration {
+        function parseModuleOrNamespaceDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, flags: NodeFlags): ModuleDeclaration {
             const node = <ModuleDeclaration>createNode(SyntaxKind.ModuleDeclaration, fullStart);
             // If we are parsing a dotted namespace name, we want to
             // propagate the 'Namespace' flag across the names if set.
@@ -5556,7 +5556,7 @@ namespace ts {
             return addJSDocComment(finishNode(node));
         }
 
-        function parseAmbientExternalModuleDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ModuleDeclaration {
+        function parseAmbientExternalModuleDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ModuleDeclaration {
             const node = <ModuleDeclaration>createNode(SyntaxKind.ModuleDeclaration, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5579,7 +5579,7 @@ namespace ts {
             return finishNode(node);
         }
 
-        function parseModuleDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ModuleDeclaration {
+        function parseModuleDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ModuleDeclaration {
             let flags: NodeFlags = 0;
             if (token() === SyntaxKind.GlobalKeyword) {
                 // global augmentation
@@ -5610,7 +5610,7 @@ namespace ts {
             return nextToken() === SyntaxKind.SlashToken;
         }
 
-        function parseNamespaceExportDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): NamespaceExportDeclaration {
+        function parseNamespaceExportDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): NamespaceExportDeclaration {
             const exportDeclaration = <NamespaceExportDeclaration>createNode(SyntaxKind.NamespaceExportDeclaration, fullStart);
             exportDeclaration.decorators = decorators;
             exportDeclaration.modifiers = modifiers;
@@ -5624,7 +5624,7 @@ namespace ts {
             return finishNode(exportDeclaration);
         }
 
-        function parseImportDeclarationOrImportEqualsDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ImportEqualsDeclaration | ImportDeclaration {
+        function parseImportDeclarationOrImportEqualsDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ImportEqualsDeclaration | ImportDeclaration {
             parseExpected(SyntaxKind.ImportKeyword);
             const afterImportPos = scanner.getStartPos();
 
@@ -5656,7 +5656,7 @@ namespace ts {
             return finishNode(importDeclaration);
         }
 
-        function parseImportEqualsDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, identifier: ts.Identifier): ImportEqualsDeclaration {
+        function parseImportEqualsDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>, identifier: ts.Identifier): ImportEqualsDeclaration {
             const importEqualsDeclaration = <ImportEqualsDeclaration>createNode(SyntaxKind.ImportEqualsDeclaration, fullStart);
             importEqualsDeclaration.decorators = decorators;
             importEqualsDeclaration.modifiers = modifiers;
@@ -5667,7 +5667,7 @@ namespace ts {
             return addJSDocComment(finishNode(importEqualsDeclaration));
         }
 
-        function parseImportClause(identifier: Identifier, fullStart: number) {
+        function parseImportClause(identifier: Identifier, fullStart: int) {
             // ImportClause:
             //  ImportedDefaultBinding
             //  NameSpaceImport
@@ -5788,7 +5788,7 @@ namespace ts {
             return finishNode(node);
         }
 
-        function parseExportDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ExportDeclaration {
+        function parseExportDeclaration(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ExportDeclaration {
             const node = <ExportDeclaration>createNode(SyntaxKind.ExportDeclaration, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5811,7 +5811,7 @@ namespace ts {
             return finishNode(node);
         }
 
-        function parseExportAssignment(fullStart: number, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ExportAssignment {
+        function parseExportAssignment(fullStart: int, decorators: NodeArray<Decorator>, modifiers: NodeArray<Modifier>): ExportAssignment {
             const node = <ExportAssignment>createNode(SyntaxKind.ExportAssignment, fullStart);
             node.decorators = decorators;
             node.modifiers = modifiers;
@@ -5981,7 +5981,7 @@ namespace ts {
                 return tokenIsIdentifierOrKeyword(token());
             }
 
-            export function parseJSDocTypeExpressionForTests(content: string, start: number, length: number) {
+            export function parseJSDocTypeExpressionForTests(content: string, start: int, length: int) {
                 initializeState(content, ScriptTarget.Latest, /*_syntaxCursor:*/ undefined, ScriptKind.JS);
                 sourceFile = createSourceFile("file.js", ScriptTarget.Latest, ScriptKind.JS);
                 scanner.setText(content, start, length);
@@ -6300,7 +6300,7 @@ namespace ts {
                 }
             }
 
-            export function parseIsolatedJSDocComment(content: string, start: number, length: number) {
+            export function parseIsolatedJSDocComment(content: string, start: int, length: int) {
                 initializeState(content, ScriptTarget.Latest, /*_syntaxCursor:*/ undefined, ScriptKind.JS);
                 sourceFile = <SourceFile>{ languageVariant: LanguageVariant.Standard, text: content };
                 const jsDoc = parseJSDocCommentWorker(start, length);
@@ -6310,7 +6310,7 @@ namespace ts {
                 return jsDoc ? { jsDoc, diagnostics } : undefined;
             }
 
-            export function parseJSDocComment(parent: Node, start: number, length: number): JSDoc {
+            export function parseJSDocComment(parent: Node, start: int, length: int): JSDoc {
                 const saveToken = currentToken;
                 const saveParseDiagnosticsLength = parseDiagnostics.length;
                 const saveParseErrorBeforeNextFinishedNode = parseErrorBeforeNextFinishedNode;
@@ -6333,7 +6333,7 @@ namespace ts {
                 SavingComments,
             }
 
-            export function parseJSDocCommentWorker(start: number, length: number): JSDoc {
+            export function parseJSDocCommentWorker(start: int, length: int): JSDoc {
                 const content = sourceText;
                 start = start || 0;
                 const end = length === undefined ? content.length : start + length;
@@ -6358,7 +6358,7 @@ namespace ts {
                     // This is so that /** * @type */ doesn't parse.
                     let advanceToken = true;
                     let state = JSDocState.SawAsterisk;
-                    let margin: number | undefined = undefined;
+                    let margin: int | undefined = undefined;
                     // + 4 for leading '/** '
                     let indent = start - Math.max(content.lastIndexOf("\n", start), 0) + 4;
                     function pushComment(text: string) {
@@ -6467,7 +6467,7 @@ namespace ts {
                     }
                 }
 
-                function isJsDocStart(content: string, start: number) {
+                function isJsDocStart(content: string, start: int) {
                     return content.charCodeAt(start) === CharacterCodes.slash &&
                         content.charCodeAt(start + 1) === CharacterCodes.asterisk &&
                         content.charCodeAt(start + 2) === CharacterCodes.asterisk &&
@@ -6487,7 +6487,7 @@ namespace ts {
                     }
                 }
 
-                function parseTag(indent: number) {
+                function parseTag(indent: int) {
                     Debug.assert(token() === SyntaxKind.AtToken);
                     const atToken = <AtToken>createNode(SyntaxKind.AtToken, scanner.getTokenPos());
                     atToken.end = scanner.getTextPos();
@@ -6537,10 +6537,10 @@ namespace ts {
                     addTag(tag, parseTagComments(indent + tag.end - tag.pos));
                 }
 
-                function parseTagComments(indent: number) {
+                function parseTagComments(indent: int) {
                     const comments: string[] = [];
                     let state = JSDocState.BeginningOfLine;
-                    let margin: number | undefined;
+                    let margin: int | undefined;
                     function pushComment(text: string) {
                         if (!margin) {
                             margin = indent;
@@ -7021,7 +7021,7 @@ namespace ts {
             return result;
         }
 
-        function moveElementEntirelyPastChangeRange(element: IncrementalElement, isArray: boolean, delta: number, oldText: string, newText: string, aggressiveChecks: boolean) {
+        function moveElementEntirelyPastChangeRange(element: IncrementalElement, isArray: boolean, delta: int, oldText: string, newText: string, aggressiveChecks: boolean) {
             if (isArray) {
                 visitArray(<IncrementalNodeArray>element);
             }
@@ -7080,7 +7080,7 @@ namespace ts {
             return false;
         }
 
-        function adjustIntersectingElement(element: IncrementalElement, changeStart: number, changeRangeOldEnd: number, changeRangeNewEnd: number, delta: number) {
+        function adjustIntersectingElement(element: IncrementalElement, changeStart: int, changeRangeOldEnd: int, changeRangeNewEnd: int, delta: int) {
             Debug.assert(element.end >= changeStart, "Adjusting an element that was entirely before the change range");
             Debug.assert(element.pos <= changeRangeOldEnd, "Adjusting an element that was entirely after the change range");
             Debug.assert(element.pos <= element.end);
@@ -7168,10 +7168,10 @@ namespace ts {
 
         function updateTokenPositionsAndMarkElements(
             sourceFile: IncrementalNode,
-            changeStart: number,
-            changeRangeOldEnd: number,
-            changeRangeNewEnd: number,
-            delta: number,
+            changeStart: int,
+            changeRangeOldEnd: int,
+            changeRangeNewEnd: int,
+            delta: int,
             oldText: string,
             newText: string,
             aggressiveChecks: boolean): void {
@@ -7270,7 +7270,7 @@ namespace ts {
             return createTextChangeRange(finalSpan, finalLength);
         }
 
-        function findNearestNodeStartingBeforeOrAtPosition(sourceFile: SourceFile, position: number): Node {
+        function findNearestNodeStartingBeforeOrAtPosition(sourceFile: SourceFile, position: int): Node {
             let bestResult: Node = sourceFile;
             let lastNodeEntirelyBeforePosition: Node;
 
@@ -7401,7 +7401,7 @@ namespace ts {
         // The implementation takes advantage of the calling pattern it knows the parser will
         // make in order to optimize finding nodes as quickly as possible.
         export interface SyntaxCursor {
-            currentNode(position: number): IncrementalNode;
+            currentNode(position: int): IncrementalNode;
         }
 
         function createSyntaxCursor(sourceFile: SourceFile): SyntaxCursor {
@@ -7413,7 +7413,7 @@ namespace ts {
             let lastQueriedPosition = InvalidPosition.Value;
 
             return {
-                currentNode(position: number) {
+                currentNode(position: int) {
                     // Only compute the current node if the position is different than the last time
                     // we were asked.  The parser commonly asks for the node at the same position
                     // twice.  Once to know if can read an appropriate list element at a certain point,
@@ -7450,7 +7450,7 @@ namespace ts {
             // Finds the highest element in the tree we can find that starts at the provided position.
             // The element must be a direct child of some node list in the tree.  This way after we
             // return it, we can easily return its next sibling in the list.
-            function findHighestListElementThatStartsAtPosition(position: number) {
+            function findHighestListElementThatStartsAtPosition(position: int) {
                 // Clear out any cached state about the last node we found.
                 currentArray = undefined;
                 currentArrayIndex = InvalidPosition.Value;

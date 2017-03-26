@@ -12,7 +12,7 @@ namespace ts.codefix {
             .map(d => allDiagnostcs[d].code);
     }
 
-    function getIgnoreCommentLocationForLocation(sourceFile: SourceFile, position: number, newLineCharacter: string) {
+    function getIgnoreCommentLocationForLocation(sourceFile: SourceFile, position: int, newLineCharacter: string) {
         const { line } = getLineAndCharacterOfPosition(sourceFile, position);
         const lineStartPosition = getStartPositionOfLine(line, sourceFile);
         const startPosition = getFirstNonSpaceCharacterPosition(sourceFile.text, lineStartPosition);

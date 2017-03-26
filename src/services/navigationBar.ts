@@ -41,7 +41,7 @@ namespace ts.NavigationBar {
         additionalNodes: Node[] | undefined;
         parent: NavigationBarNode | undefined; // Present for all but root node
         children: NavigationBarNode[] | undefined;
-        indent: number; // # of parents
+        indent: int; // # of parents
     }
 
     export function getNavigationBarItems(sourceFile: SourceFile, cancellationToken: CancellationToken): NavigationBarItem[] {

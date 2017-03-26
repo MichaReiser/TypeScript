@@ -98,7 +98,7 @@ namespace ts {
         // The number of language services that this source file is referenced in.   When no more
         // language services are referencing the file, then the file can be removed from the
         // registry.
-        languageServiceRefCount: number;
+        languageServiceRefCount: int;
         owners: string[];
     }
 
@@ -123,7 +123,7 @@ namespace ts {
         function reportStats() {
             const bucketInfoArray = arrayFrom(buckets.keys()).filter(name => name && name.charAt(0) === "_").map(name => {
                 const entries = buckets.get(name);
-                const sourceFiles: { name: string; refCount: number; references: string[]; }[] = [];
+                const sourceFiles: { name: string; refCount: int; references: string[]; }[] = [];
                 entries.forEachValue((key, entry) => {
                     sourceFiles.push({
                         name: key,

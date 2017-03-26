@@ -103,7 +103,7 @@ namespace ts.server {
         event(payload: any, eventName: string): void;
     }
 
-    function allEditsBeforePos(edits: ts.TextChange[], pos: number) {
+    function allEditsBeforePos(edits: ts.TextChange[], pos: int) {
         for (const edit of edits) {
             if (textSpanEnd(edit.span) >= pos) {
                 return false;
@@ -1041,7 +1041,7 @@ namespace ts.server {
             }
         }
 
-        private getPosition(args: protocol.FileLocationRequestArgs, scriptInfo: ScriptInfo): number {
+        private getPosition(args: protocol.FileLocationRequestArgs, scriptInfo: ScriptInfo): int {
             return args.position !== undefined ? args.position : scriptInfo.lineOffsetToPosition(args.line, args.offset);
         }
 
@@ -1187,7 +1187,7 @@ namespace ts.server {
                     if (lineText.search("\\S") < 0) {
                         const preferredIndent = project.getLanguageService(/*ensureSynchronized*/ false).getIndentationAtPosition(file, position, formatOptions);
                         let hasIndent = 0;
-                        let i: number, len: number;
+                        let i: int, len: int;
                         for (i = 0, len = lineText.length; i < len; i++) {
                             if (lineText.charAt(i) === " ") {
                                 hasIndent++;

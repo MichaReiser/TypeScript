@@ -32,7 +32,7 @@ namespace ts {
          *
          * @param pos The position.
          */
-        emitPos(pos: number): void;
+        emitPos(pos: int): void;
 
         /**
          * Emits a node with possible leading and trailing source maps.
@@ -51,7 +51,7 @@ namespace ts {
          * @param tokenStartPos The start pos of the token.
          * @param emitCallback The callback used to emit the token.
          */
-        emitTokenWithSourceMap(node: Node, token: SyntaxKind, tokenStartPos: number, emitCallback: (token: SyntaxKind, tokenStartPos: number) => number): number;
+        emitTokenWithSourceMap(node: Node, token: SyntaxKind, tokenStartPos: int, emitCallback: (token: SyntaxKind, tokenStartPos: int) => int): int;
 
         /**
          * Gets the text for the source map.
@@ -86,7 +86,7 @@ namespace ts {
         let sourceMapDir: string; // The directory in which sourcemap will be
 
         // Current source map file and its index in the sources list
-        let sourceMapSourceIndex: number;
+        let sourceMapSourceIndex: int;
 
         // Last recorded and encoded spans
         let lastRecordedSourceMapSpan: SourceMapSpan;
@@ -254,7 +254,7 @@ namespace ts {
          *
          * @param pos The position.
          */
-        function emitPos(pos: number) {
+        function emitPos(pos: int) {
             if (disabled || positionIsSynthesized(pos)) {
                 return;
             }
@@ -353,7 +353,7 @@ namespace ts {
          * @param tokenStartPos The start pos of the token.
          * @param emitCallback The callback used to emit the token.
          */
-        function emitTokenWithSourceMap(node: Node, token: SyntaxKind, tokenPos: number, emitCallback: (token: SyntaxKind, tokenStartPos: number) => number) {
+        function emitTokenWithSourceMap(node: Node, token: SyntaxKind, tokenPos: int, emitCallback: (token: SyntaxKind, tokenStartPos: int) => int) {
             if (disabled) {
                 return emitCallback(token, tokenPos);
             }
@@ -457,7 +457,7 @@ namespace ts {
 
     const base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    function base64FormatEncode(inValue: number) {
+    function base64FormatEncode(inValue: int) {
         if (inValue < 64) {
             return base64Chars.charAt(inValue);
         }

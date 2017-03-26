@@ -282,7 +282,7 @@ namespace ts.Completions.PathCompletions {
         return deduplicate(nonRelativeModules);
     }
 
-    export function getTripleSlashReferenceCompletion(sourceFile: SourceFile, position: number, compilerOptions: CompilerOptions, host: LanguageServiceHost): CompletionInfo {
+    export function getTripleSlashReferenceCompletion(sourceFile: SourceFile, position: int, compilerOptions: CompilerOptions, host: LanguageServiceHost): CompletionInfo {
         const token = getTokenAtPosition(sourceFile, position);
         if (!token) {
             return undefined;
@@ -463,7 +463,7 @@ namespace ts.Completions.PathCompletions {
     }
 
     // Replace everything after the last directory seperator that appears
-    function getDirectoryFragmentTextSpan(text: string, textStart: number): TextSpan {
+    function getDirectoryFragmentTextSpan(text: string, textStart: int): TextSpan {
         const index = text.lastIndexOf(directorySeparator);
         const offset = index !== -1 ? index + 1 : 0;
         return { start: textStart + offset, length: text.length - offset };
