@@ -10,9 +10,9 @@ interface Array<T> {
       * @param thisArg If provided, it will be used as the this value for each invocation of
       * predicate. If it is not provided, undefined is used instead.
       */
-    find(predicate: (this: undefined, value: T, index: number, obj: Array<T>) => boolean): T | undefined;
-    find(predicate: (this: undefined, value: T, index: number, obj: Array<T>) => boolean, thisArg: undefined): T | undefined;
-    find<Z>(predicate: (this: Z, value: T, index: number, obj: Array<T>) => boolean, thisArg: Z): T | undefined;
+    find(predicate: (this: undefined, value: T, index: int, obj: Array<T>) => boolean): T | undefined;
+    find(predicate: (this: undefined, value: T, index: int, obj: Array<T>) => boolean, thisArg: undefined): T | undefined;
+    find<Z>(predicate: (this: Z, value: T, index: int, obj: Array<T>) => boolean, thisArg: Z): T | undefined;
 
     /**
       * Returns the index of the first element in the array where predicate is true, and -1
@@ -23,9 +23,9 @@ interface Array<T> {
       * @param thisArg If provided, it will be used as the this value for each invocation of
       * predicate. If it is not provided, undefined is used instead.
       */
-    findIndex(predicate: (this: undefined, value: T, index: number, obj: Array<T>) => boolean): number;
-    findIndex(predicate: (this: undefined, value: T, index: number, obj: Array<T>) => boolean, thisArg: undefined): number;
-    findIndex<Z>(predicate: (this: Z, value: T, index: number, obj: Array<T>) => boolean, thisArg: Z): number;
+    findIndex(predicate: (this: undefined, value: T, index: int, obj: Array<T>) => boolean): int;
+    findIndex(predicate: (this: undefined, value: T, index: int, obj: Array<T>) => boolean, thisArg: undefined): int;
+    findIndex<Z>(predicate: (this: Z, value: T, index: int, obj: Array<T>) => boolean, thisArg: Z): int;
 
     /**
       * Returns the this object after filling the section identified by start and end with value
@@ -35,7 +35,7 @@ interface Array<T> {
       * @param end index to stop filling the array at. If end is negative, it is treated as
       * length+end.
       */
-    fill(value: T, start?: number, end?: number): this;
+    fill(value: T, start?: int, end?: int): this;
 
     /**
       * Returns the this object after copying a section of the array identified by start and end
@@ -46,7 +46,7 @@ interface Array<T> {
       * is treated as length+end.
       * @param end If not specified, length of the this object is used as its default value.
       */
-    copyWithin(target: number, start: number, end?: number): this;
+    copyWithin(target: int, start: int, end?: int): this;
 }
 
 interface ArrayConstructor {
