@@ -16635,6 +16635,7 @@ namespace ts {
                     rightType = checkNonNullType(rightType, right);
 
                     let suggestedOperator: SyntaxKind;
+                    let resultValueType: Type;
                     // if a user tries to apply a bitwise operator to 2 boolean operands
                     // try and return them a helpful suggestion
                     if ((leftType.flags & TypeFlags.BooleanLike) &&
@@ -16646,12 +16647,20 @@ namespace ts {
                         // otherwise just check each operand separately and report errors as normal
                         const leftOk = checkArithmeticOperandType(left, leftType, Diagnostics.The_left_hand_side_of_an_arithmetic_operation_must_be_of_type_any_number_or_an_enum_type);
                         const rightOk = checkArithmeticOperandType(right, rightType, Diagnostics.The_right_hand_side_of_an_arithmetic_operation_must_be_of_type_any_number_or_an_enum_type);
+
+                        
+                        if (operator === ts.SyntaxKind.AsteriskAsteriskToken || operator === ts.SyntaxKind.AsteriskAsteriskEqualsToken) {
+                            resultValueType = numberType;
+                        } else {
+                            resultValueType = unifyNumberTypes(leftType, rightType, expectedResultType);
+                        }
                         if (leftOk && rightOk) {
-                            checkAssignmentOperator(unifyNumberTypes(leftType, rightType, expectedResultType));
+                            checkAssignmentOperator(resultValueType);
                         }
                     }
 
-                    return unifyNumberTypes(leftType, rightType, expectedResultType);
+
+                    return resultValueType;
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.PlusEqualsToken:
                     if (leftType === silentNeverType || rightType === silentNeverType) {
