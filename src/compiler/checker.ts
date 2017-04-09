@@ -16603,12 +16603,16 @@ namespace ts {
             let expectedResultType = numberType;
 
             switch (operator) {
+                case SyntaxKind.AmpersandToken:
+                case SyntaxKind.AmpersandEqualsToken:
                 case SyntaxKind.BarToken:
                 case SyntaxKind.BarEqualsToken:
                 case SyntaxKind.CaretToken:
                 case SyntaxKind.CaretEqualsToken:
-                case SyntaxKind.AmpersandToken:
-                case SyntaxKind.AmpersandEqualsToken:
+                case SyntaxKind.GreaterThanGreaterThanGreaterThanToken:
+                case SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken:
+                case SyntaxKind.LessThanLessThanToken:
+                case SyntaxKind.LessThanLessThanEqualsToken:
                     expectedResultType = intType;
 
                 case SyntaxKind.PercentToken:
@@ -16621,12 +16625,8 @@ namespace ts {
                 case SyntaxKind.SlashEqualsToken:
                 case SyntaxKind.MinusToken:
                 case SyntaxKind.MinusEqualsToken:
-                case SyntaxKind.LessThanLessThanToken:
-                case SyntaxKind.LessThanLessThanEqualsToken:
                 case SyntaxKind.GreaterThanGreaterThanToken:
                 case SyntaxKind.GreaterThanGreaterThanEqualsToken:
-                case SyntaxKind.GreaterThanGreaterThanGreaterThanToken:
-                case SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken:
                     if (leftType === silentNeverType || rightType === silentNeverType) {
                         return silentNeverType;
                     }
