@@ -16830,6 +16830,8 @@ namespace ts {
                 case SyntaxKind.BarEqualsToken:
                 case SyntaxKind.CaretToken:
                 case SyntaxKind.CaretEqualsToken:
+                case SyntaxKind.GreaterThanGreaterThanToken:
+                case SyntaxKind.GreaterThanGreaterThanEqualsToken:
                 case SyntaxKind.GreaterThanGreaterThanGreaterThanToken:
                 case SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken:
                 case SyntaxKind.LessThanLessThanToken:
@@ -16846,8 +16848,6 @@ namespace ts {
                 case SyntaxKind.SlashEqualsToken:
                 case SyntaxKind.MinusToken:
                 case SyntaxKind.MinusEqualsToken:
-                case SyntaxKind.GreaterThanGreaterThanToken:
-                case SyntaxKind.GreaterThanGreaterThanEqualsToken:
                     if (leftType === silentNeverType || rightType === silentNeverType) {
                         return silentNeverType;
                     }
