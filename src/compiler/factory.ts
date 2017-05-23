@@ -3081,7 +3081,7 @@ namespace ts {
      * @param ensureUseStrict: boolean determining whether the function need to add prologue-directives
      * @param visitor: Optional callback used to visit any custom prologue directives.
      */
-    export function addPrologue(target: Statement[], source: Statement[], ensureUseStrict?: boolean, visitor?: (node: Node) => VisitResult<Node>): number {
+    export function addPrologue(target: Statement[], source: Statement[], ensureUseStrict?: boolean, visitor?: (node: Node) => VisitResult<Node>): int {
         const offset = addStandardPrologue(target, source, ensureUseStrict);
         return addCustomPrologue(target, source, offset, visitor);
     }
@@ -3092,7 +3092,7 @@ namespace ts {
      * This function needs to be called whenever we transform the statement
      * list of a source file, namespace, or function-like body.
      */
-    export function addStandardPrologue(target: Statement[], source: Statement[], ensureUseStrict?: boolean): number {
+    export function addStandardPrologue(target: Statement[], source: Statement[], ensureUseStrict?: boolean): int {
         Debug.assert(target.length === 0, "Prologue directives should be at the first statement in the target statements array");
         let foundUseStrict = false;
         let statementOffset = 0;
@@ -3122,7 +3122,7 @@ namespace ts {
      * This function needs to be called whenever we transform the statement
      * list of a source file, namespace, or function-like body.
      */
-    export function addCustomPrologue(target: Statement[], source: Statement[], statementOffset: number, visitor?: (node: Node) => VisitResult<Node>): number {
+    export function addCustomPrologue(target: Statement[], source: Statement[], statementOffset: int, visitor?: (node: Node) => VisitResult<Node>): int {
         const numStatements = source.length;
         while (statementOffset < numStatements) {
             const statement = source[statementOffset];

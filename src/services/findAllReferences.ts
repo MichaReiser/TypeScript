@@ -41,7 +41,7 @@ namespace ts.FindAllReferences {
         readonly implementations?: boolean;
     }
 
-    export function findReferencedSymbols(checker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: number): ReferencedSymbol[] | undefined {
+    export function findReferencedSymbols(checker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: int): ReferencedSymbol[] | undefined {
         const referencedSymbols = findAllReferencedSymbols(checker, cancellationToken, sourceFiles, sourceFile, position);
 
         if (!referencedSymbols || !referencedSymbols.length) {
@@ -59,7 +59,7 @@ namespace ts.FindAllReferences {
         return out;
     }
 
-    export function getImplementationsAtPosition(checker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: number): ImplementationLocation[] {
+    export function getImplementationsAtPosition(checker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: int): ImplementationLocation[] {
         const node = getTouchingPropertyName(sourceFile, position);
         const referenceEntries = getImplementationReferenceEntries(checker, cancellationToken, sourceFiles, node);
         return map(referenceEntries, entry => toImplementationLocation(entry, checker));
@@ -85,7 +85,7 @@ namespace ts.FindAllReferences {
         }
     }
 
-    export function findReferencedEntries(checker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: number, options?: Options): ReferenceEntry[] | undefined {
+    export function findReferencedEntries(checker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: int, options?: Options): ReferenceEntry[] | undefined {
         const x = flattenEntries(findAllReferencedSymbols(checker, cancellationToken, sourceFiles, sourceFile, position, options));
         return map(x, toReferenceEntry);
     }
@@ -94,7 +94,7 @@ namespace ts.FindAllReferences {
         return flattenEntries(Core.getReferencedSymbolsForNode(node, sourceFiles, checker, cancellationToken, options));
     }
 
-    function findAllReferencedSymbols(checker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: number, options?: Options): SymbolAndEntries[] | undefined {
+    function findAllReferencedSymbols(checker: TypeChecker, cancellationToken: CancellationToken, sourceFiles: SourceFile[], sourceFile: SourceFile, position: int, options?: Options): SymbolAndEntries[] | undefined {
         const node = getTouchingPropertyName(sourceFile, position, /*includeJsDocComment*/ true);
         return Core.getReferencedSymbolsForNode(node, sourceFiles, checker, cancellationToken, options);
     }
@@ -646,8 +646,8 @@ namespace ts.FindAllReferences.Core {
         return parent ? scope.getSourceFile() : scope;
     }
 
-    function getPossibleSymbolReferencePositions(sourceFile: SourceFile, symbolName: string, start: number, end: number): number[] {
-        const positions: number[] = [];
+    function getPossibleSymbolReferencePositions(sourceFile: SourceFile, symbolName: string, start: int, end: int): int[] {
+        const positions: int[] = [];
 
         /// TODO: Cache symbol existence for files to save text search
         // Also, need to make this work for unicode escapes.
@@ -762,7 +762,7 @@ namespace ts.FindAllReferences.Core {
         }
     }
 
-    function getReferencesAtLocation(sourceFile: SourceFile, position: number, search: Search, state: State): void {
+    function getReferencesAtLocation(sourceFile: SourceFile, position: int, search: Search, state: State): void {
         const referenceLocation = getTouchingPropertyName(sourceFile, position);
 
         if (!isValidReferencePosition(referenceLocation, search.text)) {
@@ -1278,7 +1278,7 @@ namespace ts.FindAllReferences.Core {
             references
         }];
 
-        function getThisReferencesInFile(sourceFile: SourceFile, searchSpaceNode: Node, possiblePositions: number[], result: Entry[]): void {
+        function getThisReferencesInFile(sourceFile: SourceFile, searchSpaceNode: Node, possiblePositions: int[], result: Entry[]): void {
             forEach(possiblePositions, position => {
                 const node = getTouchingWord(sourceFile, position);
                 if (!node || !isThis(node)) {
@@ -1332,7 +1332,7 @@ namespace ts.FindAllReferences.Core {
             references
         }];
 
-        function getReferencesForStringLiteralInFile(sourceFile: SourceFile, searchText: string, possiblePositions: number[], references: Push<NodeEntry>): void {
+        function getReferencesForStringLiteralInFile(sourceFile: SourceFile, searchText: string, possiblePositions: int[], references: Push<NodeEntry>): void {
             for (const position of possiblePositions) {
                 const node = getTouchingWord(sourceFile, position);
                 if (node && node.kind === SyntaxKind.StringLiteral && (node as StringLiteral).text === searchText) {

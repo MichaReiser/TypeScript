@@ -917,7 +917,7 @@ namespace ts {
             const statements: Statement[] = [];
             resumeLexicalEnvironment();
 
-            let statementOffset = -1.0;
+            let statementOffset = -1;
             if (hasSynthesizedSuper) {
                 // If a super call has already been synthesized,
                 // we're going to assume that we should just transform everything after that.
@@ -1820,7 +1820,7 @@ namespace ts {
 
             const statements: Statement[] = [];
             const body = node.body;
-            let statementOffset: number;
+            let statementOffset: int;
 
             resumeLexicalEnvironment();
             if (isBlock(body)) {
