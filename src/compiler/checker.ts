@@ -16224,7 +16224,12 @@ namespace ts {
                     if (maybeTypeOfKind(operandType, TypeFlags.ESSymbol)) {
                         error(node.operand, Diagnostics.The_0_operator_cannot_be_applied_to_type_symbol, tokenToString(node.operator));
                     }
-                    return intType;
+
+                    if (node.operator === SyntaxKind.TildeToken) {
+                        return unifyNumberTypes(operandType, intType, intType);
+                    }
+
+                    return unifyNumberTypes(operandType, operandType, numberType);
                 case SyntaxKind.ExclamationToken:
                     const facts = getTypeFacts(operandType) & (TypeFacts.Truthy | TypeFacts.Falsy);
                     return facts === TypeFacts.Truthy ? falseType :

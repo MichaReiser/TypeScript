@@ -878,7 +878,7 @@ namespace ts {
             while (isOctalDigit(text.charCodeAt(pos))) {
                 pos++;
             }
-            return +(text.substring(start, pos));
+            return +(text.substring(start, pos)) as int;
         }
 
         /**
